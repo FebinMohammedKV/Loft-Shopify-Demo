@@ -1,0 +1,211 @@
+.reviews{
+  display: grid;
+  grid-template-columns: 20% 75%;
+  gap: 30px;
+  margin: 100px 0;
+  margin-bottom: 110px;
+  align-items: center;
+  overflow: hidden;
+  width: 100%;
+}
+.reviews .poster{
+    /* background-color: #879056; */
+    /* width: 280px; */
+    width: 100%;
+    height: 240px;
+    /* color: #ffffff; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-basis: 20%;
+}
+.reviews .poster h3{
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+.reviews .poster .ratingstar{
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+.reviews .poster > p{
+    margin-top: 0.7rem;
+    font-weight: 300;
+    font-size: 0.9rem;
+}
+.reviews .poster .ratingstar p span{
+    font-size: 1.2rem;
+    font-weight: 400;
+}
+.reviews .poster .ratingstar .starbtn{
+    border: none;
+    position: relative;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0.3rem;
+    background-image: radial-gradient(circle, red, yellow, green);
+}
+.reviews .poster .ratingstar p{
+    font-size: 0.6rem;
+}
+.reviews .poster .ratingstar .starbtn svg{
+    position: absolute;
+    background-color: #879056;
+}
+
+
+.testimonial-slider{
+  flex-basis: 70%;
+}
+section.testimonial-slider {
+  /* margin-top: 2rem;
+  margin-bottom: 5rem; */
+  overflow: hidden;
+  height: 260px;
+  /* background-color: red; */
+  display: flex;
+  align-items: center;
+}
+.testimonial-track{
+  height: 260px;
+  /* background-color: rgb(221, 255, 0); */
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+.testimonial-meta {
+  display: flex;
+  align-items: center;
+}
+.testimonial-meta img.avatar {
+  margin-right: 1rem;
+  width: 84px;
+  height: 84px;
+}
+.author-meta{
+  font-size: 13px;
+  font-weight: bolder;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.author-meta h3 {
+  font-size: 13px;
+  font-weight: bold;
+  padding-top: 10px;
+}
+.author-meta svg{
+  color: #879056;
+}
+.slick-list{
+  height: 260px;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  
+  margin: 0;
+}
+.slick-track{
+  height: 260px;
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+.testimonial-card {
+  padding: 1.5rem;
+  /* border: 1px solid #707070; */
+  box-shadow: 0 0 8px rgb(128, 127, 127);
+  margin: 0 0.5rem;
+  position:relative;
+  /* margin-top: 30px; */
+  height: 240px;
+  /* margin-left: 0.5rem;
+  margin-right: 0.5rem; */
+}
+.testimonial-content .second{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 30px;
+}
+.testimonial-content .second p{
+  font-size: 0.7rem;
+  padding-top: 15px;
+  font-weight: 500;
+}
+.testimonial-content .product{
+  font-size: 13px;
+  font-style: italic;
+  margin-bottom: 0;
+}
+.testimonial-content .cont{
+  line-height: 20px;
+  font-size: 14px;
+  color: #474646;
+  font-weight: 500;
+}
+.testimonial-content .footer{
+  position: absolute;
+    right: 0;
+    bottom: 0;
+    padding-right: 15px;
+    padding-bottom: 5px;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: hsl(0, 0%, 18%);
+}
+.slick-slide .star-rating img {
+  display: inline!important;
+}
+button.slick-arrow {
+  background: transparent;
+  border: none;
+  font-size: 0;
+  color: black;
+  position: absolute;
+  cursor: pointer;
+}
+button.slick-prev.slick-arrow {
+  left: -25px;
+  /* top: calc(50% - 50px); */
+  /* color: black; */
+}
+button.slick-next.slick-arrow {
+  right: -25px;
+  /* top: calc(50% - 50px); */
+  /* color: black; */
+}
+button.slick-prev.slick-arrow:before {
+  /* content:url('https://cdn.shopify.com/s/files/1/0874/2610/5646/files/chevron-left.png?v=1716530443');    */
+  /* content:url('https://cdn.shopify.com/s/files/1/0874/2610/5646/files/chevron-left.png?v=1716545319');    */
+  content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/></svg>');
+}
+button.slick-next.slick-arrow:before {
+  /* content:url('https://cdn.shopify.com/s/files/1/0874/2610/5646/files/chevron-right.png?v=1716530444');    */
+  /* content:url('https://cdn.shopify.com/s/files/1/0874/2610/5646/files/chevron-right.png?v=1716545327');    */
+  content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/></svg>');
+}
+button.slick-arrow:hover {
+  opacity:0.75
+}
+
+/* @media screen and (max-width:600px) {
+  button.slick-arrow {
+      display: none!important;
+  }
+}
+@media screen and (min-width:770px) {
+  .reviews{
+    grid-template-columns: 35% 58%;
+    gap: 1.8rem;
+  }
+  .page-width h2{
+    display: none;
+    margin-bottom: 0;
+  }
+} */

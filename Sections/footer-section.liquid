@@ -1,0 +1,50 @@
+{{ 'footer-section.css' | asset_url | stylesheet_tag }}
+<footer>
+  <div class="pay2">
+    {% if section.settings.pay_image2 != blank %}
+      <img src="{{ section.settings.pay_image2 | img_url: 'master' }}" alt="Payment Options Image 2">
+    {% endif %}
+  </div>
+  <div class="rights">
+    {{ section.settings.rights_text | escape }}
+  </div>
+  <div class="pay">
+    {% if section.settings.pay_image != blank %}
+      <img src="{{ section.settings.pay_image | img_url: 'master' }}" alt="Payment Options Image">
+    {% endif %}
+  </div>
+</footer>
+
+
+
+{% schema %}
+    {
+      "name": "Footer Information",
+      "settings": [
+        {
+          "type": "text",
+          "id": "rights_text",
+          "label": "Rights Text",
+          "default": "© 2024 LOFT Powered by Shopify"
+        },
+        {
+          "type": "image_picker",
+          "id": "pay_image",
+          "label": "Payment Options Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "pay_image2",
+          "label": "Alternate Payment Options Image"
+        }
+      ],
+      "presets": [
+        {
+          "name": "Footer Information",
+          "category": "Footer"
+        }
+      ]
+    }
+    {% endschema %}
+    
+    

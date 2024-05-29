@@ -1,0 +1,59 @@
+<section class="video-section">
+  {% assign video_url = section.settings.video_url %}
+  {% assign youtube_video_url = section.settings.youtube_video_url %}
+
+  {% if video_url != '' %}
+    <div class="video-container">
+      <video width="100%" height="auto" controls>
+        <source src="{{ video_url }}" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  {% elsif youtube_video_url != '' %}
+    <div class="video-container">
+      <iframe width="640" height="360" src="{{ youtube_video_url }}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  {% endif %}
+</section>
+
+<style>
+  .video-section {
+    width: 100%;
+    margin: 80px auto;
+    text-align: center;
+  }
+  
+  .video-container {
+    margin-top: 20px;
+  }
+</style>
+  
+  {% schema %}
+    {
+      "name": "Video  ",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Video Settings"
+        },
+        {
+          "type": "text",
+          "id": "video_url",
+          "label": "Video URL",
+          "default": "https://cdn.shopify.com/videos/c/o/v/d675e09dd23a443abcaf7e9727db9417.mp4"
+        },
+        {
+          "type": "url",
+          "id": "youtube_video_url",
+          "label": "YouTube Video URL"
+        }
+      ],
+      "presets": [
+        {
+          "name": "Video Section",
+          "category": "Custom"
+        }
+      ]
+    }
+{% endschema %}
+    

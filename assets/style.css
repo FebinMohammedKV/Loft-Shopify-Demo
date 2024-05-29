@@ -1,0 +1,411 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Montserrat", sans-serif;
+}
+
+.navigation{
+    margin-top: 20px;
+    padding: 0 1rem;
+}
+.navigation .main{
+    display: flex;
+    align-items: center;
+} 
+.navigation .main .left{
+    padding-left: 8rem;
+}
+.navigation .main .right{
+    padding-right: 8rem;
+    padding-top: 1rem;
+}
+.navigation .main .menu-btn{
+    position: absolute;
+    top: 35px;
+    left: 30px;
+    width: 60px;
+    height: 40px;
+    padding-top: 10px;
+    cursor: pointer;
+    display: none;
+}
+.navigation .left{
+    display: flex;
+    flex-basis: 30%;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 20px;
+}
+.left button{
+    border: none;
+    background: transparent;
+}
+
+.navigation .main .left .Search{
+    width: 15rem;
+    border: none;
+    outline: none;
+}
+.main .logo{
+    flex-basis: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.main .right{
+    flex-basis: 30%;
+    align-items: center;
+}
+.main .right ul{
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+}
+.main .right ul li{
+    list-style: none;
+    text-align: center;
+    position: relative;
+}
+.main .right ul li a{
+    color: rgb(67, 67, 67);
+}
+.main .right ul li .sub{
+    display: none;
+    position: absolute;
+    z-index: 3;
+    width: 220px;
+    padding: 10px 10px 0 10px;
+    box-shadow: 0 0 3px rgb(180, 180, 180);
+    background-color: white;
+    top: calc(100% + 5px); 
+    left: 50%; 
+    transform: translateX(-70%);  
+}
+.main .right ul li:hover .sub {
+    display: block;
+}
+.main .right ul li .sub button{
+    width: 100%;
+    height: 40px;
+    background-color: rgb(48,48,48);
+    border: none;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+.main .right ul li .sub button:hover {
+    background-color: rgb(96, 95, 95);
+}
+
+
+.main .right ul li .sub p{
+    padding: 3px 0;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+.main .right ul li .sub .under a{
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    color: rgb(113, 113, 113);
+    padding-top: 10px;
+    font-size: 0.9rem;
+}
+.main .right ul li:hover .sub{
+    display: block;
+}
+
+.nav .menu .menu-btn{
+    position: absolute;
+    top: 30px;
+    left: 60px;
+    width: 40px;
+    cursor: pointer;
+    padding-left: 30px;
+}
+
+.nav-links {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    gap: 0.8rem;
+    font-size: 0.8rem;
+    font-weight: 450;
+    letter-spacing: 1px;
+    margin: 20px auto;
+}
+
+.nav-links li {
+    position: relative;
+}
+
+.nav-links .plus {
+    display: none;
+}
+
+.nav-links li a {
+    display: block;
+    color: #121212;
+    text-decoration: none;
+    padding-right: 0.5rem;
+}
+
+.nav-links .submenu {
+    display: none;
+    position: absolute;
+    background-color: white;
+    z-index: 3;
+    top: 100%;
+    left: 0;
+    color: rgb(69, 69, 69);
+    border: 1px solid rgb(238, 238, 238);
+    width: 180px;
+    padding: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0;
+}
+
+.has-submenu .item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 2;
+    padding-right: 1rem;
+}
+
+.has-submenu:hover > .submenu,
+.has-submenu:hover > .item > .submenu {
+    display: block;
+}
+
+.submenu li {
+    display: block;
+    padding: 10px 0;
+    position: relative;
+}
+
+.submenu .submenu {
+    display: none;
+    top: 0;
+    left: 100%;
+    margin-left: 10px;
+}
+
+.submenu li.has-submenu:hover > .submenu {
+    display: block;
+}
+.bi-chevron-down{
+    width: 8px;
+    height: 8px;
+}
+.bi-chevron-down path {
+    stroke-width: 1; 
+}
+.bi-chevron-right path{
+    stroke: black; 
+    stroke-width: 1; 
+}
+
+.nav-links .main a:hover {
+    color: rgb(122, 121, 121);
+}
+
+.nav-links .has-submenu svg:hover {
+    color: rgb(122, 121, 121);
+}
+
+.submenu li a {
+    color: rgb(69, 69, 69);
+    text-decoration: none;
+}
+
+.submenu li:hover {
+    color: rgb(122, 121, 121);
+    cursor: pointer;
+}
+
+/* @media (max-width: 770px) and (min-width: 700px) {
+    .nav-links {
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+}
+
+@media (max-width: 700px) {
+    .navigation .menu {
+        display: none;
+    }
+
+    .navigation .menu-btn {
+        display: block;
+    }
+
+    .navigation .close-btn {
+        display: none;
+    }
+
+    .menu-btn.active + .menu {
+        display: flex;
+    }
+}
+
+
+ .nav-links {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    gap: 0.8rem;
+    font-size: 0.8rem;
+    font-weight: 450;
+    letter-spacing: 1px;
+    margin: 20px auto;
+} */
+
+.nav-links li {
+    position: relative;
+}
+
+.nav-links .plus {
+    display: none;
+}
+
+.nav-links li a {
+    display: block;
+    color: #121212;
+    text-decoration: none;
+    padding-right: 0.5rem;
+}
+
+.nav-links .submenu {
+    display: none;
+    position: absolute;
+    background-color: white;
+    z-index: 3;
+    top: 100%;
+    left: 0;
+    color: rgb(69, 69, 69);
+    border: 1px solid rgb(238, 238, 238);
+    width: 180px;
+    padding: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0;
+}
+
+.has-submenu .item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 2;
+    padding-right: 1rem;
+}
+
+.has-submenu:hover > .submenu,
+.has-submenu:hover > .item > .submenu {
+    display: block;
+}
+
+.submenu li {
+    display: block;
+    padding: 10px 0;
+    position: relative;
+}
+
+.submenu .submenu {
+    display: none;
+    top: 0;
+    left: 100%;
+    margin-left: 10px;
+}
+
+.submenu li.has-submenu:hover > .submenu {
+    display: block;
+}
+.bi-chevron-down{
+    width: 8px;
+    height: 8px;
+}
+.bi-chevron-down path {
+    stroke-width: 1; 
+}
+.bi-chevron-right path{
+    stroke: black; 
+    stroke-width: 1; 
+}
+
+.nav-links .main a:hover {
+    color: rgb(122, 121, 121);
+}
+
+.nav-links .has-submenu svg:hover {
+    color: rgb(122, 121, 121);
+}
+
+.submenu li a {
+    color: rgb(69, 69, 69);
+    text-decoration: none;
+}
+
+.submenu li:hover {
+    color: rgb(122, 121, 121);
+    cursor: pointer;
+}
+
+/* @media only screen and (min-width: 1900px){
+    .navigation .main .left{
+        padding-left: 22rem;
+    }
+    .navigation .main .right{ 
+        padding-right: 22rem;
+    }
+}
+@media only screen and (min-width: 1200px){
+    .navigation .main .left{
+        padding-left: 3rem;
+    }
+    .navigation .main .right{ 
+        padding-right: 3rem;
+    }
+}
+@media only screen and (min-width: 960px){
+    .navigation .main .left{
+        padding-left: 1.5rem;
+    }
+    .navigation .main .right{ 
+        padding-right: 1.5rem;
+    }
+}
+@media only screen and (max-width: 770px){
+    .navigation .main .left{
+        padding-left: 2rem;
+    }
+    .navigation .main .right{ 
+        padding-right: 2rem;
+    }
+    .navigation .main .left .Search {
+        width: 9rem;
+    }
+}
+
+ @media only screen and (min-width: 1024px){
+    .navigation .main .left{
+        padding-left: 2rem;
+    }
+    .navigation .main .right{
+        padding-right: 2rem;
+    }
+    .navigation .main .left .Search {
+        width: 7rem;
+    }
+    .bi-chevron-down path {
+        stroke-width: 2; 
+    }
+} */

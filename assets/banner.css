@@ -1,0 +1,29 @@
+.bottom{
+    background-image: url(Design.webp);
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-position: center;
+}
+.bottom span{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    height: 50px;
+    /* background-color: #eeeeee;
+    background-color: #A3402D; */
+    /* color: white; */
+    border: none;
+    margin-top: 210px;
+}
+.bottom span a{
+    text-decoration: none;
+}
+.bottom span:hover{
+    background-image: linear-gradient(to left, #ab4747 0%, #be4d4d 100%);
+}

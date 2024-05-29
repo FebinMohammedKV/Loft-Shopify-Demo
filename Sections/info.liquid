@@ -1,0 +1,74 @@
+{{ 'info.css'| asset_url | stylesheet_tag }}
+    
+<section class="info">
+  {% for block in section.blocks %}
+    <div>
+      <div class="image-container" style="background-image: url('{{ block.settings.image | img_url: '600x600' }}');"></div>
+      <p class="head" style="color: {{ block.settings.heading_color }}">{{ block.settings.heading }}</p>
+      <p class="post" style="color: {{ block.settings.posted_by_color }}">{{ block.settings.posted_by }}</p>
+      <p class="cont" style="color: {{ block.settings.content_color }}">{{ block.settings.content }}</p>
+    </div>
+  {% endfor %}
+</section>
+
+{% schema %}
+{
+  "name": "Blog Posts",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "blog_post",
+      "name": "Blog Post",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Blog Post Heading"
+        },
+        {
+          "type": "text",
+          "id": "posted_by",
+          "label": "Posted By",
+          "default": "Posted by Author"
+        },
+        {
+          "type": "textarea",
+          "id": "content",
+          "label": "Content",
+          "default": "Blog post content goes here."
+        },
+        {
+          "type": "color",
+          "id": "heading_color",
+          "label": "Heading Color",
+          "default": "#3A3A3A"
+        },
+        {
+          "type": "color",
+          "id": "posted_by_color",
+          "label": "Posted By Color",
+          "default": "#666666"
+        },
+        {
+          "type": "color",
+          "id": "content_color",
+          "label": "Content Color",
+          "default": "#4B4A4A"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Blog Posts",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}

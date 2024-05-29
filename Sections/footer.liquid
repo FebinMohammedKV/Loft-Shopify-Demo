@@ -1,0 +1,175 @@
+{{ 'footer.css'| asset_url | stylesheet_tag }}
+
+{% style %}
+  .containers{
+    background-color: {{ section.settings.background_color }};
+    margin-top: {{ section.settings.top_margin }};
+    padding-top: {{ section.settings.padding_top }};
+    padding-bottom: {{ section.settings.padding_bottom }};
+  }
+{% endstyle %}
+
+
+<section class="containers">
+  {% for block in section.blocks %}
+    {% if block.type == 'footer_menu' %}
+      <div class="item">
+        <ul>
+          <p class="head">{{ block.settings.heading_text }}</p>
+          {% assign menu = linklists[block.settings.menu] %}
+          {% for link in menu.links %}
+            <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+          {% endfor %}
+
+          {% for i in (1..5) %}
+            {% capture image_key %}link_image_{{ i }}{% endcapture %}
+            {% capture url_key %}link_url_{{ i }}{% endcapture %}
+            {% assign image = block.settings[image_key] %}
+            {% assign url = block.settings[url_key] %}
+            {% if image != blank and url != blank %}
+              <li>
+                <a href="{{ url }}">
+                  <img class="link-image" src="{{ image | img_url: '100x100' }}" alt="Link Image {{ i }}">
+                </a>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+  {% endfor %}
+</section>
+
+
+{% schema %}
+  {
+    "name": "Footer",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Color Scheme"
+      },
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background Color",
+        "default": "#ffffff"
+      },
+      {
+        "type": "header",
+        "content": "Spacing"
+      },
+      {
+        "type": "range",
+        "id": "top_margin",
+        "label": "Top margin",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "default": 100 
+      },
+      {
+        "type": "header",
+        "content": "Section padding"
+      },
+      {
+        "type": "range",
+        "id": "padding_top",
+        "label": "Padding top",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "default": 10 
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom",
+        "label": "Padding bottom",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "default": 10 
+      }
+    ],
+    "blocks": [
+      {
+        "type": "footer_menu",
+        "name": "Footer Menu",
+        "settings": [
+          {
+            "type": "text",
+            "id": "heading_text",
+            "label": "Heading Text",
+            "default": "Menu Heading"
+          },
+          {
+            "type": "link_list",
+            "id": "menu",
+            "label": "Select Menu"
+          },
+          {
+            "type": "image_picker",
+            "id": "link_image_1",
+            "label": "Link Image 1"
+          },
+          {
+            "type": "url",
+            "id": "link_url_1",
+            "label": "Link URL 1"
+          },
+          {
+            "type": "image_picker",
+            "id": "link_image_2",
+            "label": "Link Image 2"
+          },
+          {
+            "type": "url",
+            "id": "link_url_2",
+            "label": "Link URL 2"
+          },
+          {
+            "type": "image_picker",
+            "id": "link_image_3",
+            "label": "Link Image 3"
+          },
+          {
+            "type": "url",
+            "id": "link_url_3",
+            "label": "Link URL 3"
+          },
+          {
+            "type": "image_picker",
+            "id": "link_image_4",
+            "label": "Link Image 4"
+          },
+          {
+            "type": "url",
+            "id": "link_url_4",
+            "label": "Link URL 4"
+          },
+          {
+            "type": "image_picker",
+            "id": "link_image_5",
+            "label": "Link Image 5"
+          },
+          {
+            "type": "url",
+            "id": "link_url_5",
+            "label": "Link URL 5"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Footer",
+        "category": "Footer"
+      }
+    ]
+  }
+{% endschema %}
+
+

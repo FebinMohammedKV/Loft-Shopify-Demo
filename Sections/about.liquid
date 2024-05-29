@@ -1,0 +1,71 @@
+{{ 'about.css' | asset_url | stylesheet_tag }}
+
+{% style %}
+    .about{
+        background-color: {{ section.settings.bg_color }};
+    }
+    .cont h1{
+        color: {{ section.settings.title_color }};
+    }
+    .cont p{
+        color: {{ section.settings.content_color }};
+    }
+{% endstyle %}
+
+<section class="about">
+        <div class="cont">
+            <h1>{{ section.settings.title }}</h1> 
+            <p>{{ section.settings.first_content }}</p>
+            <p>{{ section.settings.second_content }}</p>
+        </div>
+</section>
+
+{% schema %}
+    {
+        "name": "About",
+        "class": "about",
+        "settings": [
+            {
+                "type": "color",
+                "id": "bg_color",
+                "label": "Background Color",
+                "default": "#ffffff"
+            },
+            {
+                "type": "color",
+                "id": "title_color",
+                "label": "Title Color",
+                "default": "#343434"
+            },
+            {
+                "type": "text",
+                "id": "title",
+                "label": "Title",
+                "default": "Loft: Industry Experts"
+            },
+            {
+                "type": "color",
+                "id": "content_color",
+                "label": "Content Color",
+                "default": "#292828"
+            },
+            {
+                "type": "text",
+                "id": "first_content",
+                "label": "First Content",
+                "default": "With over 20 years of experience in providing interior design and furnishings, LOFT works across the UK to craft spaces that residents love."
+            },
+            {
+                "type": "text",
+                "id": "second_content",
+                "label": "Second Content",
+                "default": "LOFT offers a full-service solution, including design, delivery, installation, removals, replacements and recycling."
+            }
+        ],
+        "presets": [
+            {
+                "name": "About"
+            }
+        ]
+    }
+{% endschema %}

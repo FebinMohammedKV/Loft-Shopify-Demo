@@ -1,0 +1,168 @@
+{{ 'style.css' | asset_url | stylesheet_tag }}
+
+<div id="myNav" class="menu">
+    <ul class="nav-links">
+        {% for link in linklists.main-menu.links %}
+            {% if link.links.size > 0 %}
+                <li class="has-submenu main">
+                    <div class="item">
+                        <a href="{{ link.url }}">{{ link.title }}</a>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
+                        </svg>
+                    </div>
+                    <ul class="submenu">
+                        {% for childlink in link.links %}
+                            <li class="{% if childlink.links.size > 0 %}has-submenu{% endif %}">
+                                <div class="item">
+                                    <a href="{{ childlink.url }}">{{ childlink.title | escape }}</a>
+                                    {% if childlink.links.size > 0 %}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
+                                        </svg>
+                                    {% endif %}
+                                </div>
+                                {% if childlink.links.size > 0 %}
+                                    <ul class="submenu">
+                                        {% for subchildlink in childlink.links %}
+                                            <li><a href="{{ subchildlink.url }}">{{ subchildlink.title | escape }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% else %}
+                <li class="main">
+                    <a href="{{ link.url }}">{{ link.title }}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</div>
+
+{% style %}
+    .menu {
+        background-color: {{ section.settings.nav_bg }};
+        padding-left: {{ section.settings.padding_left }};
+        padding-right: {{ section.settings.padding_right }};
+        color: {{ section.settings.text_color }};
+    }
+    .nav-links .has-submenu .item svg{
+        stroke: {{ section.settings.text_color }};
+    }
+    .nav-links li a {
+        color: {{ section.settings.text_color }};
+    }
+    
+    .menu li a:hover {
+        color: {{ blocks[0].settings.hover_color }};
+    }
+    
+    .submenu {
+        color: {{ blocks[0].settings.text_color }};
+        background-color: {{ blocks[0].settings.background_color }};
+    }
+    
+    .submenu li a {
+        color: {{ blocks[0].settings.text_color }};
+    }
+    
+    .submenu li a:hover {
+        color: {{ blocks[0].settings.hover_color }};
+    }
+{% endstyle %}
+
+
+
+
+
+{% schema %}
+    {
+      "name": "navigation",
+      "class": "navigation",
+      "settings": [
+        {
+          "type": "link_list",
+          "id": "main-menu",
+          "label": "Main menu"
+        },
+        {
+          "type": "color",
+          "id": "nav_bg",
+          "label": "Background color",
+          "default": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "id": "padding_right",
+          "label": "Padding Right",
+          "default": "20px"
+        },
+        {
+          "type": "text",
+          "id": "padding_left",
+          "label": "Padding Left",
+          "default": "20px"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text Color"
+        },
+        {
+          "type": "select",
+          "id": "desktop_menu_type",
+          "options": [
+            {
+              "value": "dropdown",
+              "label": "Dropdown"
+            },
+            {
+              "value": "mega",
+              "label": "Mega Menu"
+            },
+            {
+              "value": "drawer",
+              "label": "Drawer"
+            }
+          ],
+          "default": "dropdown",
+          "label": "Menu Type for Sticky Header",
+          "info": "Select the type of menu for the sticky header"
+        }
+      ],
+      "blocks": [
+        {
+          "type": "section",
+          "name": "dropdown_menu",
+          "settings": [
+            {
+              "type": "color",
+              "id": "text_color",
+              "label": "Text Color",
+              "default": "#333333"
+            },
+            {
+              "type": "color",
+              "id": "hover_color",
+              "label": "Hover Color",
+              "default": "#666666"
+            },
+            {
+              "type": "color",
+              "id": "background_color",
+              "label": "Background Color",
+              "default": "#ffffff"
+            }
+          ]
+        }
+      ],
+      "presets": [
+        {
+          "name": "menu"
+        }
+      ]
+    }
+{% endschema %}

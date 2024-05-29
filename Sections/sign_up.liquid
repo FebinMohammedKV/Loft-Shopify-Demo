@@ -1,0 +1,152 @@
+{{ 'sign_up.css' | asset_url | stylesheet_tag }}
+
+{% style %}
+    .sign{
+        background-color: {{ section.settings.background_color }};
+    }
+    .sign .container .desc .head{
+        color: {{ section.blocks[0].settings.color }};
+    }
+    .sign .container .desc .cont{
+        color: {{ section.blocks[1].settings.color }};
+    }
+    /* .sign .container .embn button{
+        background-color: {{ section.blocks[3].settings.background_color }};
+        color: {{ section.blocks[3].settings.color }};
+    } */
+{% endstyle %}
+
+<!-- sections/sign-up-promo.liquid -->
+<section class="sign">
+    <div class="container">
+        <div class="desc">
+            {% if section.blocks.size > 0 %}
+                {% for block in section.blocks %}
+                    {% case block.type %}
+                        {% when 'promo-heading' %}
+                            <div class="head">{{ block.settings.heading_text }}</div>
+                        {% when 'promo-description' %}
+                            <div class="cont">{{ block.settings.description_text }}</div>
+                    {% endcase %}
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="embn">
+            {% if section.blocks.size > 0 %}
+                {% for block in section.blocks %}
+                    {% case block.type %}
+                        {% when 'promo-input' %}
+                            <input type="text" placeholder="{{ block.settings.input_placeholder }}">
+                        {% when 'promo-button' %}
+                          <span style="background-color: {{ section.blocks[3].settings.background_color }};">
+                              <a href="{{ section.blocks[3].settings.button_url }}" class="view-all-button" style="color: {{ section.blocks[3].settings.color }};">
+                                  {{ block.settings.button_text }}
+                              </a>
+                          </span>
+                            {% comment %} <button>{{ block.settings.button_text }}</button> {% endcomment %}
+                    {% endcase %}
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+{% schema %}
+    {
+  "name": "Sign Up Promo",
+  "settings": [
+        {
+            "type": "color",
+            "id": "background_color",
+            "label": "Background Color",
+            "default": "#F0F0F0"
+        }
+    ],
+    "blocks": [
+        {
+          "type": "promo-heading",
+          "name": "Heading",
+          "settings": [
+            {
+              "type": "text",
+              "id": "heading_text",
+              "label": "Heading Text",
+              "default": "GET 10% OFF YOUR FIRST ORDER"
+            },
+            {
+                "type": "color",
+                "id": "color",
+                "label": "Text color",
+                "default": "#595959"
+            }
+          ]
+        },
+        {
+          "type": "promo-description",
+          "name": "Description",
+          "settings": [
+            {
+              "type": "textarea",
+              "id": "description_text",
+              "label": "Description Text",
+              "default": "Subscribe to our newsletter and join us for access to exclusive previews and private shopping experiences."
+            },
+            {
+                "type": "color",
+                "id": "color",
+                "label": "Text color",
+                "default": "#595959"
+            }
+          ]
+        },
+        {
+          "type": "promo-input",
+          "name": "Input Field",
+          "settings": [
+            {
+              "type": "text",
+              "id": "input_placeholder",
+              "label": "Input Placeholder Text",
+              "default": "Your email"
+            }
+          ]
+        },
+        {
+          "type": "promo-button",
+          "name": "Button",
+          "settings": [
+            {
+              "type": "url",
+              "id": "button_url",
+              "label": "Button link"
+            },
+            {
+              "type": "text",
+              "id": "button_text",
+              "label": "Button Text",
+              "default": "SIGN UP"
+            },
+            {
+                "type": "color",
+                "id": "color",
+                "label": "Text color",
+                "default": "#ffffff"
+            },
+            {
+                "type": "color",
+                "id": "background_color",
+                "label": "background color",
+                "default": "#303030"
+            }
+          ]
+        }
+      ],
+      "presets": [
+        {
+          "name": "Sign Up Promo",
+          "category": "Custom"
+        }
+      ]
+    }
+
+{% endschema %}

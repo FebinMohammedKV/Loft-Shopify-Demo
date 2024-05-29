@@ -1,0 +1,128 @@
+{{ 'material.css' | asset_url | stylesheet_tag }}
+
+{% style %}
+    .material{
+        background-color: {{ section.settings.background_color }};
+        color: {{ section.settings.text_color }};
+    }
+    .material .cont h1{
+        color: {{ section.settings.title_color }};
+    }
+    .material .cont h3{
+        color: {{ section.settings.content_color }};
+    }
+    .material .cont p{
+        color: {{ section.settings.content_color }};
+    }
+    /* .material .cont button{
+        background-color: {{ section.blocks[0].settings.background_color }};
+        color: {{ section.blocks[0].settings.text_color }};
+    } */
+{% endstyle %}
+
+<!-- sections/material-handbook.liquid -->
+<section class="material-container">
+  <div class="material">
+    <div class="cont">
+      <h1>{{ section.settings.title }}</h1>
+      <h3>{{ section.settings.subtitle }}</h3>
+      <p>{{ section.settings.description }}</p>
+      <span style="background-color: {{ section.blocks[0].settings.background_color }};">
+        <a href="{{ section.blocks[0].settings.download_link }}" class="view-all-button" style="color: {{ section.blocks[0].settings.text_color }};">
+          {{ section.blocks[0].settings.button_text }}
+        </a>
+      </span>
+    </div>
+    <div class="image" style="background-image: url({{ section.settings.image | img_url : 'master' }});">
+      <!-- The image URL is set dynamically in the style attribute -->
+    </div>
+  </div>
+  <div class="images" style="background-image: url({{ section.settings.image | img_url : 'master' }});">
+  </div>
+</section>
+
+{% schema %}
+    {
+      "name": "Material Handbook",
+      "settings": [
+        {
+            "type": "color",
+            "id": "background_color",
+            "label": "Background Color",
+            "default": "#000000"
+        },
+        {
+            "type": "color",
+            "id": "title_color",
+            "label": "Title Color",
+            "default": "#ffffff"
+        },
+        {
+            "type": "color",
+            "id": "content_color",
+            "label": "Content Color",
+            "default": "#ffffff"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "The Essential 2024 Furnishing Handbook"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitle",
+          "default": "Elevate your interiors within 24 hours"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "The Essential Furnishing Handbook is the ultimate interiors style guide for durable and stylish furniture. Download the full furniture brochure now."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        }
+        ],
+        "blocks": [
+            {
+                "type": "section",
+                "name": "button",
+                "settings": [
+                    {
+                        "type": "text",
+                        "id": "button_text",
+                        "label": "Button Text",
+                        "default": "DOWNLOAD"
+                    },
+                    {
+                        "type": "url",
+                        "id": "download_link",
+                        "label": "Download Link"
+                    },
+                    {
+                        "type": "color",
+                        "id": "background_color",
+                        "label": "Background color",
+                        "default": "transparent"
+                    },
+                    {
+                        "type": "color",
+                        "id": "text_color",
+                        "label": "Text color",
+                        "default": "#ffffff"
+                    }
+                ]
+            }
+        ],
+        "presets": [
+          {
+            "name": "Material Handbook"
+          }
+        ]
+    }
+
+{% endschema %}

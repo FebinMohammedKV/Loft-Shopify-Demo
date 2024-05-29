@@ -1,0 +1,124 @@
+.material-container{
+    padding: 0 10rem;
+    margin: 0 auto;
+}
+.material{
+    width: 100%;
+    /* background-color: black; */
+    /* color: white; */
+    margin: 0 auto;
+    display: flex;
+    height: 460px;
+    padding: 70px 40px;
+}
+.material .cont{
+    width: 50%;
+    padding-right: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex-basis: 50%;
+}
+.material .cont h1{
+    font-size: 2.1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+.material .cont h3{
+    font-weight: 500;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+.material .cont p{
+    font-size: 0.84rem;
+    font-weight: 500;
+}
+.material .cont span {
+    width: 150px;
+    height: 50px;
+    border: 2px solid white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-align: center;
+    cursor: pointer;
+    background-color: inherit;
+}
+
+.material .cont span a {
+    text-decoration: none;
+    color: inherit; 
+}
+
+.material .cont span a:hover {
+    transition-duration: 240ms;
+    color: red; 
+}
+
+
+.material .image{
+    /* background-image: url(material.webp); */
+    background-size: cover;
+    /* width: 570px; */
+    width: 100%;
+    height: 390px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-repeat: no-repeat; 
+    flex-basis: 50%;
+}
+.material-container .images{
+    /* background-image: url(material.webp); */
+    background-size: cover;
+    width: 570px;
+    height: 390px;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: none;
+}
+
+/* @media only screen and (min-width: 1900px){
+    .material-container{
+        padding: 0 23rem;
+    } 
+}
+@media only screen and (min-width: 1200px){
+    .material-container{
+        padding: 0 3rem;
+    } 
+}
+@media only screen and (min-width: 960px){
+    .material-container{
+        padding: 0;
+    } 
+}
+@media only screen and (min-width: 770px){
+    .material-container {
+        padding: 0;
+        position: relative;
+    }
+    
+    .material {
+        padding: 30px 40px;
+        position: relative;
+    }
+    
+    .material .image {
+        position: absolute;
+        bottom: 0;
+        right: 1.5rem;
+        width: 50%;
+        height: 390px;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+    .material .cont span{
+        height: 2.5rem;
+        position: absolute;
+        bottom: 2rem;
+    }
+} */

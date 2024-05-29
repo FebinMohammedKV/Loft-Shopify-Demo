@@ -1,0 +1,162 @@
+<div class="chat-container {{ section.settings.position }}">
+  <a href="{{ section.settings.chat_link }}">
+    <div class="chat">
+      <div class="icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-chat-dots-fill" viewBox="0 0 16 16">
+            <path d="M16 8c0 3.866-3.582 7-8 7a9 9 0 0 1-2.347-.306c-.584.296-1.925.864-4.181 1.234-.2.032-.352-.176-.273-.362.354-.836.674-1.95.77-2.966C.744 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7M5 8a1 1 0 1 0-2 0 1 1 0 0 0 2 0m4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0m3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
+        </svg>
+      </div>
+      <div class="cont">{{ section.settings.button_text }}</div>
+    </div>
+  </a>
+</div>
+
+{% style %}
+    .chat{
+        background-color: {{ section.settings.background_color }};
+    }
+    .chat-container .chat .cont{
+        color: {{ section.settings.Text_color }};
+    }
+    .chat-container .chat svg{
+        fill: {{ section.settings.Text_color }};
+    }
+{% endstyle %}
+
+<style>
+.chat-container {
+  position: fixed;
+  z-index: 1;
+}
+
+.chat-container a{
+    text-decoration: none;
+}
+
+.chat {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  /* background-color: black; */
+  align-items: center;
+  border: none;
+  border-radius: 13px;
+  padding: 10px;
+  align-items: center;
+}
+
+.chat .cont {
+  /* color: white; */
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.chat .icon {
+  display: flex;
+  align-items: center;
+}
+
+.chat svg {
+  /* fill: #fbfafa; */
+  width: 24px; /* Set a fixed width for the icon */
+  height: 24px; /* Set a fixed height for the icon */
+}
+
+/* Positioning options */
+.chat-container.left {
+  left: 20px;
+  bottom: 20px;
+}
+
+.chat-container.right {
+  right: 20px;
+  bottom: 20px;
+}
+
+.chat-container.center {
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 20px;
+}
+
+.chat-container.top-left {
+  left: 20px;
+  top: 20px;
+}
+
+.chat-container.top-right {
+  right: 20px;
+  top: 20px;
+}
+
+.chat-container.top-center {
+  left: 50%;
+  transform: translateX(-50%);
+  top: 20px;
+}
+@media screen and (min-width:770px){
+  .chat{
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+  }
+  .chat .cont{
+    display: none;
+  }
+  .chat svg {
+    width: 32px; 
+    height: 32px; 
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Chat Button",
+  "settings": [
+    {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background color",
+        "default": "#000000"
+    },
+    {
+        "type": "color",
+        "id": "Text_color",
+        "label": "text color",
+        "default": "#ffffff"
+    },
+    {
+      "type": "url",
+      "id": "chat_link",
+      "label": "Chat Link"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Chat"
+    },
+    {
+      "type": "select",
+      "id": "position",
+      "label": "Desktop Chat Position",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" },
+        { "value": "center", "label": "Center" },
+        { "value": "top-left", "label": "Top Left" },
+        { "value": "top-right", "label": "Top Right" },
+        { "value": "top-center", "label": "Top Center" }
+      ],
+      "default": "left"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Chat Button",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}

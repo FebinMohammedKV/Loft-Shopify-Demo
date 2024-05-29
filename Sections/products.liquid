@@ -1,0 +1,146 @@
+{{ 'products.css'| asset_url | stylesheet_tag }}
+
+{% style %}
+    .grid-items .top{
+        background-color: {{ section.blocks[0].settings.background_color }};
+        color: {{ section.blocks[0].settings.text_color }};
+    }
+{% endstyle %}
+
+<section class="grid-products-small">
+    <div class="main-grid">
+        <div class="grid-items left">
+            <p>{{ section.settings.collection_title }}</p>
+            <span style="background-color: {{ section.settings.background_color }};">
+                <a href="{{ section.settings.collection_link }}" class="view-all-button" style="color: {{ section.settings.button_text_color }};">
+                    {{ section.settings.view_all_text }}
+                </a>
+            </span>
+        </div>
+        <div class="grid-container">
+            {% assign product_counter = 0 %}
+            {% for product in collections[section.settings.collection].products %}
+                {% if product_counter < 4 %}
+                    <div class="grid-items">
+                        {% for block in section.blocks %}
+                            {% if block.type == 'top-text' and block.settings.product_id == product.id %}
+                                {% assign top_text = block.settings.top_text %}
+                            {% endif %}
+                        {% endfor %}
+                        {% if top_text != '' %}
+                            <div class="top" style="background-color: {{ section.blocks[0].settings.background_color }}; color: {{ section.blocks[0].settings.top_color }};">{{ section.blocks[0].settings.top_text }}</div>
+                        {% endif %}
+                        <a href="{{ product.url }}" style="text-decoration: none;">
+                            <div class="image-container">
+                                {% if product.images.size > 1 %}
+                                    <img src="{{ product.images.first | img_url: '400x' }}" alt="{{ product.title }}" class="f-image">
+                                    <img src="{{ product.images[1] | img_url: '400x' }}" alt="{{ product.title }}" class="f2-image">
+                                {% else %}
+                                    <img src="{{ product.images.first | img_url: '400x' }}" alt="{{ product.title }}" class="f-image">
+                                {% endif %}
+                            </div>
+                            <div class="grid-footer">
+                                <div class="head">{{ product.title }}</div>
+                                <div class="price">
+                                    {% if product.compare_at_price > product.price %}
+                                        <span style="color: red;">{{ product.price | money }}</span>
+                                        <del>{{ product.compare_at_price | money }}</del>
+                                    {% else %}
+                                        <span>{{ product.price | money }}</span>
+                                    {% endif %}
+                                </div>
+                                <div class="addtocart">
+                                    <form action="/cart/add" method="post" enctype="multipart/form-data">
+                                        <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+                                        <button type="submit">ADD TO CART</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    {% assign product_counter = product_counter | plus: 1 %}
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+
+{% schema %}
+    {
+      "name": "Featured collection",
+      "settings": [
+        {
+          "type": "text",
+          "id": "collection_title",
+          "label": "Collection Title",
+          "default": "BEDROOM"
+        },
+        {
+          "type": "url",
+          "id": "collection_link",
+          "label": "Button Link"
+        },
+        {
+          "type": "text",
+          "id": "view_all_text",
+          "label": "Button Text",
+          "default": "VIEW ALL"
+        },
+        {
+          "type": "color",
+          "id": "background_color",
+          "label": "Button color",
+          "default": "#303030"
+        },
+        {
+          "type": "color",
+          "id": "button_text_color",
+          "label": "Button Text Color",
+          "default": "#ffffff"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Select Collection"
+        }
+      ],
+      "blocks": [
+        {
+          "type": "top-text",
+          "name": "Top Text",
+          "settings": [
+            {
+              "type": "product",
+              "id": "product_id",
+              "label": "Select Product"
+            },
+            {
+              "type": "text",
+              "id": "top_text",
+              "label": "Top Text",
+              "default": "Delivered Within 7 Days"
+            },
+            {
+              "type": "color",
+              "id": "background_color",
+              "label": "Background Color",
+              "default": "#323232"
+            },
+            {
+              "type": "color",
+              "id": "top_color",
+              "label": "Color",
+              "default": "#ffffff"
+            }
+          ]
+        }
+      ],
+      "presets": [
+        {
+          "name": "Featured collection"
+        }
+      ]
+    }
+    {% endschema %}
+    

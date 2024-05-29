@@ -1,0 +1,69 @@
+{{ 'banner.css' | asset_url | stylesheet_tag }}
+
+<div class="bottom">
+    <span>
+        <a href="{{ section.blocks[0].settings.button_url }}" class="banner_button">{{ section.blocks[0].settings.button_text }}</a>
+    </span>
+</div>
+
+{% style %}
+    .bottom{
+        background-image: url("{{ section.settings.banner_background | img_url : 'master' }}");
+    }
+    .bottom span{
+        background-color: {{ section.blocks[0].settings.button_background }};
+    }
+    .bottom span a{
+        color: {{ section.blocks[0].settings.button_color }};
+    }
+{% endstyle %}
+
+{% schema %}
+{
+    "name": "banner",
+    "settings": [
+            {
+                "type": "image_picker",
+                "id": "banner_background",
+                "label": "Banner Background"
+            }
+             
+        ],
+        "blocks": [
+            {
+                "name": "Button",
+                "type": "text",
+                "settings": [
+                    {
+                        "type": "text",
+                        "id": "button_text",
+                        "label": "Button Text",
+                        "default": "Shop now"
+                    },
+                    {
+                        "type": "url",
+                        "id": "button_url",
+                        "label": "Button Link"
+                    },
+                    {
+                        "type": "color",
+                        "id": "button_color",
+                        "label": "Color",
+                        "default": "#eeeeee"
+                    },
+                    {
+                        "type": "color",
+                        "id": "button_background",
+                        "label": "Button Background",
+                        "default": "#A3402D"
+                    } 
+                ]   
+            }
+        ],
+        "presets": [
+            {
+                "name": "Banner"
+            }
+        ]
+}
+{% endschema %}

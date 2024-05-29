@@ -1,0 +1,218 @@
+.grid-products-small{
+    /* width: 75rem; */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: center;
+    margin: 0 auto;
+    padding: 1rem 10rem;
+    margin-bottom: 2rem;
+}
+.main-grid{
+    display: flex;
+    gap: 1.5rem;
+    width: 100%; 
+}
+.main-grid .grid-container{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    flex-basis: 80%;
+    width: 100%;
+}
+.main-grid .grid-items{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    /* width: 13rem; */
+    width: 100%;
+    /* gap: 1rem; */
+}
+.main-grid .left{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-basis: 20%;
+}
+.main-grid .left p{
+    font-size: x-large;
+    font-weight: 500;
+    color: rgb(48,48,48);
+}
+.main-grid .left span{
+    width: 8rem;
+    height: 3.5rem;
+    /* background-color: rgb(48,48,48); */
+    /* color: white; */
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    position: absolute;
+    right: 0;
+    bottom: 5rem;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.main-grid .left span a{
+    text-decoration: none;
+}
+.main-grid .left span:hover{
+    background-color: rgb(96, 95, 95);
+}
+
+.grid-items .image-container{
+    width: 100%;
+    height: 13.3rem;
+}
+.grid-items .image-container .f-image {
+    position: absolute;
+    width: 100%;
+    margin: 15px auto;
+    transition: opacity 0.5s;
+    cursor: pointer;
+    opacity: 1;
+}
+
+.grid-items .image-container .f2-image {
+    position: absolute;
+    width: 100%;
+    margin: 15px auto;
+    transition: opacity 0.5s;
+    opacity: 0;
+}
+
+.grid-items:hover .f-image {
+    opacity: 0;
+}
+
+.grid-items:hover .f2-image {
+    opacity: 1;
+}
+.grid-items .top{
+    position: absolute;
+    width: 100%;
+    /* width: 13.2rem; */
+    /* height: 50px; */
+    /* background-color: rgb(48,48,48); */
+    color: white;
+    z-index: 1;
+    padding: 0.3rem 0.7rem;
+    /* padding-right: 20px; */
+    word-spacing: 5px;
+    letter-spacing: 1px;
+    line-height: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+   display: flex;
+   align-items: center; 
+}
+.grid-container .grid-footer{
+    margin-top: 2rem;
+}
+.grid-items .head{
+    color: rgb(67, 66, 66);
+    letter-spacing: 2px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding-top: 30px;
+}
+.grid-items .price{
+    padding-top: 10px;
+    color: rgb(96, 95, 95);
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+.grid-items .price del {
+    margin-left: 10px;
+}
+.grid-items .addtocart button {
+    background-color: white; 
+    border: 2px solid rgb(50, 49, 49);
+    color: #1f1e1e;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+    width: 100%;
+    text-align: center;
+    font-size: 0.9rem; 
+    font-weight: 500; 
+    text-transform: uppercase; 
+    cursor: pointer; 
+    border-radius: 4px; 
+    transition: background-color 0.3s ease; 
+}
+
+.grid-items .addtocart button:hover {
+    border: none;
+    color: white;
+    background-color: #303030; 
+}
+
+/* @media only screen and (min-width: 1900px){
+    .grid-products-small{
+        padding: 0 23rem;
+        margin-bottom: 6rem;
+    }
+    .grid-items .head {
+        padding: 0;
+    }
+}
+@media only screen and (min-width: 1200px){
+    .grid-products-small{
+        padding: 0 3rem;
+        margin-bottom: 6rem;
+    }
+    .grid-items .head {
+        padding: 0;
+    }
+}
+@media only screen and (min-width: 960px){
+    .grid-products-small{
+        padding: 0 3rem;
+        margin-bottom: 6rem;
+    }
+    .grid-items .head {
+        padding: 0;
+    }
+    .grid-items .image-container{
+        height: 10.3rem;
+    }
+    .main-grid .left p{
+        margin-bottom: 4rem;
+    }
+}
+@media only screen and (min-width: 770px){
+    .grid-products-small{
+        padding: 0 3rem;
+        margin-bottom: 6rem;
+    }
+    .main-grid{
+        flex-direction: column;
+        gap: 3rem;
+    }
+    .main-grid .left{
+        flex-direction: column;
+        justify-content: flex-start;
+
+    }
+    .main-grid .grid-container{
+        grid-template-columns: repeat(2,1fr);
+        width: 100%;
+        gap: 2.5rem;
+    }
+    .main-grid .left span{
+        position: static;
+    }
+    .main-grid .left{
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 1rem;
+    }
+    .grid-container .grid-footer{
+        margin-top: 8rem;
+    }
+} */
