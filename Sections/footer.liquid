@@ -1,16 +1,16 @@
 {{ 'footer.css'| asset_url | stylesheet_tag }}
 
 {% style %}
-  .containers{
+  .container{
     background-color: {{ section.settings.background_color }};
-    margin-top: {{ section.settings.top_margin }};
-    padding-top: {{ section.settings.padding_top }};
-    padding-bottom: {{ section.settings.padding_bottom }};
+    margin-top: {{ section.settings.top_margin }}px;
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
   }
 {% endstyle %}
 
 
-<section class="containers">
+{% comment %} <section class="containers">
   {% for block in section.blocks %}
     {% if block.type == 'footer_menu' %}
       <div class="item">
@@ -38,7 +38,41 @@
       </div>
     {% endif %}
   {% endfor %}
+</section> {% endcomment %}
+
+<section class="container text-center">
+  <div class="row">
+    {% for block in section.blocks %}
+      {% if block.type == 'footer_menu' %}
+        <div class="col-md-6 col-lg-3">
+          <div class="item">
+            <ul>
+              <p class="head">{{ block.settings.heading_text }}</p>
+              {% assign menu = linklists[block.settings.menu] %}
+              {% for link in menu.links %}
+                <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+              {% endfor %}
+              {% for i in (1..5) %}
+                {% capture image_key %}link_image_{{ i }}{% endcapture %}
+                {% capture url_key %}link_url_{{ i }}{% endcapture %}
+                {% assign image = block.settings[image_key] %}
+                {% assign url = block.settings[url_key] %}
+                {% if image != blank and url != blank %}
+                  <li>
+                    <a href="{{ url }}">
+                      <img class="link-image" src="{{ image | img_url: '100x100' }}" alt="Link Image {{ i }}">
+                    </a>
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
 </section>
+
 
 
 {% schema %}

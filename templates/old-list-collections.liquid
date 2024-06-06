@@ -1,4 +1,5 @@
-{% for collection in collections %}
+
+{% comment %} {% for collection in collections %}
   {% unless collection.handle == 'frontpage' %}
     {% capture collection_title %}{{ collection.title | escape }}{% endcapture %}
     <a href="{{ collection.url }}">More {{ collection_title }} &rsaquo;</a>
@@ -14,4 +15,17 @@
       </div>
     {% endfor %}
   {% endunless %}
-{% endfor %}
+{% endfor %} {% endcomment %}
+{% comment %} <div class="collection-list">
+   {% for collection in collections %}
+     <a href="{{ collection.url }}" class="collection-item">
+       <div class="collection-image-wrapper">
+         <img class="collection-image" src="{{ collection.image.src | img_url: 'master' }}" alt="{{ collection.title }}">
+         <div class="collection-title">{{ collection.title }}</div>
+       </div>
+     </a>
+   {% endfor %}
+</div> {% endcomment %}
+
+
+   

@@ -73,13 +73,51 @@
 .material-container .images{
     /* background-image: url(material.webp); */
     background-size: cover;
-    width: 570px;
-    height: 390px;
+    width: 48%;
+    height: 200px;
     background-position: center;
     background-repeat: no-repeat;
     display: none;
 }
-
+@media (max-width: 768px){
+    .material-container{
+        padding: 0;
+        width: 100%;
+        position: relative;
+        flex-direction: column;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: auto;
+        margin-top: 10rem;
+    }
+    .material{
+        flex-basis: 70%;
+        /* padding-bottom: 3rem; */
+        position: relative;
+        height: fit-content;
+    }
+    .material .image{
+        display: none;
+    }
+    .material-container .images{
+        flex-basis: 28%;
+        display: block;
+        position: absolute;
+        z-index: 1;
+        top: -131px;
+    }
+    .material .cont{
+        width: 100%;
+        flex-basis: 100%;
+        padding-top: 1rem;
+    }
+    .material .cont span{
+        position: absolute;
+        right: 5%;
+        bottom: 8%;
+    }
+}
 /* @media only screen and (min-width: 1900px){
     .material-container{
         padding: 0 23rem;

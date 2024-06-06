@@ -22,6 +22,8 @@
 
 <!-- sections/material-handbook.liquid -->
 <section class="material-container">
+  <div class="images" style="background-image: url({{ section.settings.image | img_url : 'master' }});">
+  </div>
   <div class="material">
     <div class="cont">
       <h1>{{ section.settings.title }}</h1>
@@ -37,8 +39,8 @@
       <!-- The image URL is set dynamically in the style attribute -->
     </div>
   </div>
-  <div class="images" style="background-image: url({{ section.settings.image | img_url : 'master' }});">
-  </div>
+  {% comment %} <div class="images" style="background-image: url({{ section.settings.image | img_url : 'master' }});">
+  </div> {% endcomment %}
 </section>
 
 {% schema %}

@@ -1,0 +1,220 @@
+{{ 'product.css'| asset_url | stylesheet_tag }}
+
+{% comment %} {% assign current_variant = product.selected_or_first_available_variant %}
+{% assign featured_image = current_variant.featured_image | default: product.featured_image %}
+<img src="{{ featured_image | img_url: 'large' }}" alt="{{ featured_image.alt | escape }}" id="ProductPhotoImg">
+{% for image in product.images %}
+  <a href="{{ image.src | img_url: 'large' }}">
+    <img src="{{ image.src | img_url: 'compact' }}" alt="{{ image.alt | escape }}">
+  </a>
+{% endfor %}
+<h1>{{ product.title }}</h1>
+<form action="/cart/add" method="post" enctype="multipart/form-data" id="AddToCartForm">
+  <select name="id" id="productSelect">
+    {% for variant in product.variants %}
+      {% if variant.available %}
+        <option value="{{ variant.id }}">
+          {{ variant.title }} - {{ variant.price | money_with_currency }}
+        </option>
+      {% else %}
+        <option disabled="disabled">
+          {{ variant.title }} - sold out
+        </option>
+      {% endif %}
+    {% endfor %}
+  </select>
+  {{ current_variant.price | money }}
+  <label for="Quantity">quantity</label>
+  <input type="number" id="Quantity" name="quantity" value="1" min="1">
+  <button type="submit" name="add" id="AddToCart">Add to cart</button>
+</form>
+<div>{{ product.description }}</div> {% endcomment %}
+
+{% style %}
+    .product-page {
+        padding-top: {{ section.settings.padding_top }}px;
+        padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+{% endstyle %}
+
+{% assign default_image = product.images[0] %} <!-- Set the first image as the default -->
+
+<div class="product-page">
+  <div class="product-images">
+    <img src="{{ default_image | img_url: 'large' }}" alt="{{ default_image.alt | escape }}" id="ProductPhotoImg">
+    <div class="product-thumbnails">
+      {% for image in product.images %}
+        <a href="#" class="thumbnail" data-image="{{ image.src | img_url: 'large' }}">
+          <img src="{{ image.src | img_url: 'compact' }}" alt="{{ image.alt | escape }}">
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+  
+  <div class="product-details">
+    <h1>{{ product.title }}</h1>
+    <div class="price-info">
+        <p class="product-price">From {{ product.price | money }} exc VAT <br>
+            {% if product.compare_at_price > product.price %}
+                <span> From {{ product.compare_at_price | money }} inc VAT</span>
+            {% endif %}
+        </p>
+      <p><a href="/pages/shipping">Shipping </a>calculated at checkout.</p>
+    </div>
+    
+    <div class="product-description closed" id="product-description">
+      {{ product.description }}
+      <span class="show-more">... show more...</span>
+    </div>
+
+    <!-- Product Variant Section -->
+    <div class="variant-selector">
+      <div class="variant-options">
+        {% for option in product.options %}
+          <div class="option-group">
+            <label>{{ option.name }}</label>
+            <div class="option-values">
+              {% for value in option.values %}
+                <label>
+                  <input type="radio" name="option-{{ option.position }}" value="{{ value }}">
+                  {{ value }}
+                </label>
+              {% endfor %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <form action="/cart/add" method="post" enctype="multipart/form-data" id="AddToCartForm">
+      <input type="hidden" name="id" value="{{ current_variant.id }}">
+      
+      <div class="quantity-selector">
+        <div class="quantity-title">QUANTITY</div>
+        <div class="quantity-content">
+          <button type="button" class="quantity-btn" id="decrease">-</button>
+          <span id="Quantity" data-value="1">1</span>
+          <button type="button" class="quantity-btn" id="increase">+</button>
+          <span class="item-price">{{ current_variant.price | money }}</span>
+        </div>
+      </div>
+      
+      <div class="total-price">
+        <p>Total: <span id="totalPrice">{{ current_variant.price | money }}</span></p>
+      </div>
+      
+      <div name="id" id="productSelect">
+          {% for variant in product.variants %}
+            {% if variant.available %}
+                <button type="submit" name="add" id="AddToCart">Add to Basket</button>
+            {% else %}
+                <button type="submit" name="add" id="AddToCart">Notify Me</button>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+      <button type="button" class="shopify-pay">
+          Buy with
+          <span class="shopify-pay-img">
+            <img src="{{ 'shopPay.png' | asset_url }}" alt="Shopify Pay">
+          </span>
+      </button>
+
+      <a href="#" class="more-payment-options">More payment options</a>
+    </form>
+    
+    <button type="button" class="add-to-wishlist">
+        <i class="fa-regular fa-heart" style="color: #ffffff;"></i> &nbsp;
+        Add to wishlist
+    </button>
+  </div>
+</div>
+
+{% javascript %}
+document.addEventListener('DOMContentLoaded', function () {
+  // Image thumbnail click handler
+  document.querySelectorAll('.thumbnail').forEach(function (thumbnail) {
+    thumbnail.addEventListener('click', function (e) {
+      e.preventDefault();
+      document.getElementById('ProductPhotoImg').src = this.dataset.image;
+    });
+  });
+
+  const quantityElement = document.getElementById('Quantity');
+  const totalPriceElement = document.getElementById('totalPrice');
+  const itemPrice = parseFloat('{{ current_variant.price | money_without_currency | remove: "," }}');
+
+  document.getElementById('increase').addEventListener('click', function () {
+    let currentQuantity = parseInt(quantityElement.getAttribute('data-value'));
+    quantityElement.setAttribute('data-value', currentQuantity + 1);
+    quantityElement.textContent = currentQuantity + 1;
+    updateTotalPrice();
+  });
+
+  document.getElementById('decrease').addEventListener('click', function () {
+    let currentQuantity = parseInt(quantityElement.getAttribute('data-value'));
+    if (currentQuantity > 1) {
+      quantityElement.setAttribute('data-value', currentQuantity - 1);
+      quantityElement.textContent = currentQuantity - 1;
+      updateTotalPrice();
+    }
+  });
+
+  function updateTotalPrice() {
+    const currentQuantity = parseInt(quantityElement.getAttribute('data-value'));
+    if (!isNaN(currentQuantity)) {
+      const totalPrice = itemPrice * currentQuantity;
+      totalPriceElement.innerText = '£' + totalPrice.toFixed(2);
+    }
+  } 
+
+  // Shipping link handler
+  document.querySelector('.price-info p a').addEventListener('click', function (e) {
+    e.preventDefault();
+    window.location.href = '/pages/shipping';
+  });
+
+  // Show more/less functionality for product description
+  const showMoreLink = document.querySelector(".product-description .show-more");
+  showMoreLink.addEventListener("click", function () {
+    const description = document.getElementById("product-description");
+    description.classList.toggle("closed");
+    showMoreLink.textContent = description.classList.contains("closed") ? "...show more" : " show less";
+  });
+});
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Product",
+  "settings": [
+    {
+        "type": "range",
+        "id": "padding_top",
+        "label": "Padding Top",
+        "min": 5,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "default": 5
+    },
+    {
+        "type": "range",
+        "id": "padding_bottom",
+        "label": "Padding Bottom",
+        "min": 5,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "default": 5
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}
+

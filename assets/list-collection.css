@@ -1,0 +1,171 @@
+.head {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: rgb(46, 46, 46);
+    max-width: 100%;
+    margin: 3rem auto;
+    margin-top: 4rem;
+    letter-spacing: 0.2rem;
+    padding: 0 4.5rem;
+}
+
+.align-left{
+    text-align: left;
+}
+
+.align-center{
+    text-align: center;
+}
+
+.align-right{
+    text-align: right;
+}
+
+.collection-list{
+    margin-top: 0;
+}
+
+.container-fluid{
+    width: 100%;
+    padding: 0 10rem;
+    margin-top: 0;
+}
+
+.collection-image-wrapper {
+    position: relative;
+    height: 21rem;
+}
+
+.collection-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.collection-list .row {
+    margin-bottom: 1.5rem;
+}
+
+.collection-title {
+    position: absolute;
+    left: 50%;
+    text-align: center;
+    z-index: 1;
+    color: white;
+    text-transform: capitalize;
+    font-size: var(--title-fontsize, 16px);
+    transform: translate(-50%, -50%);
+}
+
+.align-top {
+    top: 10%;
+}
+
+.align-middle {
+    top: 50%;
+}
+
+.align-bottom {
+    bottom: 10%;
+}
+
+.align-top-left {
+    top: 10%;
+    left: 10%;
+    transform: translate(0, -50%);
+}
+
+.align-top-right {
+    top: 10%;
+    right: 10%;
+    transform: translate(0, -50%);
+}
+
+.align-bottom-left {
+    bottom: 10%;
+    left: 10%;
+    transform: translate(0, 50%);
+}
+
+.align-bottom-right {
+    bottom: 10%;
+    right: 10%;
+    transform: translate(0, 50%);
+}
+
+
+.collection-list a {
+    text-decoration: none;
+}
+
+.paging {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5rem;
+    margin-bottom: 5rem;
+    padding: 0 10rem; /* Added padding to align arrows at the ends */
+}
+
+.paging .page-links {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.paging p, .paging a, .paging span {
+    margin: 0;
+    color: rgb(92, 92, 92);
+}
+
+.paging .current {
+    font-weight: bold;
+    border: 1px solid rgb(204, 204, 204);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    font-weight: 500;
+}
+
+.paging .left, .paging .right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgb(100, 100, 100);
+    transition: color 0.3s;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.paging .left i, .paging .right i{
+   font-size: 10px;
+}
+
+.paging .left:hover, .paging .right:hover {
+    color: rgb(50, 50, 50);
+}
+
+/* .paging .left.disabled, .paging .right.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+} */
+
+.paging .left a, .paging .right a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.paging .left span, .paging .right span {
+    color: inherit;
+    display: flex;
+    align-items: center;
+}
+
+.paging a {
+    text-decoration: none;
+}

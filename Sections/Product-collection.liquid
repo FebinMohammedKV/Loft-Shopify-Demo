@@ -1,0 +1,135 @@
+{{ 'product-collection.css' | asset_url | stylesheet_tag }}
+{{ 'sort.js'| asset_url | script_tag }}
+
+{% style %}
+    .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    
+    gap: 2rem;
+    padding: 0 5rem;
+}
+{% endstyle %}
+
+
+<section class="sorting">
+    <div class="filter">
+        {% comment %} <i class="fa-solid fa-filter"></i> {% endcomment %}
+        <span class="material-symbols-outlined">tune</span>
+        <span>Filter</span>
+    </div>
+    <div>
+        <span>{{ collection.products_count }} &nbsp; Products</span>
+    </div>
+    <div class="sort">
+        <div class="dropdown">
+          <span onclick="myFunction()" class="dropbtn">Sort By</span>
+          <i id="sortIcon" class="fa-solid fa-chevron-down dropbtn" onclick="myFunction()"></i>
+          <div id="myDropdown" class="dropdown-content">
+            <a href="?sort=price-asc">Best selling</a>
+            <a href="?sort=price-desc">Title ascending</a>
+            <a href="?sort=title-asc">Title descending</a>
+            <a href="?sort=title-desc">Price ascending</a>
+            <a href="?sort=title-desc">Price descending</a>
+            <a href="?sort=title-desc">Created ascending</a>
+            <a href="?sort=title-desc">Created descending</a>
+            <a href="?sort=title-desc">Relevance</a>
+          </div>
+        </div>
+    </div>
+</section> 
+
+
+{%- paginate collection.products by section.settings.products_per_page  -%}
+    <section class="grid">
+        {% for product in collection.products %}
+            <div class="grid-container">
+                <a href="{{ product.url }}" style="text-decoration: none;">
+                    <div class="image-container">
+                        <div class="image">
+                            {% if product.images.size > 1 %}
+                                <img src="{{ product.images.first | img_url: 'large' }}" alt="{{ product.title }}" class="f-image">
+                                <img src="{{ product.images[1] | img_url: 'large' }}" alt="{{ product.title }}" class="f2-image">
+                            {% else %}
+                                <img src="{{ product.featured_image.src | img_url: 'large' }}" alt="{{ product.featured_image.alt | escape }}" class="f-image">
+                                <img src="{{ product.featured_image.src | img_url: 'large' }}" alt="{{ product.featured_image.alt | escape }}" class="f2-image">
+                            {% endif %}
+                        </div>
+                        <div class="top">
+                            {% if product.available %}
+                                <div class="sale">SALE</div>
+                            {% else %}
+                                <div class="sale">SOLD OUT</div>
+                            {% endif %}
+                            <div>
+                                <i class="fa-regular fa-heart" style="color: #030303;"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="details">
+                        <div class="head">{{ product.title }}</div>
+                        <p>From {{ product.price | money }} exc VAT &nbsp;
+                            {% if product.compare_at_price > product.price %}
+                                <span>{{ product.compare_at_price | money }}</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </a>
+            </div>
+        {% else %}
+        <p>No matches</p>
+        {% endfor %}
+    </section>
+
+    <section class="paging">
+        <div class="left {% unless paginate.previous %}disabled{% endunless %}">
+            {% if paginate.previous %}
+                <a href="{{ paginate.previous.url }}"><i class="fa-solid fa-arrow-left-long"></i></a>
+            {% else %}
+                <i class="fa-solid fa-arrow-left-long"></i>
+            {% endif %}
+        </div>
+        <div class="page-links">
+            {% for part in paginate.parts %}
+                {% if part.is_link %}
+                    <a href="{{ part.url }}">{{ part.title }}</a>
+                {% else %}
+                    <p class="current">{{ part.title }}</p>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="right {% unless paginate.next %}disabled{% endunless %}">
+            {% if paginate.next %}
+                <a href="{{ paginate.next.url }}"><i class="fa-solid fa-arrow-right-long"></i></a>
+            {% else %}
+                <i class="fa-solid fa-arrow-right-long"></i>
+            {% endif %}
+        </div>
+    </section>
+
+    
+    
+{% endpaginate %}
+    
+
+
+
+
+{% schema %}
+{
+    "name": "Product collection",
+    "settings": [
+        {
+            "type": "number",
+            "id": "products_per_page",
+            "label": "products per page" 
+        }
+    ],
+    "presets": [
+        {
+            "name": "Product collection",
+            "category": "Product"
+        }
+    ]
+}
+{% endschema %}

@@ -1,0 +1,238 @@
+.product-page {
+    display: flex;
+    gap: 5rem;
+    padding: 0 10rem;
+  }
+  
+  .product-images {
+    width: 50%;
+  }
+  
+  .product-images #ProductPhotoImg {
+    width: 100%;
+  }
+  
+  .product-thumbnails {
+    display: flex;
+    gap: 0.7rem;
+    margin-top: 1rem;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  
+  .product-thumbnails .thumbnail {
+    cursor: pointer;
+  }
+  
+  .product-thumbnails img {
+    width: 6rem;
+    height: 6rem;
+    object-fit: cover;
+  }
+  
+  .product-details {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .product-details h1 {
+    font-size: 1.6rem;
+    font-weight: 450;
+    letter-spacing: 0.15em;
+    margin: 0;
+  }
+  
+  .price-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .price-info .product-price {
+    font-size: 1.2rem;
+    font-weight: 500;
+  }
+  
+  .price-info p {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+  
+  .price-info p a {
+    color: rgb(87, 87, 87);
+    text-underline-offset: 0.3em;
+    text-decoration-color: black;
+    text-decoration-thickness: 1px;
+  }
+  
+  .variant-selector, .quantity-selector, .total-price {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+  
+  .quantity-selector {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+  
+  .quantity-selector .quantity-btn {
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 50%;
+    cursor: pointer;
+    width: 1rem;
+    height: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .quantity-selector span#Quantity {
+    border: none;
+    text-align: center;
+    width: 2rem;
+    display: inline-block;
+    text-align: center;
+  }
+
+  .quantity-title{
+    font-size: 0.9rem;
+    font-weight: 450;
+  }
+
+  .quantity-content{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .quantity-selector input {
+    border: none;
+    text-align: center;
+  }
+  
+  .total-price p {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 0;
+  }
+  
+  .variant-options {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .option-group {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .option-group label {
+    font-weight: bold;
+  }
+  
+  .option-values {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  option-values input[type="radio"] {
+    display: none;
+  }
+
+  #AddToCart, .shopify-pay {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    width: 100%;
+  }
+
+  #AddToCart{
+    padding: 0.8rem 1rem;
+    background-color: white;
+    border: 2px solid black;
+  }
+  .shopify-pay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    width: 100%;
+    border: none;
+    background-color: rgb(90,49,244);
+    color: white;
+  }
+  .shopify-pay-img img {
+    width: 8rem;
+    height: 2.5rem; 
+  }
+  
+  .more-payment-options{
+    font-size: 0.9rem;
+    font-weight: 450;
+    color: black;
+    text-decoration-thickness: 1px solid;
+  }
+
+  .add-to-wishlist{
+    margin-top: 1rem;
+    cursor: pointer;
+    background-color: black;
+    color: white;
+    border: none;
+    width: 35%;
+    padding: 10px 5px;
+  }
+
+  .product-description {
+    position: relative;
+    overflow: hidden;
+    max-height: 3em;
+    line-height: 1.5em; 
+    font-size: 0.9rem;
+    font-weight: 450;
+    margin-top: 2rem;
+  }
+  
+  .product-description.closed {
+    max-height: 3em;
+  }
+  
+  .product-description:not(.closed) {
+    max-height: none;
+  }
+  
+  .product-description .show-more {
+    color: rgb(106, 106, 107);
+    cursor: pointer;
+    display: inline;
+    white-space: nowrap;
+  }
+  
+  .product-description.closed .show-more {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: white;
+  }
+  
+
+
+
+  
+
+
+

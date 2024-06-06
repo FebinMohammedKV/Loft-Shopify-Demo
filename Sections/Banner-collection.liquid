@@ -12,8 +12,53 @@
     }
 {% endstyle %}
 
+<!-- Add this inside your <head> tag -->
+  
+  
+  <div class="collections-slider">
+    <div class="swiper-wrapper">
+      {% for block in section.blocks %}
+        <div class="swiper-slide content {{ block.settings.css_class }}">
+          <img src="{{ block.settings.image | img_url: '100x100' }}" alt="{{ block.settings.image_alt }}" width="7%">
+          <a href="{{ block.settings.link_url }}" class="pro2" style="padding-top: {{ block.settings.text_padding }};">
+            {{ block.settings.text_content }} <span style="color: {{ block.settings.text_color }};">{{ block.settings.text_content_bold }}</span> {{ block.settings.text_content2 }}
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+    <!-- Add Pagination -->
+    <div class="swiper-pagination"></div>
+  </div>
+  
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    new Swiper('.collections-slider', {
+      slidesPerView: 3,
+      spaceBetween: 30,
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+      },
+      breakpoints: {
+        0: {
+          slidesPerView: 1,
+          spaceBetween: 10,
+        },
+        576: {
+          slidesPerView: 2,
+          spaceBetween: 20,
+        },
+        992: {
+          slidesPerView: 3,
+          spaceBetween: 30,
+        },
+      },
+    });
+  });
+  </script>
+  
 
-<div class="collections-slider">
+{% comment %} <div class="collections-slider">
   {% for block in section.blocks %}
     <div class="content {{ block.settings.css_class }}">
       <img src="{{ block.settings.image | img_url: '100x100' }}" alt="{{ block.settings.image_alt }}" width="20%">
@@ -22,9 +67,9 @@
       </a>
     </div>
   {% endfor %}
-</div>
+</div> {% endcomment %}
 
-<script>
+{% comment %} <script>
 document.addEventListener('DOMContentLoaded', function() {
   if (window.innerWidth <= 700) {
     const slider = document.querySelector('.collections-slider');
@@ -42,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
-</script>
+</script> {% endcomment %}
 
 {% schema %}
 {
@@ -158,4 +203,4 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 {% endschema %}
-<use xlink:href="#icon-search"></use>
+{% comment %} <use xlink:href="#icon-search"></use> {% endcomment %}

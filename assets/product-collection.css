@@ -1,0 +1,307 @@
+.sorting {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 3rem;
+    border-bottom: 1px solid rgb(229, 229, 229);
+    height: 3rem;
+    margin-bottom: 2.7rem;
+    font-weight: 500;
+} 
+.sorting .filter{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+    
+}
+/* .sorting div {
+    width: 6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.7rem;
+    font-size: 0.9rem;
+}*/
+/* .sorting div img {
+    width: 25%;
+    height: 32%;
+}  */
+.sort{
+  position: relative;
+  cursor: pointer;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  padding: 0.5rem;
+  padding-right: 2rem;
+  overflow: auto;
+  border: 1px solid rgb(229, 229, 229);
+  /* border-top: none; */
+  z-index: 1;
+  transform: translate(-70%, 6%);
+  box-sizing: border-box;
+  width: auto;
+  min-width: fit-content;
+  max-width: 100%; /* Optional: ensures it doesn't exceed the parent container */
+  white-space: nowrap; /* Optional: keeps the content in one line */
+}
+
+.dropdown-content a {
+  color: rgb(119, 118, 118);
+  padding: 12px 16px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  display: block;
+}
+.dropdown-content a:hover{
+    text-decoration: underline;
+    text-underline-offset: 0.3em;
+    text-decoration-color: black;
+    text-decoration-thickness: 1px;
+}
+
+/* .dropdown a:hover {background-color: #ddd;} */
+
+.show {display: block;}
+
+.sort-dropdown {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.sort-dropdown a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.sort-dropdown a:hover {
+    background-color: #f1f1f1;
+}
+
+.sort {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.sort.open #sortDropdown {
+    display: block;
+} 
+
+.sort.open #sortIcon {
+    transform: rotate(180deg);
+}
+
+
+
+
+.grid .grid-container {
+    display: flex;
+    flex-direction: column;
+    /* justify-content: space-between; */
+    position: relative;
+    gap: 1rem;
+    cursor: pointer;
+}
+
+.grid .grid-container .top {
+    position: absolute;
+    top: 0;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.grid .grid-container .top .sale {
+    box-sizing: border-box;
+    width: auto;
+    min-width: fit-content;
+    max-width: 100%; /* Optional: ensures it doesn't exceed the parent container */
+    white-space: nowrap;
+    height: 1.3rem;
+    background-color: red;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0.5rem;
+    padding: 0 0.2rem;
+} 
+
+.grid .grid-container .top i {
+    margin-top: 1rem;
+}
+
+.grid .grid-container .image {
+    position: relative;
+    width: 100%;
+    padding-top: 100%; /* This creates a square container */
+    overflow: hidden;
+}
+
+.grid .grid-container img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.5s;
+}
+
+.grid-container .image-container .f-image {
+    opacity: 1;
+}
+
+.grid-container .image-container .f2-image {
+    opacity: 0;
+}
+
+.grid-container:hover .f-image {
+    opacity: 0;
+}
+
+.grid-container:hover .f2-image {
+    opacity: 1;
+}
+
+.grid .grid-container .details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.grid .grid-container .details .head {
+    font-size: 1rem;
+    font-weight: bolder;
+    margin: 0;
+    text-align: left;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.grid .grid-container .details p {
+    font-size: 0.9rem;
+    color: red;
+    font-weight: 500;
+}
+
+.grid .grid-container .details p span {
+    text-decoration: line-through;
+    color: rgb(144, 143, 143);
+    font-size: 0.8rem;
+}
+
+/* .paging {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 5rem;
+    margin-bottom: 5rem;
+}
+.paging p {
+    margin-top: 1rem;
+}
+.paging .left {
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgb(147, 147, 147);
+    border-radius: 50%;
+    color: rgb(202, 200, 200);
+}
+.paging .right {
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgb(50, 50, 50);
+    border-radius: 50%;
+}
+.paging .right:hover {
+    background-color: rgb(50, 50, 50);
+} */
+.paging {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 5rem;
+    margin-bottom: 5rem;
+}
+
+.paging .page-links {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.paging p, .paging a {
+    margin-top: 0;
+    color: rgb(50, 50, 50);
+}
+
+.paging .current {
+    font-weight: bold;
+}
+
+.paging .left, .paging .right {
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgb(110, 110, 110);
+    border-radius: 50%;
+    color: rgb(100, 100, 100);
+    transition: background-color 0.3s;
+}
+
+.paging .right {
+    border-color: rgb(50, 50, 50);
+}
+
+.paging .right:hover {
+    background-color: rgb(50, 50, 50);
+}
+
+.paging .left.disabled, .paging .right.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.paging .left.disabled i, .paging .right.disabled i {
+    color: rgb(202, 200, 200);
+}
+
+.paging .left a, .paging .right a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.paging a {
+    text-decoration: none;
+}
+
+
+ 

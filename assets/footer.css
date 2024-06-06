@@ -1,73 +1,116 @@
+.container .row .head{
+  margin: 0;
+  padding: 0;
+  font-size: 1.4rem;
+  font-weight: 500;
+  margin-bottom: 20px;
+  letter-spacing: 0;
+}
 
+.container .row ul li{
+  list-style: none;
+}
+
+.container .row ul li a{
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: rgb(121, 121, 121);
+}
+
+.container .row .link-image{
+  width: 80%;
+}
+
+
+
+@media (max-width: 1200px) {
+  /* .containers {
+    padding: 0 5rem;
+  } */
+}
+
+@media (max-width: 992px) {
+  /* .containers {
+    padding: 0 2rem;
+  } */
+}
+
+/* For screens 768px and below */
+@media (max-width: 768px) {
+  .containers {
+    padding: 0 1rem;
+    /* Define the grid layout for screens 768px and below */
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .containers .item .head {
+    font-size: 1.2rem;
+  }
+
+  .containers .item li a {
+    font-size: 0.8rem;
+  }
+}
+
+/* For screens 576px and below */
+@media (max-width: 576px) {
+  .containers {
+    padding: 0 0.5rem;
+  }
+
+  .containers .item .head {
+    font-size: 1rem;
+  }
+
+  .containers .item li a {
+    font-size: 0.75rem;
+  }
+}
+
+
+
+
+/* 
 .containers {
+  display: grid;
   width: 100%;
   height: auto;
-  display: flex;
-  justify-content: space-between;
-  /* gap: 50px; */
-  gap: 1rem;
   margin: 0 auto;
   margin-top: 100px;
   padding: 0 9rem;
+  gap: 1rem;
+  grid-template-columns: repeat(4, 1fr);
 }
+
 .containers .item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
   text-align: center;
 }
+
+ul{
+  padding: 0;
+}
+
 .containers .item .head {
   font-size: 1.4rem;
   font-weight: 500;
+  margin: 0;
 }
+
 .containers .item li {
   list-style: none;
 }
+
 .containers .item li a {
   text-decoration: none;
   font-size: 0.9rem;
   font-weight: 500;
   color: rgb(121, 121, 121);
 }
+
 .containers .item li a .link-image {
   width: 70%;
-}
-
-/* @media only screen and (min-width: 1900px){
-  .containers {
-    padding: 0 23rem;
-  }
-  .containers .item li a .link-image{
-    width: 90%;
-  }
-}
-@media only screen and (min-width: 1200px){
-  .containers {
-    padding: 0 3rem;
-  }
-}
-@media only screen and (min-width: 960px){
-  .containers {
-    padding: 0 2rem;
-  }
-}
-@media only screen and (min-width: 770px){
-  .containers{
-    padding: 0 3rem;
-    width: 100%;
-    gap: 2rem;
-  }
-  .containers .item{
-    width: 100%;
-  }
-  .containers .item .head{
-    width: 100%;
-  }
-  ul{
-    padding: 0;
-  }
-  .containers .item li a .link-image{
-    width: 90%;
-  }
 } */

@@ -1,6 +1,4 @@
-
 footer {
-  /* width: 1190px; */
   width: 100%;
   height: 60px;
   display: flex;
@@ -20,24 +18,57 @@ footer .rights {
   color: rgb(72, 72, 72);
   letter-spacing: 1px;
 }
+
 footer .pay {
   flex-basis: 87%;
   display: flex;
   align-items: center;
   justify-content: flex-end;
 }
+
 footer .pay img {
   width: 480px;
 }
+
 footer .pay2 {
-  flex-basis: 50%;
+  flex-basis: 87%;
   display: none;
   align-items: center;
   justify-content: flex-end;
 }
+
 footer .pay2 img {
   width: 480px;
 }
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+  footer {
+    flex-direction: column;
+    padding: 0 1rem;
+    height: auto;
+  }
+
+  footer .rights {
+    flex-basis: auto;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  footer .pay {
+    display: none;
+  }
+
+  footer .pay2 {
+    display: flex;
+  }
+
+  footer .pay img, footer .pay2 img {
+    width: 100%;
+    max-width: 300px; /* Adjust this value as needed */
+  }
+}
+
 
 /* Media query to show different images based on screen size */
 /* @media screen and (max-width: 767px) {
