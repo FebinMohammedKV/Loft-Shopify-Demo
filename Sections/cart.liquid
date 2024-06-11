@@ -1,0 +1,361 @@
+{{ 'cart.css'| asset_url | stylesheet_tag }}
+{{ 'cart.js'| asset_url | script_tag }}
+
+{% comment %} {% if cart.item_count > 0 %}
+    <h1>cart</h1>
+    <form action="/cart" method="post" novalidate>
+      <table>
+        <thead>
+          <th colspan="2">Prod</th>
+          <th>Price</th>
+          <th>Qty</th>
+          <th>total</th>
+        </thead>
+        <tbody>
+          {% for item in cart.items %}
+            <tr>
+              <td>
+                <a href="{{ item.url | within: collections.all }}">
+                  <img src="{{ item | img_url: 'medium' }}" alt="{{ item.title | escape }}">
+                </a>
+              </td>
+              <td>
+                <a href="{{ item.url }}">{{ item.product.title }}</a>
+                {{ item.variant.title }}
+                <a href="/cart/change?line={{ forloop.index }}&amp;quantity=0">remove</a>
+              </td>
+              <td>{{ item.price | money }}</td>
+              <td>
+                <input type="number" name="updates[]" id="updates_{{ item.key }}" value="{{ item.quantity }}" min="0">
+              </td>
+              <td>
+                {% if item.original_line_price != item.line_price %}{{ item.original_line_price | money }}{% endif %}
+                {{ item.line_price | money }}
+                {% for discount in item.discounts %}{{ discount.title }}{% endfor %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <div>
+        <p>sub total : {{ cart.total_price | money }}</p>
+        <button type="submit" name="update">Update</button>
+        <button type="submit" name="checkout">Checkout</button>
+      </div>
+    </form>
+  {% else %}
+    <h2>cart</h2>
+    Cart is empty
+{% endif %}
+   {% endcomment %}
+
+{% if cart.item_count > 0 %}
+  <h1 style="font-size: {{ section.settings.cart_title_font_size }}px; font-weight: {{ section.settings.cart_title_font_weight }}; margin-top: {{ section.settings.cart_title_margin_top }}px; margin-bottom: {{ section.settings.cart_title_margin_bottom }}px;">
+    {{ section.settings.cart_page_title }}
+  </h1>
+    <form action="/cart" method="post" novalidate>
+      <div class="cart-container">
+        <!-- Left Column: Product Information -->
+        <div class="cart-products">
+          {% for item in cart.items %}
+            <div class="cart-product">
+              <div class="product-image">
+                <a href="{{ item.url | within: collections.all }}">
+                  <img src="{{ item | img_url: 'medium' }}" alt="{{ item.title | escape }}">
+                </a>
+              </div>
+              <div class="product-details">
+                <a href="{{ item.url }}">{{ item.product.title }}</a>
+                <div class="product-varient">{{ item.variant.title }}</div>
+                <div class="quantity-selector">
+                  <div class="product-price">{{ item.price | money }}</div>
+                  <div class="quantity-content">
+                    <button type="button" class="quantity-btn decrease" data-key="{{ item.key }}">-</button>
+                    <span id="Quantity_{{ item.key }}" data-value="{{ item.quantity }}">{{ item.quantity }}</span>
+                    <button type="button" class="quantity-btn increase" data-key="{{ item.key }}">+</button>
+                    <input type="hidden" name="updates[]" id="updates_{{ item.key }}" value="{{ item.quantity }}">
+                  </div>
+                  <a href="" class="edit">Edit</a>
+                </div>
+              </div>
+              <div class="product-total">
+                <div class="total">
+                  <span>Total</span>
+                  <span class="item-total">{{ item.line_price | money }}</span>
+                </div>
+                <div class="remove">
+                  <a href="/cart/change?line={{ forloop.index }}&amp;quantity=0">Remove</a>
+                </div>
+              </div>
+            </div>
+            <hr>
+          {% endfor %}
+          <div class="cart-instruction">
+            <textarea name="instruction" id="instruction" class="custom-textarea" placeholder="Special instructions (Where keys are located etc...)"></textarea>
+          </div>
+        </div> 
+
+        <div class="cart-aside">
+          <div class="cart-subtotal">
+            <p>Total </p>
+            <p>{{ cart.total_price | money }} <span>(All prices are ex VAT)</span></p>
+          </div>
+          <div class="shipping">
+            <a href="/pages/shipping">Shipping</a> calculated at checkout.
+          </div>
+          <div class="mandatory_checkout-container">
+            <input id="mandatory_checkout" class="check-input" type="checkbox" value="Yes" required="">
+            <span class="mandatory_checkout-text">Added all the installation &amp; removal services</span>
+          </div>
+          <div class="cart-actions">
+            <div class="upd-chek-btn">
+              <button type="submit" name="update" class="update-button">Update</button>
+              <button type="submit" name="checkout" class="checkout-button">Checkout</button>
+            </div>
+            <!-- Add your payment options buttons here -->
+            <button class="shoppay-button" style="background-color: #5A31F4;">
+              <img src="{{ 'shopPay.png' | asset_url }}" alt="Shopify Pay">
+            </button>
+            <button class="paypal-button" style="background-color: #FFC439;">
+              <img src="{{ 'paypal-logo.svg' | asset_url }}" alt="Paypal Logo">
+              <img src="{{ 'paypal.svg' | asset_url }}" alt="Paypal Logo">
+            </button>
+            <button class="gpay-button" style="background-color: #000000;">
+              <img src="{{ 'g-pay.png' | asset_url }}" alt="Google Pay">
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <div class="install-removal" style="margin-top: {{ section.settings.ir_margin_top }}px; margin-bottom: {{ section.settings.ir_margin-bottom }}px">
+      <h2 class="installation-removal-heading" style="font-size: {{ section.settings.ir_heading_font_size }}px; font-weight: {{ section.settings.ir_heading_font_weight }};">
+        {{ section.settings.install_removal_title }}
+      </h2>
+      <div class="install-removal-container">
+        <div class="installation-removal-slider">
+          {% for block in section.blocks %}
+            <div class="install-removal-slide">
+              <div class="image-container">
+                <a href="{{ block.settings.link_url }}" class="product-link">
+                    <img src="{{ block.settings.install_removal_image | img_url: 'medium' }}" alt="{{ block.settings.slide_title }}">
+                    <h3 class="slider-product-title">{{ block.settings.slide_title }}</h3>
+                    <p class="slider-product-price">Rs. {{ block.settings.slide_price }} GBP</p>
+                </a>
+              </div>
+                <button type="submit" class="add-to-cart-button link-container">
+                  <a href="{{ block.settings.link_url }}">{{ block.settings.button_text }}</a>
+                </button>
+            </div>
+          {% endfor %}
+        </div>
+        <button class="slick-prev slick-arrow">
+          <i class="fa-solid fa-chevron-left fa-2xs" style="color: #5c5c5c;"></i>
+        </button>
+        <button class="slick-next slick-arrow">
+          <i class="fa-solid fa-chevron-right fa-2xs" style="color: #5c5c5c;"></i>
+        </button>
+      </div>
+    </div>
+
+  {% else %}
+    {% comment %} <h2>Cart</h2> {% endcomment %}
+    <p class="cart-empty">{{ section.settings.cart_empty_text }} <a href="{{ section.settings.continue_shopping_url }}">Continue shopping.</a></p>
+{% endif %}
+  
+
+
+{% schema %}
+  { 
+    "name": "Cart Page",
+    "settings": [
+        {
+        "type": "text",
+        "id": "cart_page_title",
+        "label": "Cart Page Title",
+        "default": "Your Basket"
+      },
+      {
+        "type": "range",
+        "id": "cart_title_font_size",
+        "label": "Cart Title Font Size",
+        "min": 10,
+        "max": 50,
+        "step": 1,
+        "unit": "px",
+        "default": 24
+      },
+      {
+        "type": "select",
+        "id": "cart_title_font_weight",
+        "label": "Cart Title Font Weight",
+        "options": [
+          {
+            "value": "400",
+            "label": "Normal"
+          },
+          {
+            "value": "500",
+            "label": "Bold"
+          },
+          {
+            "value": "700",
+            "label": "Bolder"
+          },
+          {
+            "value": "300",
+            "label": "Lighter"
+          }
+        ],
+        "default": "500"
+      },
+      {
+        "type": "range",
+        "id": "cart_title_margin_top",
+        "label": "Cart Title Margin Top",
+        "min": 10,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "default": 24
+      },
+      {
+        "type": "range",
+        "id": "cart_title_margin_bottom",
+        "label": "Cart Title Margin Bottom",
+        "min": 10,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "default": 24
+      },
+      {
+        "type": "number",
+        "id": "quantity_min",
+        "label": "Minimum Quantity",
+        "default": 1
+      },
+      {
+        "type": "number",
+        "id": "quantity_max",
+        "label": "Maximum Quantity",
+        "default": 99
+      },
+      {
+        "type": "text",
+        "id": "cart_empty_text",
+        "label": "Cart Empty Text",
+        "default": "Your basket is currently empty."
+      },
+      {
+        "type": "url",
+        "id": "continue_shopping_url",
+        "label": "Continue Shopping URL"
+      },
+      {
+        "type": "header",
+        "content": "Installation or Removal Slider (Optional)"
+      },
+      {
+        "type": "text",
+        "id": "install_removal_title",
+        "label": "Slider Title",
+        "default": "Need installations or removals?"
+      },
+      {
+        "type": "range",
+        "id": "ir_heading_font_size",
+        "label": "Heading Font Size",
+        "min": 10,
+        "max": 50,
+        "step": 1,
+        "unit": "px",
+        "default": 24
+      },
+      {
+        "type": "select",
+        "id": "ir_heading_font_weight",
+        "label": "Heading Font Weight",
+        "options": [
+            {
+              "value": "normal",
+              "label": "Normal"
+            },
+            {
+              "value": "bold",
+              "label": "Bold"
+            },
+            {
+              "value": "bolder",
+              "label": "Bolder"
+            },
+            {
+              "value": "lighter",
+              "label": "Lighter"
+            }
+          ],
+        "default": "bold"
+      },
+      {
+        "type": "range",
+        "id": "ir_margin_top",
+        "label": "Heading Margin Top",
+        "min": 10,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "default": 24
+      },
+      {
+        "type": "range",
+        "id": "ir_margin_bottom",
+        "label": "Heading Margin Bottom",
+        "min": 10,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "default": 24
+      }
+    ],
+    "blocks": [
+      {
+        "name": "Installation or Removal",
+        "type": "slider",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "install_removal_image",
+            "label": "Image"
+          },
+          {
+            "type": "text",
+            "id": "slide_title",
+            "label": "Slide Title"
+          },
+          {
+            "type": "text",
+            "id": "slide_price",
+            "label": "Slide Price"
+          },
+          {
+            "type": "url",
+            "id": "link_url",
+            "label": "Button URL"
+          },
+          {
+            "type": "text",
+            "id": "button_text",
+            "label": "Button Text"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Cart",
+        "category": "Cart"
+      }
+    ]
+  }
+  {% endschema %}
+  
