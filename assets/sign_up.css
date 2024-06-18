@@ -1,25 +1,20 @@
 .sign {
     width: 100%;
     height: auto;
-    /* height: 150px; */
     padding: 1rem;
     align-content: center;
-    /* padding-bottom: 0; */
     margin-bottom: 5rem;
     margin: 90px auto;
 }
 .sign .container {
     width: 800px;
-    /* width: 100%; */
     margin: 0 auto;
     display: flex;
-    /* height: 100px; */
     height: auto;
     padding: 1rem;
     gap: 22px;
 }
 .sign .container .desc {
-    /* width: 380px; */
     width: 50%;
     display: flex;
     flex-direction: column;
@@ -27,7 +22,6 @@
     font-weight: 500;
 }
 .sign .container .desc .cont {
-    /* color: rgb(89, 89, 89); */
     font-size: 0.9rem;
 }
 .sign .container .embn {
@@ -38,21 +32,18 @@
     border: 2px;
 }
 .sign .container .embn input {
-    /* width: 12rem; */
     width: 50%;
     height: 52px;
     padding-left: 15px;
     font-size: 0.9rem;
     border: none;
+    display: block; 
 }
 .sign .container .embn span {
-    /* width: 12rem; */
     width: 50%;
     height: 52px;
     font-size: medium;
     align-content: center;
-    /* background-color: rgb(48, 48, 48); */
-    /* color: white; */
     border: none;
     text-align: center;
 }
@@ -77,5 +68,9 @@
     }
     .sign .container .embn{
         width: 100%;
+    }
+    .sign .container .embn input {
+        width: 50%;
+        display: block; 
     }
 }

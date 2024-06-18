@@ -1,85 +1,45 @@
-/* 
-.collections-slider{
-    display: flex;
-    justify-content: center;
-    gap: 10rem;
-    height: 88px;
-    align-items: center;
-}
-.collections-slider .content {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    width: 15rem;
-}
-.collections-slider .content a{
-    text-decoration: none;
-   
-    line-height: 17px;
-    font-weight: 450;
-}
-.collections-slider .content a span{
-    font-weight: bold;
-}
-.top .protect a{
-   padding-top: 20px;
-} */
-
-/* @media (max-width: 700px) {
-  .collections-slider {
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .collections-slider .content {
-    flex-direction: column;
-  }
-} */
-/* @media only screen and (min-width: 770px){
-  .collections-slider{
-    gap: 4rem;
-  }
-  .collections-slider .content a{
-    font-size: 0.9rem;
-  }
-} */
-
 .collections-slider {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 88px;
-  width: 100%;
+  max-width: 100%;
+  padding: 10px 0;
+  overflow: hidden;
 }
 
 .collections-slider .swiper-wrapper {
   display: flex;
+  align-items: center;
 }
 
 .collections-slider .content {
   display: flex;
   align-items: center;
-  gap: 20px;
-  width: 15rem;
+  text-align: start; /* Center text alignment for wrapping */
+  gap: 10px;
+  padding: 10px; /* Optional padding for better look */
+}
+
+.collections-slider .content img {
+  width: 35px; /* Adjust the width of the images */
 }
 
 .collections-slider .content a {
   text-decoration: none;
-  line-height: 17px;
+  line-height: 1.5; /* Adjust line-height for better readability */
   font-weight: 450;
+  word-wrap: break-word; /* Ensure text wraps */
+  white-space: normal; /* Allow text to wrap */
+  color: black;
 }
 
 .collections-slider .content a span {
   font-weight: bold;
 }
 
-.top .protect a {
-  padding-top: 20px;
-}
-
 /* Swiper-specific styling */
 .swiper-container {
-  width: 100%;
+  width: 100%; /* Ensure full width */
   padding-top: 20px;
   padding-bottom: 20px;
 }
@@ -88,6 +48,23 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  width: auto; /* Allow the slide width to adjust automatically */
 }
 
+@media (max-width: 576px) {
+  .collections-slider .content {
+    padding: 5px;
+  }
+}
 
+@media (min-width: 576px) and (max-width: 992px) {
+  .collections-slider .content {
+    padding: 10px;
+  }
+}
+
+@media (min-width: 992px) {
+  .collections-slider .content {
+    padding: 15px;
+  }
+}

@@ -15,18 +15,6 @@
     gap: 1em;
     
 }
-/* .sorting div {
-    width: 6rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.7rem;
-    font-size: 0.9rem;
-}*/
-/* .sorting div img {
-    width: 25%;
-    height: 32%;
-}  */
 .sort{
   position: relative;
   cursor: pointer;
@@ -40,7 +28,6 @@
   padding-right: 2rem;
   overflow: auto;
   border: 1px solid rgb(229, 229, 229);
-  /* border-top: none; */
   z-index: 1;
   transform: translate(-70%, 6%);
   box-sizing: border-box;
@@ -206,40 +193,6 @@
     font-size: 0.8rem;
 }
 
-/* .paging {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1.5rem;
-    margin-top: 5rem;
-    margin-bottom: 5rem;
-}
-.paging p {
-    margin-top: 1rem;
-}
-.paging .left {
-    width: 2.5rem;
-    height: 2.5rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid rgb(147, 147, 147);
-    border-radius: 50%;
-    color: rgb(202, 200, 200);
-}
-.paging .right {
-    width: 2.5rem;
-    height: 2.5rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid rgb(50, 50, 50);
-    border-radius: 50%;
-}
-.paging .right:hover {
-    background-color: rgb(50, 50, 50);
-} */
 .paging {
     width: 100%;
     display: flex;

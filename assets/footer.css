@@ -1,6 +1,6 @@
 .container .row .head{
   margin: 0;
-  padding: 0;
+  padding: 0 2rem;
   font-size: 1.4rem;
   font-weight: 500;
   margin-bottom: 20px;
@@ -22,24 +22,30 @@
   width: 80%;
 }
 
+ul{
+  padding-left: 0;
+}
 
 
 @media (max-width: 1200px) {
-  /* .containers {
-    padding: 0 5rem;
-  } */
+  .containers {
+    padding: 0 2rem;
+  }
 }
 
 @media (max-width: 992px) {
-  /* .containers {
+  .containers {
     padding: 0 2rem;
-  } */
+  }
+  .container .row .link-image{
+    width: 60%;
+  }
 }
 
 /* For screens 768px and below */
 @media (max-width: 768px) {
   .containers {
-    padding: 0 1rem;
+    padding: 0 1.5rem;
     /* Define the grid layout for screens 768px and below */
     grid-template-columns: repeat(2, 1fr);
   }
@@ -50,6 +56,14 @@
 
   .containers .item li a {
     font-size: 0.8rem;
+  }
+
+  ul{
+    padding-left: 0;
+  }
+
+  .container .row .link-image{
+    width: 45%;
   }
 }
 
@@ -65,6 +79,14 @@
 
   .containers .item li a {
     font-size: 0.75rem;
+  }
+
+  ul{
+    padding-left: 0;
+  }
+
+  .container .row .link-image{
+    width: 40%;
   }
 }
 

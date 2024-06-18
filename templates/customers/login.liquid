@@ -1,28 +1,223 @@
 <!-- /templates/customers/login.liquid -->
+<div class="login">
+    <h2 class="heading">Log In</h2>
 
-<h2>Login</h2>
-{% form 'customer_login' %}
+    <form action="/account/login" method="post" class="login-form">
+        {% form 'customer_login' %}
+        
+        {{ form.errors | default_errors }}
 
-{{ form.errors | default_errors }}
+        <div class="form-group">
+            <label for="customer_email">Email</label>
+            <input type="email" name="customer[email]" placeholder="Email" class="input-field" />
+        </div>
 
-<label for="customer_email">Email Address</label>
-<input type="email" name="customer[email]" />
+        <div class="form-group">
+            <label for="customer_password">Password</label>
+            <input type="password" name="customer[password]" placeholder="Password" class="input-field" />
+        </div>
 
-<label for="customer_password">Password</label>
-<input type="password" name="customer[password]" />
+        <div class="form-actions">
+            <input type="submit" value="Log In" class="bttn btn-login" />
+            <a href="#" onclick="showForgotPassword()" class="forgot-password">Forgot your password?</a>
+        </div>
 
-<input type="submit" value="Sign In" />
+        {% endform %}
+    </form>
 
-{% endform %}
+    <div class="separator"></div>
 
-<h2>Forgot Password</h2>
-{% form 'recover_customer_password' %}
+    {% comment %} <form action="" method="post" class="register-form"> {% endcomment %}
+        <a href="/account/register"><input type="submit" value="Sign Up for an Account" class="bttn btn-signup" /></a>
+    {% comment %} </form> {% endcomment %}
+</div>
 
-{{ form.errors | default_errors }}
+<div class="reset-password">
+    <h2 class="heading">Reset Your Password</h2>
+    <p class="instruction">We will send you an email with further instructions on resetting your account password.</p>
 
-<label for="customer_email">Email Address</label>
-<input type="email" name="email" />
+    <form action="/account/recover" method="post" class="reset-password-form">
+        {% form 'recover_customer_password' %}
+        
+        {{ form.errors | default_errors }}
 
-<input type="submit" value="Submit" />
+        <div class="form-group">
+            <label for="customer_email">Email</label>
+            <input type="email" name="email" placeholder="Email" class="input-field" />
+        </div>
 
-{% endform %}
+        <div class="form-actions">
+            <input type="submit" value="Submit" class="bttn btn-submit" />
+            <a href="#" onclick="showLogin()" class="cancel">Cancel</a>
+            </div>
+        </div>
+
+        {% endform %}
+    </form>
+</div>
+
+
+<style>
+    .login {
+        max-width: 400px;
+        margin: 0 auto;
+        text-align: center;
+        margin-top: 50px;
+    }
+
+    .heading {
+        font-size: 24px;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+        text-align: left;
+        text-transform: uppercase;
+        font-weight: 500;
+        letter-spacing: 2px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 15px;
+    }
+
+    .input-field {
+        width: 100%;
+        padding: 10px;
+        font-size: 15px;
+        border: 1px solid #ccc;
+        font-weight: 500;
+        border-radius: 0!important;
+    }
+
+    .form-actions {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+        gap: 20px;
+    }
+
+    .bttn {
+        display: inline-block;
+        padding: 15px 20px;
+        font-size: 15px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+        color: #fff;
+        background-color: #333;
+        transition: background-color 0.3s ease;
+        border-radius: 0;
+        text-transform: uppercase;
+    }
+
+    .btn-login{
+        width: 45%;
+    }
+
+    .btn-signup {
+        background-color: #333;
+        width: 100%;
+    }
+
+    .forgot-password {
+        font-size: 14px;
+        color: #7d7d7d;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .separator {
+        height: 1px;
+        background-color: #ccc;
+        margin: 20px 0;
+    }
+
+
+    .bttn:hover {
+        color: white;
+        background: linear-gradient(to bottom right, #535050, #333); /* Transitioned gradient */
+    }
+
+
+
+.reset-password {
+    display: none;
+    max-width: 400px;
+    margin: 0 auto;
+    text-align: center;
+    margin-top: 50px;
+}
+
+.heading {
+    font-size: 25px;
+    width: ;
+    text-align: center;
+    margin-bottom: 20px;
+    letter-spacing: 3px;
+}
+
+.instruction {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 20px;
+    text-align: left;
+    font-weight: 500;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.input-field {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.form-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.btn-submit {
+    width: 45%;
+}
+
+.cancel {
+    font-size: 15px;
+    font-weight: 500;
+    color: #777676;
+    text-decoration: none;
+}
+.cancel:hover{
+    color: #777676;
+}
+
+</style>
+
+<script>
+    function showForgotPassword() {
+        document.querySelector('.reset-password').style.display = 'block';
+        document.querySelector('.login').style.display = 'none';
+    }
+    function showLogin() {
+        document.querySelector('.reset-password').style.display = 'none';
+        document.querySelector('.login').style.display = 'block';
+    }
+</script>

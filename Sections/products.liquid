@@ -37,10 +37,12 @@
                                     <img src="{{ product.images[1] | img_url: '400x' }}" alt="{{ product.title }}" class="f2-image">
                                 {% else %}
                                     <img src="{{ product.images.first | img_url: '400x' }}" alt="{{ product.title }}" class="f-image">
+                                    <img src="{{ product.images.first | img_url: '400x' }}" alt="{{ product.title }}" class="f2-image">
                                 {% endif %}
                             </div>
                             <div class="grid-footer">
                                 <div class="head">{{ product.title }}</div>
+
                                 <div class="price">
                                     {% if product.compare_at_price > product.price %}
                                         <span style="color: red;">{{ product.price | money }}</span>
@@ -49,6 +51,7 @@
                                         <span>{{ product.price | money }}</span>
                                     {% endif %}
                                 </div>
+                                
                                 <div class="addtocart">
                                     <form action="/cart/add" method="post" enctype="multipart/form-data">
                                         <input type="hidden" name="id" value="{{ product.variants.first.id }}">
@@ -64,6 +67,7 @@
         </div>
     </div>
 </section>
+
 
 
 {% schema %}

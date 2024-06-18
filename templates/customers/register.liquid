@@ -1,21 +1,124 @@
 <!-- /templates/customers/register.liquid -->
 
-{% form 'create_customer' %}
+<div class="create-account">
+    <h2 class="heading">Create Account</h2>
 
-{{ form.errors | default_errors }}
+    <form action="/account" method="post" class="create-account-form">
+        {% form 'create_customer' %}
 
-<label for="first_name">First Name</label>
-<input type="text" value="" name="customer[first_name]" size="30" />
+        {{ form.errors | default_errors }}
 
-<label for="last_name">Last Name</label>
-<input type="text" value="" name="customer[last_name]" size="30" />
+        <div class="form-group">
+            <label for="first_name">First Name</label>
+            <input type="text" name="customer[first_name]" placeholder="First Name" class="input-field" />
+        </div>
 
-<label for="email">Email Address</label>
-<input type="email" value="" name="customer[email]" size="30" />
+        <div class="form-group">
+            <label for="last_name">Last Name</label>
+            <input type="text" name="customer[last_name]" placeholder="Last Name" class="input-field" />
+        </div>
 
-<label for="password">Password</label>
-<input type="password" value="" name="customer[password]" size="30" />
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" name="customer[email]" placeholder="Email" class="input-field" />
+        </div>
 
-<input type="submit" value="Create" />
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" name="customer[password]" placeholder="Password" class="input-field" />
+        </div>
 
-{% endform %}
+        <div class="form-actions">
+            <input type="submit" value="Create Account" class="bttn btn-submit" />
+            <a href="/" class="cancel">Return to Store</a>
+        </div>
+
+        {% endform %}
+    </form>
+</div>
+
+<style>
+    .create-account {
+        max-width: 400px;
+        margin: 0 auto;
+        text-align: center;
+        margin-top: 50px;
+    }
+
+    .heading {
+        font-size: 25px;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        font-weight: 500;
+        letter-spacing: 3px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+        text-align: left;
+        font-weight: 500;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 14px;
+        text-transform: uppercase;
+    }
+
+    .input-field {
+        width: 100%;
+        padding: 10px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 0;
+        font-weight: 500;
+    }
+
+    .form-actions {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .bttn {
+        display: inline-block;
+        padding: 15px 20px;
+        font-size: 15px;
+        border: none;
+        border-radius: 0;
+        cursor: pointer;
+        text-decoration: none;
+        color: #fff;
+        background-color: #333;
+        transition: background-position 0.5s ease;
+        background: linear-gradient(to bottom right, #333, #3e3e3e);
+        background-size: 200% 200%;
+        background-position: top left;
+        border-radius: 0;
+    }
+
+    .btn:hover {
+        color: white;
+        background-position: bottom right;
+    }
+
+    .btn-submit {
+        width: 50%;
+        text-transform: uppercase;
+        font-weight: 500;
+    }
+
+    .cancel {
+        font-size: 15px;
+        font-weight: 500;
+        color: #777676;
+        text-decoration: none;
+        text-align: left;
+    }
+
+    .cancel:hover{
+        color: #777676;
+    }
+
+</style>

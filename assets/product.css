@@ -48,12 +48,14 @@
   .price-info {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 35px;
+    white-space: nowrap;
   }
   
   .price-info .product-price {
     font-size: 1.2rem;
     font-weight: 500;
+    
   }
   
   .price-info p {
@@ -177,8 +179,10 @@
     color: white;
   }
   .shopify-pay-img img {
-    width: 8rem;
-    height: 2.5rem; 
+    width: 5rem;
+    height: 1.4rem; 
+    object-fit: contain;
+    margin-left: 3px;
   }
   
   .more-payment-options{
@@ -245,18 +249,25 @@
     position: relative;
     overflow: hidden;
     max-height: 3em;
-    line-height: 1.5em; 
+    line-height: 1.5em;
     font-size: 0.9rem;
     font-weight: 450;
     margin-top: 2rem;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2; /* Show only 2 lines */
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   
   .product-description.closed {
     max-height: 3em;
+    -webkit-line-clamp: 2; /* Show only 2 lines */
   }
   
   .product-description:not(.closed) {
     max-height: none;
+    -webkit-line-clamp: unset; /* Allow full height */
   }
   
   .product-description .show-more {
@@ -272,6 +283,7 @@
     right: 0;
     background: white;
   }
+  
 
 /* details */
 .product-additional-details {
@@ -396,6 +408,7 @@
   color: #070707;
   height: 1.5em; /* Fixed height for price */
   font-weight: bold;
+  overflow: hidden;
   margin: 3px 0 6px 0;
 }
 

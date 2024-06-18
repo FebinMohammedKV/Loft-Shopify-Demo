@@ -68,7 +68,7 @@
 @media (max-width: 768px) {
   .shop {
     grid-template-columns: 1fr;
-    padding: 0 1rem;
+    padding: 0 1.5rem;
     /* text-align: center; */
   }
 
@@ -88,7 +88,7 @@
 @media (max-width: 576px) {
   .shop {
     margin: 50px auto;
-    padding: 0 1rem;
+    padding: 0 1.5rem;
   }
 
   .shop .cont .head {
@@ -100,7 +100,7 @@
   }
 
   .shop .cont button {
-    width: 100%;
+    width: 150px;
     height: 45px;
   }
 }

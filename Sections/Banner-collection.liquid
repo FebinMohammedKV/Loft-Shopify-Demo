@@ -20,21 +20,19 @@
       {% for block in section.blocks %}
         <div class="swiper-slide content {{ block.settings.css_class }}">
           <img src="{{ block.settings.image | img_url: '100x100' }}" alt="{{ block.settings.image_alt }}" width="7%">
-          <a href="{{ block.settings.link_url }}" class="pro2" style="padding-top: {{ block.settings.text_padding }};">
+          <a href="{{ block.settings.link_url }}" class="pro2">
             {{ block.settings.text_content }} <span style="color: {{ block.settings.text_color }};">{{ block.settings.text_content_bold }}</span> {{ block.settings.text_content2 }}
           </a>
         </div>
       {% endfor %}
     </div>
-    <!-- Add Pagination -->
-    <div class="swiper-pagination"></div>
   </div>
   
   <script>
   document.addEventListener('DOMContentLoaded', function() {
     new Swiper('.collections-slider', {
       slidesPerView: 3,
-      spaceBetween: 30,
+      spaceBetween: 10, // Reduced space between slides
       pagination: {
         el: '.swiper-pagination',
         clickable: true,
@@ -46,161 +44,124 @@
         },
         576: {
           slidesPerView: 2,
-          spaceBetween: 20,
+          spaceBetween: 15,
         },
         992: {
           slidesPerView: 3,
-          spaceBetween: 30,
+          spaceBetween: 10, // Reduced space between slides
         },
       },
     });
-  });
+});
+
   </script>
   
 
-{% comment %} <div class="collections-slider">
-  {% for block in section.blocks %}
-    <div class="content {{ block.settings.css_class }}">
-      <img src="{{ block.settings.image | img_url: '100x100' }}" alt="{{ block.settings.image_alt }}" width="20%">
-      <a href="{{ block.settings.link_url }}" class="pro2" style="padding-top: {{ block.settings.text_padding }};">
-        {{ block.settings.text_content }} <span style="color: {{ block.settings.text_color }};">{{ block.settings.text_content_bold }}</span> {{ block.settings.text_content2 }}
-      </a>
-    </div>
-  {% endfor %}
-</div> {% endcomment %}
-
-{% comment %} <script>
-document.addEventListener('DOMContentLoaded', function() {
-  if (window.innerWidth <= 700) {
-    const slider = document.querySelector('.collections-slider');
-    slider.classList.add('swiper-container');
-    slider.innerHTML = '<div class="swiper-wrapper">' + slider.innerHTML + '</div>';
-    slider.querySelectorAll('.content').forEach(el => el.classList.add('swiper-slide'));
-
-    new Swiper('.swiper-container', {
-      slidesPerView: 1,
-      spaceBetween: 10,
-      pagination: {
-        el: '.swiper-pagination',
-        clickable: true,
-      },
-    });
-  }
-});
-</script> {% endcomment %}
-
 {% schema %}
-{
-  "name": "Collections Slider",
-  "settings": [
-    {
-        "type": "header",
-        "content": "Color scheme"
-    },
-    {
-        "type": "color",
-        "id": "background_color",
-        "label": "Background Color",
-        "default": "#F1F1F1"
-    },
-    {
-        "type": "header",
-        "content": "Spacing"
-    },
-    {
-        "type": "range",
-        "id": "top_margin",
-        "label": "Top margin",
-        "min": 0,
-        "max": 100,
-        "step": 1,
-        "unit": "px",
-        "default": 0 
-    },
-    {
-        "type": "range",
-        "id": "bottom_margin",
-        "label": "Bottom margin",
-        "min": 0,
-        "max": 100,
-        "step": 1,
-        "unit": "px",
-        "default": 0 
-    },
-    {
-        "type": "color",
-        "id": "text_color",
-        "label": "Text Color",
-        "default": "#000000"
-    }
-  ],
-  "blocks": [
-    {
-      "type": "content",
-      "name": "Content Block",
-      "settings": [
-        {
-          "type": "image_picker",
-          "id": "image",
-          "label": "Image"
-        },
-        {
-          "type": "text",
-          "id": "image_alt",
-          "label": "Image Alt Text",
-          "default": "Image Alt Text"
-        },
-        {
-          "type": "url",
-          "id": "link_url",
-          "label": "Link URL"
-        },
-        {
-          "type": "text",
-          "id": "text_content",
-          "label": "Text Content Before Span",
-          "default": "Default Text Before Span"
-        },
-        {
-          "type": "text",
-          "id": "text_content_bold",
-          "label": "Bold Text Content (Span)",
-          "default": "Bold Text"
-        },
-        {
-          "type": "text",
-          "id": "text_content2",
-          "label": "Text Content After Span",
-          "default": "Default Text After Span"
-        },
-        {
+  {
+    "name": "Collections Slider",
+    "settings": [
+      {
+          "type": "header",
+          "content": "Color scheme"
+      },
+      {
+          "type": "color",
+          "id": "background_color",
+          "label": "Background Color",
+          "default": "#F1F1F1"
+      },
+      {
+          "type": "header",
+          "content": "Spacing"
+      },
+      {
+          "type": "range",
+          "id": "top_margin",
+          "label": "Top margin",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "px",
+          "default": 0 
+      },
+      {
+          "type": "range",
+          "id": "bottom_margin",
+          "label": "Bottom margin",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "px",
+          "default": 0 
+      },
+      {
           "type": "color",
           "id": "text_color",
           "label": "Text Color",
           "default": "#000000"
-        },
-        {
-          "type": "text",
-          "id": "text_padding",
-          "label": "Text Padding",
-          "default": "10px"
-        },
-        {
-          "type": "text",
-          "id": "css_class",
-          "label": "CSS Class",
-          "default": "custom-class"
-        }
-      ]
-    }
-  ],
-  "presets": [
-    {
-      "name": "Collections Slider",
-      "category": "Custom"
-    }
-  ]
-}
+      }
+    ],
+    "blocks": [
+      {
+        "type": "content",
+        "name": "Content Block",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "text",
+            "id": "image_alt",
+            "label": "Image Alt Text",
+            "default": "Image Alt Text"
+          },
+          {
+            "type": "url",
+            "id": "link_url",
+            "label": "Link URL"
+          },
+          {
+            "type": "text",
+            "id": "text_content",
+            "label": "Text Content Before Span",
+            "default": "Default Text Before Span"
+          },
+          {
+            "type": "text",
+            "id": "text_content_bold",
+            "label": "Bold Text Content (Span)",
+            "default": "Bold Text"
+          },
+          {
+            "type": "text",
+            "id": "text_content2",
+            "label": "Text Content After Span",
+            "default": "Default Text After Span"
+          },
+          {
+            "type": "color",
+            "id": "text_color",
+            "label": "Text Color",
+            "default": "#000000"
+          },
+          {
+            "type": "text",
+            "id": "css_class",
+            "label": "CSS Class",
+            "default": "custom-class"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Collections Slider",
+        "category": "Custom"
+      }
+    ]
+  }
 
 {% endschema %}
-{% comment %} <use xlink:href="#icon-search"></use> {% endcomment %}

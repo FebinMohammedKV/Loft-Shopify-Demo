@@ -42,15 +42,28 @@ footer .pay2 img {
 }
 
 /* Media Queries for Responsiveness */
-@media (max-width: 768px) {
-  footer {
-    flex-direction: column;
-    padding: 0 1rem;
-    height: auto;
+@media (max-width: 1200px) {
+  footer{
+    padding: 3rem;
   }
 
   footer .rights {
-    flex-basis: auto;
+    width: 40%;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  footer {
+    flex-direction: column;
+    padding: 0 1.5rem;
+    height: auto;
+    gap: 20px;
+  }
+
+  footer .rights {
+    width: 20%;
     align-items: center;
     margin-bottom: 10px;
   }

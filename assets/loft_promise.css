@@ -27,7 +27,8 @@
 
 .loft .grid-pro .grid-ittems img {
   width: 100%;
-  height: auto;
+  height: 100%;
+  /* height: auto; */
   object-fit: cover;
 }
 
@@ -37,6 +38,7 @@
   justify-content: center;
   align-items: center;
   gap: 1rem;
+  padding: 25px 0;
 }
 
 .loft .grid-pro .cont .head {
@@ -63,9 +65,15 @@
 }
 
 /* Media Queries for Responsiveness */
+@media (max-width: 1200px) {
+  .loft{
+    padding: 2rem;
+  }
+}
+
 @media (max-width: 768px) {
   .loft {
-    padding: 0 1rem;
+    padding: 0 1.5rem;
   }
 
   .loft .grid-pro {
@@ -77,7 +85,9 @@
     height: auto;
   }
 }
+/* @media (max-width: 576px) {
 
+} */
 
 /* @media only screen and (min-width: 1900px){
     .loft {

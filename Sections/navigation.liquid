@@ -1,15 +1,18 @@
 {{ 'style.css' | asset_url | stylesheet_tag }}
+{{ 'navigation.js' | asset_url | script_tag }}
 
 <div id="myNav" class="menu">
     <ul class="nav-links">
         {% for link in linklists.main-menu.links %}
             {% if link.links.size > 0 %}
-                <li class="has-submenu main">
+                <li class="has-submenu">
                     <div class="item">
                         <a href="{{ link.url }}">{{ link.title }}</a>
                         <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
                         </svg>
+                        <i class="fa-solid fa-plus plus-dropdown"></i>
+                        <i class="fa-solid fa-minus minus-dropdown" style="display:none;"></i>
                     </div>
                     <ul class="submenu">
                         {% for childlink in link.links %}
@@ -20,6 +23,8 @@
                                         <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
                                             <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
                                         </svg>
+                                        <i class="fa-solid fa-plus plus-dropdown"></i>
+                                        <i class="fa-solid fa-minus minus-dropdown" style="display:none;"></i>
                                     {% endif %}
                                 </div>
                                 {% if childlink.links.size > 0 %}
@@ -34,13 +39,55 @@
                     </ul>
                 </li>
             {% else %}
-                <li class="main">
+                <li class="mains">
                     <a href="{{ link.url }}">{{ link.title }}</a>
                 </li>
             {% endif %}
         {% endfor %}
     </ul>
 </div>
+
+{% comment %} <div id="myNav" class="menu">
+  <ul class="nav-links">
+    {% for link in linklists.main-menu.links %}
+      {% if link.links.size > 0 %}
+        <li class="has-submenu main">
+          <div class="item">
+            <a href="{{ link.url }}">{{ link.title }}</a>
+            <i class="fa-solid fa-plus plus-dropdown"></i>
+            <i class="fa-solid fa-minus minus-dropdown" style="display:none;"></i>
+          </div>
+          <ul class="submenu">
+            {% for childlink in link.links %}
+              <li class="{% if childlink.links.size > 0 %}has-submenu{% endif %}">
+                <div class="item">
+                  <a href="{{ childlink.url }}">{{ childlink.title | escape }}</a>
+                  {% if childlink.links.size > 0 %}
+                    <i class="fa-solid fa-plus plus-dropdown"></i>
+                    <i class="fa-solid fa-minus minus-dropdown" style="display:none;"></i>
+                  {% endif %}
+                </div>
+                {% if childlink.links.size > 0 %}
+                  <ul class="submenu">
+                    {% for subchildlink in childlink.links %}
+                      <li><a href="{{ subchildlink.url }}">{{ subchildlink.title | escape }}</a></li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        </li>
+      {% else %}
+        <li class="main">
+          <a href="{{ link.url }}">{{ link.title }}</a>
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+</div> {% endcomment %}
+
+
 
 {% style %}
     .menu {
