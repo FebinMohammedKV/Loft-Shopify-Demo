@@ -1,16 +1,6 @@
 {{ 'product-collection.css' | asset_url | stylesheet_tag }}
 {{ 'sort.js'| asset_url | script_tag }}
 
-{% style %}
-    .grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    
-    gap: 2rem;
-    padding: 0 5rem;
-}
-{% endstyle %}
-
 
 <section class="sorting">
     <div class="filter">
@@ -40,19 +30,19 @@
 </section> 
 
 
-{%- paginate collection.products by section.settings.products_per_page  -%}
+{%- paginate collection.products by section.settings.products_per_page -%}
     <section class="grid">
         {% for product in collection.products %}
-            <div class="grid-container">
+            <div class="grid-container" id="product-{{ product.id }}">
                 <a href="{{ product.url }}" style="text-decoration: none;">
                     <div class="image-container">
                         <div class="image">
                             {% if product.images.size > 1 %}
-                                <img src="{{ product.images.first | img_url: 'large' }}" alt="{{ product.title }}" class="f-image">
-                                <img src="{{ product.images[1] | img_url: 'large' }}" alt="{{ product.title }}" class="f2-image">
+                                <img src="{{ product.images.first | img_url: 'large' }}" alt="{{ product.title }}" class="f-image main-image-{{ product.id }}">
+                                <img src="{{ product.images[1] | img_url: 'large' }}" alt="{{ product.title }}" class="f2-image secondary-image-{{ product.id }}">
                             {% else %}
-                                <img src="{{ product.featured_image.src | img_url: 'large' }}" alt="{{ product.featured_image.alt | escape }}" class="f-image">
-                                <img src="{{ product.featured_image.src | img_url: 'large' }}" alt="{{ product.featured_image.alt | escape }}" class="f2-image">
+                                <img src="{{ product.featured_image.src | img_url: 'large' }}" alt="{{ product.featured_image.alt | escape }}" class="f-image main-image-{{ product.id }}">
+                                <img src="{{ product.featured_image.src | img_url: 'large' }}" alt="{{ product.featured_image.alt | escape }}" class="f2-image secondary-image-{{ product.id }}">
                             {% endif %}
                         </div>
                         <div class="top">
@@ -68,18 +58,61 @@
                     </div>
                     <div class="details">
                         <div class="head">{{ product.title }}</div>
+                        </a>
                         <p>From {{ product.price | money }} exc VAT &nbsp;
                             {% if product.compare_at_price > product.price %}
                                 <span>{{ product.compare_at_price | money }}</span>
                             {% endif %}
                         </p>
                     </div>
-                </a>
+
+                    <div class="seperator"></div>
+
+                    {% if product.options.size > 1 or product.options.first != 'Title' %}
+                        <div class="variant">
+                            {% for option in product.options_with_values %}
+                                {% if option.name == 'Color' %}
+                                    <p class="variant-title">{{ option.name }}</p>
+                                    <div class="product-form__swatch">
+                                        {% for value in option.values %}
+                                            {% assign variant = product.variants | where: 'option1', value | first %}
+                                            <label class="swatch">
+                                                <input type="radio" name="variant-Color-{{ product.id }}" value="{{ variant.id }}" data-image="{{ variant.featured_image | img_url: 'large' }}" data-alt="{{ value }}" class="variant-radio-{{ product.id }}">
+                                                <span class="swatch-image" style="background-image: url('{{ variant.featured_image | img_url: 'small' }}');"></span>
+                                                <span class="swatch-name">{{ value }}</span>
+                                            </label>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <p class="variant-title">{{ option.name }}</p>
+                                    <div class="product-form__button-options">
+                                        {% for value in option.values %}
+                                            <label class="button-option">
+                                                <input type="radio" name="variant-{{ option.name }}-{{ product.id }}" value="{{ value }}">
+                                                <span class="button-label">{{ value }}</span>
+                                            </label>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <form action="/cart/add" method="post" class="add-to-cart-form">
+                      <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+                      <button type="submit" class="add-to-cart-button">
+                        <span>Add to Cart</span>
+                      </button>
+                    </form>
             </div>
         {% else %}
-        <p>No matches</p>
+            <p>No matches</p>
         {% endfor %}
     </section>
+
+
+
+
 
     <section class="paging">
         <div class="left {% unless paginate.previous %}disabled{% endunless %}">

@@ -45,11 +45,19 @@
     <img src="{{ default_image | img_url: 'large' }}" alt="{{ default_image.alt | escape }}" id="ProductPhotoImg">
     <div class="product-thumbnails">
       {% for image in product.images %}
-        <a href="#" class="thumbnail" data-image="{{ image.src | img_url: 'large' }}">
+        <a href="#" 
+           class="thumbnail" 
+           data-image="{{ image.src | img_url: 'large' }}" 
+           thumbnail-alt="{{ image.alt }}"
+           {% if product.selected_or_first_available_variant.featured_media and product.selected_or_first_available_variant.featured_media.alt != image.alt %}
+             style="display: none;"
+           {% endif %}
+        >
           <img src="{{ image.src | img_url: 'compact' }}" alt="{{ image.alt | escape }}">
         </a>
       {% endfor %}
     </div>
+    
   </div>
   
   <div class="product-details">
@@ -69,27 +77,39 @@
     </div>
 
     <!-- Product Variant Section -->
-    <div class="variant-selector">
-      <div class="variant-options">
-        {% for option in product.options %}
-          <div class="option-group">
-            <label>{{ option.name }}</label>
-            <div class="option-values">
-              {% for value in option.values %}
-                <label>
-                  <input type="radio" name="option-{{ option.position }}" value="{{ value }}">
-                  {{ value }}
-                </label>
-              {% endfor %}
-            </div>
+    <fieldset class="product-form__options">
+      <legend><span>Choose Variants</span></legend>
+      <div class="variant">
+      {% for option in product.options_with_values %}
+        {% if option.name == 'Color' %}
+          <p class="variant-title">{{ option.name }}</p>
+          <div class="product-form__swatch">
+            {% for value in option.values %}
+              {% assign variant = product.variants | where: 'option1', value | first %}
+              <label class="swatch">
+                <input type="radio" name="variant-Color" value="{{ variant.id }}" data-image="{{ variant.featured_image | img_url: 'large' }}" data-alt="{{ value }}">
+                <span class="swatch-image" style="background-image: url('{{ variant.featured_image | img_url: 'small' }}');"></span>
+                <span class="swatch-name">{{ value }}</span>
+              </label>
+            {% endfor %}
           </div>
-        {% endfor %}
+        {% else %}
+          <p class="variant-title">{{ option.name }}</p>
+          <div class="product-form__button-options">
+            {% for value in option.values %}
+              <label class="button-option">
+                <input type="radio" name="variant-{{ option.name }}" value="{{ value }}">
+                <span class="button-label">{{ value }}</span>
+              </label>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endfor %}
       </div>
-    </div>
+    </fieldset>
 
     <form action="/cart/add" method="post" enctype="multipart/form-data" id="AddToCartForm">
       <input type="hidden" name="id" value="{{ current_variant.id }}">
-      
       <div class="quantity-selector">
         <div class="quantity-title">QUANTITY</div>
         <div class="quantity-content">
@@ -154,6 +174,7 @@
 </div>
 
 
+
 {% comment %} Similer products {% endcomment %}
 {% assign current_product = product %}
 {% assign current_collection = current_product.collections.first %}
@@ -190,6 +211,58 @@
   </div>
 </div>
 {% endif %}
+
+
+{% javascript %}
+document.addEventListener('DOMContentLoaded', function() {
+  var variantRadios = document.querySelectorAll('.product-form__swatch input[type="radio"]');
+  var mainImage = document.getElementById('ProductPhotoImg');
+  var thumbnails = document.querySelectorAll('.product-thumbnails .thumbnail');
+
+  variantRadios.forEach(function(radio) {
+    radio.addEventListener('change', function() {
+      var selectedImage = this.getAttribute('data-image');
+      var selectedAlt = this.getAttribute('data-alt');
+
+      // Update the main image
+      if (mainImage) {
+        mainImage.src = selectedImage;
+        mainImage.alt = selectedAlt;
+      }
+
+      // Update thumbnails to reflect the variant's images
+      thumbnails.forEach(function(thumbnail) {
+        var thumbnailImage = thumbnail.getAttribute('data-image');
+        if (thumbnailImage === selectedImage) {
+          thumbnail.classList.add('active');
+        } else {
+          thumbnail.classList.remove('active');
+        }
+      });
+    });
+  });
+
+  // Handle thumbnail click
+  thumbnails.forEach(function(thumbnail) {
+    thumbnail.addEventListener('click', function(event) {
+      event.preventDefault();
+      var thumbnailImage = this.getAttribute('data-image');
+      if (mainImage) {
+        mainImage.src = thumbnailImage;
+        mainImage.alt = this.querySelector('img').getAttribute('alt');
+      }
+      thumbnails.forEach(function(thumb) {
+        thumb.classList.remove('active');
+      });
+      this.classList.add('active');
+    });
+  });
+});
+
+
+{% endjavascript %}
+
+
 
 {% schema %}
 {

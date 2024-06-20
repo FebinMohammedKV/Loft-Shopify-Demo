@@ -64,27 +64,29 @@
                   <img src="{{ item | img_url: 'medium' }}" alt="{{ item.title | escape }}">
                 </a>
               </div>
-              <div class="product-details">
-                <a href="{{ item.url }}">{{ item.product.title }}</a>
-                <div class="product-varient">{{ item.variant.title }}</div>
-                <div class="quantity-selector">
-                  <div class="product-price">{{ item.price | money }}</div>
-                  <div class="quantity-content">
-                    <button type="button" class="quantity-btn decrease" data-key="{{ item.key }}">-</button>
-                    <span id="Quantity_{{ item.key }}" data-value="{{ item.quantity }}">{{ item.quantity }}</span>
-                    <button type="button" class="quantity-btn increase" data-key="{{ item.key }}">+</button>
-                    <input type="hidden" name="updates[]" id="updates_{{ item.key }}" value="{{ item.quantity }}">
+              <div class="cart-product-details">
+                <div class="product-details">
+                  <a href="{{ item.url }}">{{ item.product.title }}</a>
+                  <div class="product-varient">{{ item.variant.title }}</div>
+                  <div class="quantity-selector">
+                    <div class="product-price">{{ item.price | money }}</div>
+                    <div class="quantity-content">
+                      <button type="button" class="quantity-btn decrease" data-key="{{ item.key }}">-</button>
+                      <span id="Quantity_{{ item.key }}" data-value="{{ item.quantity }}">{{ item.quantity }}</span>
+                      <button type="button" class="quantity-btn increase" data-key="{{ item.key }}">+</button>
+                      <input type="hidden" name="updates[]" id="updates_{{ item.key }}" value="{{ item.quantity }}">
+                    </div>
+                    <a href="" class="edit">Edit</a>
                   </div>
-                  <a href="" class="edit">Edit</a>
                 </div>
-              </div>
-              <div class="product-total">
-                <div class="total">
-                  <span>Total</span>
-                  <span class="item-total">{{ item.line_price | money }}</span>
-                </div>
-                <div class="remove">
-                  <a href="/cart/change?line={{ forloop.index }}&amp;quantity=0">Remove</a>
+                <div class="product-total">
+                  <div class="total">
+                    <span>Total</span>
+                    <span class="item-total">{{ item.line_price | money }}</span>
+                  </div>
+                  <div class="remove">
+                    <a href="/cart/change?line={{ forloop.index }}&amp;quantity=0">Remove</a>
+                  </div>
                 </div>
               </div>
             </div>

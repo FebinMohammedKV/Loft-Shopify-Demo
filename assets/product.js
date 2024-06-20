@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const totalPrice = itemPrice * currentQuantity;
         totalPriceElement.innerText = 'Rs' + totalPrice.toFixed(2);
       }
-    } 
+    }
     // Shipping link handler
     document.querySelector('.price-info p a').addEventListener('click', function (e) {
       e.preventDefault();

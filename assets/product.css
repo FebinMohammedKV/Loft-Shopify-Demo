@@ -1,7 +1,7 @@
 .product-page {
     display: flex;
     gap: 5rem;
-    padding: 0 10rem;
+    padding: 0 10vw;
   }
   
   .product-images {
@@ -171,7 +171,7 @@
     align-items: center;
     margin-top: 1rem;
     margin-bottom: 1rem;
-    padding: 0.5rem 1rem;
+    padding: 0.7rem 1rem;
     cursor: pointer;
     width: 100%;
     border: none;
@@ -198,7 +198,7 @@
     background-color: black;
     color: white;
     border: none;
-    width: 35%;
+    width: 37%;
     padding: 0.8rem 1rem;
     text-transform: uppercase;
     white-space: nowrap;
@@ -216,34 +216,6 @@
   .add-to-wishlist i {
     margin-right: 5px;
   }
-  
-  @media (max-width: 768px) {
-    .add-to-wishlist {
-      width: 60%;
-      /* min-width: 150px; */
-      padding: 0.5rem 1rem; /* Adjust padding for medium screens */
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .add-to-wishlist {
-      width: 75%;
-      /* min-width: 150px; */
-      padding: 0.5rem 1rem; /* Adjust padding for small screens */
-      font-size: 0.75rem; /* Adjust font size for small screens */
-    }
-  }
-  
-  @media (max-width: 320px) {
-    .add-to-wishlist {
-      width: 90%;
-      /* min-width: 150px; */
-      padding: 0.5rem 1rem; /* Adjust padding for very small screens */
-      font-size: 0.7rem; /* Adjust font size for very small screens */
-    }
-  }
-  
-  
 
   .product-description {
     position: relative;
@@ -285,7 +257,7 @@
   }
   
 
-/* details */
+/* Additional details */
 .product-additional-details {
   display: flex;
   flex-direction: column;
@@ -295,7 +267,7 @@
 
 .detail-headings {
   display: flex;
-  /* flex-wrap: wrap; Allow headings to wrap to the next line if they don't fit */
+  flex-wrap: wrap;
   justify-content: space-between; /* Distribute space between headings */
 }
 
@@ -348,7 +320,7 @@
 .similar-products {
   display: flex;
   flex-direction: column;
-  padding: 0 12rem;
+  padding: 0 12vw;
   margin-top: 100px;
 }
 
@@ -469,3 +441,183 @@ button.slick-arrow:hover {
   opacity: 0.75;
 }
 
+/* Product Variants */
+.product-form__options {
+  border: 1px solid rgb(228, 227, 227); 
+  border-width: 1px; 
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.product-form__options legend {
+  font-size: 1rem;
+  font-weight: 450;
+}
+
+legend {
+  float: none;
+  width: 0;
+}
+
+legend span {
+  white-space: nowrap;
+  background-color: white;
+  color: #000;
+  padding: 0 10px;
+}
+
+.product-form__swatch {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.variant{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.variant-title {
+  font-weight: bold;
+  margin: 0;
+  margin-bottom: 2px;
+}
+
+.swatch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+}
+
+.swatch input[type="radio"] {
+  display: none;
+}
+
+.swatch-image {
+  width: 40px;
+  height: 40px;
+  background-size: 80%; /* Adjust this value as needed to fit within the padding */
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  padding: 5px; /* Add padding to create a gap between the image and the border */
+  margin-top: 10px;
+  box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
+}
+
+
+.swatch-name {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgb(96, 95, 95);
+  text-align: center;
+  white-space: nowrap;
+  font-size: 0.9rem;
+  font-weight: 450;
+}
+
+.swatch:hover .swatch-image {
+  border-color: #959494;
+  border-width: 1px;
+}
+
+.swatch input[type="radio"]:checked + .swatch-image {
+  border-color: #000000;
+  border-width: 2px;
+}
+
+.swatch:hover .swatch-name {
+  display: block;
+  color: rgb(96, 95, 95);
+}
+
+.swatch input[type="radio"]:checked + .swatch-image + .swatch-name {
+  display: block;
+  color: black;
+}
+
+.product-form__button-options {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.button-option {
+  display: inline-block;
+}
+
+.button-option input[type="radio"] {
+  display: none;
+}
+
+.button-label {
+  display: inline-block;
+  padding: 10px 20px;
+  border: 1px solid rgb(185, 184, 184);
+  cursor: pointer;
+  font-size: 1rem;
+  text-align: center;
+  font-weight: 500;
+}
+
+.button-option input[type="radio"]:checked + .button-label {
+  border: 2px solid rgb(0, 0, 0);
+}
+
+.button-option:hover .button-label {
+  background-color: #d6d6d6;
+  border-color: #959494;
+}
+
+@media (max-width: 768px) {
+  .product-page{
+    flex-direction: column;
+    padding: 2rem;
+  }
+
+  .product-images{
+    width: 100%;
+  }
+
+  .product-details{
+    width: 100%;
+  }
+
+  .price-info{
+    white-space: wrap;
+  }
+
+  .legend span{
+    white-space: wrap;
+  }
+
+  .product-form__swatch{
+    flex-wrap: wrap;
+  }
+
+  .add-to-wishlist {
+    width: 30%;
+    padding: 0.7rem 1rem;
+  }
+
+  .similar-products{
+    padding: 2.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .add-to-wishlist {
+    width: 40%;
+    padding: 0.7rem 1rem;
+    font-size: 0.75rem;
+  }
+}

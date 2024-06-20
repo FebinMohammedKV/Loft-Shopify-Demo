@@ -2,13 +2,14 @@ h1{
   text-align: center;
   letter-spacing: 0.2rem;
   text-transform: uppercase;
+  padding: 2rem;
 }
 
 .cart-container {
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 5rem;
-  padding: 0 11rem;
+  padding: 0 11vw;
   font-weight: 500;
 }
 
@@ -19,13 +20,19 @@ h1{
 .cart-product {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   align-items: center;
   /* padding: 10px 0; */
 }
 
 .product-image img {
   max-width: 120px;
+}
+
+.cart-product-details{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .product-details {
@@ -108,7 +115,7 @@ h1{
 .product-total {
   flex: 1;
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   flex-direction: column;
 }
 
@@ -177,6 +184,8 @@ h1{
   font-weight: 500;
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .cart-subtotal span{
@@ -284,7 +293,7 @@ h1{
 .install-removal {
   display: flex;
   flex-direction: column;
-  padding: 0 10rem;
+  padding: 0 10vw;
   max-width: 100%;
   /* height: 300px; */
 }
@@ -404,4 +413,84 @@ button.slick-next.slick-arrow {
 
 button.slick-arrow:hover {
   opacity: 0.75;
+}
+
+@media (max-width: 1060px){
+  .product-total .total{
+    flex-direction: column;
+    text-align: end;
+  }
+}
+
+@media (max-width: 992px){
+  .cart-container{
+    grid-template-columns: repeat(1, 1fr); 
+  }
+  .product-total .total{
+    flex-direction: row;
+  }
+}
+
+@media(max-width: 768px){
+  h1{
+    margin-top: 20px!important;
+    margin-bottom: 10px!important;
+  }
+
+  .cart-container{
+    padding: 0 2.5rem;
+  }
+
+  .product-total .total{
+    flex-direction: column;
+    text-align: end;
+  }
+
+  .install-removal{
+    padding: 0 4.5rem;
+  }
+}
+
+@media(max-width: 576px){
+  .cart-product{
+    flex-direction: column;
+  }
+
+  .cart-container{
+    padding: 0 1.5rem;
+    gap: 2rem;
+  }
+
+  .product-total .total{
+    text-align: end;
+  }
+
+  .product-price{
+    white-space: nowrap;
+  }
+
+  .cart-instruction{
+    margin-top: 10px;
+  }
+}
+
+@media(max-width: 400px){
+  .cart-product-details{
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 10px;
+  }
+
+  .product-details{
+    padding-left: 0;
+  }
+
+  .product-total{
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .product-total .total{
+    text-align: start;
+  }
 }

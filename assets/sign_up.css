@@ -46,6 +46,9 @@
     align-content: center;
     border: none;
     text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .sign .container .embn span a{
     text-decoration: none;
