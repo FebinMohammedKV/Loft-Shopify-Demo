@@ -46,7 +46,6 @@ ul{
 @media (max-width: 768px) {
   .containers {
     padding: 0 1.5rem;
-    /* Define the grid layout for screens 768px and below */
     grid-template-columns: repeat(2, 1fr);
   }
 
@@ -56,6 +55,11 @@ ul{
 
   .containers .item li a {
     font-size: 0.8rem;
+  }
+
+  .row{
+    justify-content: center;
+    align-items: center;
   }
 
   ul{

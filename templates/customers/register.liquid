@@ -3,7 +3,7 @@
 <div class="create-account">
     <h2 class="heading">Create Account</h2>
 
-    <form action="/account" method="post" class="create-account-form">
+    {% comment %} <form action="/account" method="post" class="create-account-form"> {% endcomment %}
         {% form 'create_customer' %}
 
         {{ form.errors | default_errors }}
@@ -34,7 +34,7 @@
         </div>
 
         {% endform %}
-    </form>
+    {% comment %} </form> {% endcomment %}
 </div>
 
 <style>

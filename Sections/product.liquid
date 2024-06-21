@@ -109,47 +109,46 @@
     </fieldset>
 
     <form action="/cart/add" method="post" enctype="multipart/form-data" id="AddToCartForm">
-      <input type="hidden" name="id" value="{{ current_variant.id }}">
+      <input type="hidden" name="id" value="{{ product.variants.first.id }}">
       <div class="quantity-selector">
         <div class="quantity-title">QUANTITY</div>
         <div class="quantity-content">
-          <button type="button" class="quantity-btn" id="decrease">-</button>
-          <span id="Quantity" data-value="1">1</span>
-          <button type="button" class="quantity-btn" id="increase">+</button>
-          <span class="item-price">{{ current_variant.price | money }}</span>
+          <button type="button" class="quantity-btn" onclick="decreaseQuantity()">-</button>
+          <input type="text" id="Quantity" name="quantity" value="1" min="1" onchange="updateTotal()">
+          <button type="button" class="quantity-btn" onclick="increaseQuantity()">+</button>
         </div>
       </div>
-      
+
       <div class="total-price">
-        <p>Total: <span id="totalPrice">{{ current_variant.price | money }}</span></p>
+        <p>Total: <span id="totalPrice">{{ product.variants.first.price | divided_by: 100.00 }}</span></p>
       </div>
-      
-      <div name="id" id="productSelect">
+
+      <div id="productSelect">
         {% if product.available %}
-          <form action="/cart/add" method="post" class="add-to-cart-form">
-            <input type="hidden" name="id" value="{{ product.variants.first.id }}">
             <button type="submit" name="add" id="AddToCart">Add to Basket</button>
-          </form>
         {% else %}
-          <button type="submit" name="add" id="AddToCart">Notify Me</button>
+          <button type="button" name="add" id="NotifyMe">Notify Me</button>
         {% endif %}
       </div>
-
+      
       <button type="button" class="shopify-pay">
-          Buy with
-          <span class="shopify-pay-img">
-            <img src="{{ 'shopPay.png' | asset_url }}" alt="Shopify Pay">
-          </span>
+        Buy with
+        <span class="shopify-pay-img">
+          <img src="{{ 'shopPay.png' | asset_url }}" alt="Shopify Pay">
+        </span>
       </button>
-
+      
       <a href="#" class="more-payment-options">More payment options</a>
     </form>
-    
+
+
+
+
     <span class="add-to-wishlist">
         <i class="fa-regular fa-heart" style="color: #ffffff;"></i> &nbsp;
         Add to wishlist
     </span>
-    
+
     <!-- sections/product-details.liquid -->
     <div class="product-additional-details">
       <div class="detail-headings">
@@ -172,8 +171,6 @@
   </div>
 
 </div>
-
-
 
 {% comment %} Similer products {% endcomment %}
 {% assign current_product = product %}
@@ -212,56 +209,30 @@
 </div>
 {% endif %}
 
+<script>
+  function updateTotal() {
+    var quantity = parseInt(document.getElementById("Quantity").value);
+    var price = parseFloat("{{ product.variants.first.price | divided_by: 100.00 }}");
+    var total = quantity * price;
+    document.getElementById("totalPrice").innerText = total.toFixed(2);
+  }
 
-{% javascript %}
-document.addEventListener('DOMContentLoaded', function() {
-  var variantRadios = document.querySelectorAll('.product-form__swatch input[type="radio"]');
-  var mainImage = document.getElementById('ProductPhotoImg');
-  var thumbnails = document.querySelectorAll('.product-thumbnails .thumbnail');
+  function increaseQuantity() {
+    var quantityInput = document.getElementById("Quantity");
+    var currentValue = parseInt(quantityInput.value);
+    quantityInput.value = currentValue + 1;
+    updateTotal();
+  }
 
-  variantRadios.forEach(function(radio) {
-    radio.addEventListener('change', function() {
-      var selectedImage = this.getAttribute('data-image');
-      var selectedAlt = this.getAttribute('data-alt');
-
-      // Update the main image
-      if (mainImage) {
-        mainImage.src = selectedImage;
-        mainImage.alt = selectedAlt;
-      }
-
-      // Update thumbnails to reflect the variant's images
-      thumbnails.forEach(function(thumbnail) {
-        var thumbnailImage = thumbnail.getAttribute('data-image');
-        if (thumbnailImage === selectedImage) {
-          thumbnail.classList.add('active');
-        } else {
-          thumbnail.classList.remove('active');
-        }
-      });
-    });
-  });
-
-  // Handle thumbnail click
-  thumbnails.forEach(function(thumbnail) {
-    thumbnail.addEventListener('click', function(event) {
-      event.preventDefault();
-      var thumbnailImage = this.getAttribute('data-image');
-      if (mainImage) {
-        mainImage.src = thumbnailImage;
-        mainImage.alt = this.querySelector('img').getAttribute('alt');
-      }
-      thumbnails.forEach(function(thumb) {
-        thumb.classList.remove('active');
-      });
-      this.classList.add('active');
-    });
-  });
-});
-
-
-{% endjavascript %}
-
+  function decreaseQuantity() {
+    var quantityInput = document.getElementById("Quantity");
+    var currentValue = parseInt(quantityInput.value);
+    if (currentValue > 1) {
+      quantityInput.value = currentValue - 1;
+      updateTotal();
+    }
+  }
+</script>
 
 
 {% schema %}

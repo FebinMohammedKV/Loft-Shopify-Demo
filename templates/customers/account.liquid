@@ -1,5 +1,6 @@
 <!-- /templates/customers/account.liquid -->
 
+<div class="account">
 {% if customer.default_address %}
   <h2>Address</h2>
   <p>{{ customer.default_address.address1 }}</p>
@@ -25,3 +26,20 @@
   {% endpaginate %}
 </div>
 
+<div id="account_actions">
+  <h2>Account</h2>
+  <ul>
+    <li><a href="/account/logout">Logout</a></li>
+    <!-- Add other account actions here if needed -->
+  </ul>
+</div>
+
+{% form 'customer_address', customer.new_address %}
+{% endform %}
+</div>
+
+<style>
+  .account{
+    padding: 3rem;
+  }
+</style>

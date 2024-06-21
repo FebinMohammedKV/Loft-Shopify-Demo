@@ -45,13 +45,13 @@
 
                                 <div class="price">
                                     {% if product.compare_at_price > product.price %}
-                                        <span style="color: red;">{{ product.price | money }}</span>
-                                        <del>{{ product.compare_at_price | money }}</del>
+                                        <span class="current-price">{{ product.price | money }}</span>
+                                        <del class="compare-price">{{ product.compare_at_price | money }}</del>
                                     {% else %}
                                         <span>{{ product.price | money }}</span>
                                     {% endif %}
                                 </div>
-                                
+
                                 <div class="addtocart">
                                     <form action="/cart/add" method="post" enctype="multipart/form-data">
                                         <input type="hidden" name="id" value="{{ product.variants.first.id }}">

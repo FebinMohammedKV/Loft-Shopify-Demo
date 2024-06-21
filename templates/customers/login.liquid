@@ -2,9 +2,9 @@
 <div class="login">
     <h2 class="heading">Log In</h2>
 
-    <form action="/account/login" method="post" class="login-form">
+    {% comment %} <form action="/account/login" method="post" class="login-form"> {% endcomment %}
         {% form 'customer_login' %}
-        
+
         {{ form.errors | default_errors }}
 
         <div class="form-group">
@@ -23,22 +23,20 @@
         </div>
 
         {% endform %}
-    </form>
+    {% comment %} </form> {% endcomment %}
 
     <div class="separator"></div>
+    <a href="/account/register"><input type="submit" value="Sign Up for an Account" class="bttn btn-signup" /></a>
 
-    {% comment %} <form action="" method="post" class="register-form"> {% endcomment %}
-        <a href="/account/register"><input type="submit" value="Sign Up for an Account" class="bttn btn-signup" /></a>
-    {% comment %} </form> {% endcomment %}
 </div>
 
 <div class="reset-password">
     <h2 class="heading">Reset Your Password</h2>
     <p class="instruction">We will send you an email with further instructions on resetting your account password.</p>
 
-    <form action="/account/recover" method="post" class="reset-password-form">
+    {% comment %} <form action="/account/recover" method="post" class="reset-password-form"> {% endcomment %}
         {% form 'recover_customer_password' %}
-        
+
         {{ form.errors | default_errors }}
 
         <div class="form-group">
@@ -53,7 +51,7 @@
         </div>
 
         {% endform %}
-    </form>
+    {% comment %} </form> {% endcomment %}
 </div>
 
 

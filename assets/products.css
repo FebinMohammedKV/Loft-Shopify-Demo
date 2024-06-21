@@ -69,7 +69,7 @@
 
 .grid-items .image-container {
     width: 100%;
-    padding-top: 100%; /* Creates a square container */
+    padding-top: 100%;
     position: relative;
     overflow: hidden;
 }
@@ -128,24 +128,30 @@
     letter-spacing: 2px;
     font-size: 0.9rem;
     font-weight: 500;
-    /* padding-top: 1rem; */
     min-height: 2rem;
     margin: 3px 0;
 }
 
 .grid-items .price {
-    /* padding-top: 0.5rem; */
     color: rgb(96, 95, 95);
     font-size: 0.85rem;
     font-weight: 500;
     min-height: 1.5rem;
-    /* margin: 3px 0; */
     display: flex;
     align-items: flex-end;
+    white-space: nowrap;
 }
 
 .grid-items .price del {
     margin-left: 10px;
+}
+
+.current-price, .compare-price {
+    white-space: nowrap;
+}
+
+.current-price{
+    color: red;
 }
 
 .grid-items .addtocart {

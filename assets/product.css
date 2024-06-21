@@ -84,6 +84,7 @@
     justify-content: flex-start;
     align-items: flex-start;
     margin-bottom: 1rem;
+    width: 100%;
   }
   
   .quantity-selector .quantity-btn {
@@ -113,14 +114,18 @@
 
   .quantity-content{
     display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 0.5rem;
+    justify-content: start;
+    align-items: start;
+    gap: 1rem;
+    width: 100%;
+    flex-wrap: wrap;
   }
   
   .quantity-selector input {
     border: none;
+    display: block;
     text-align: center;
+    width: 25px;
   }
   
   .total-price p {
@@ -143,12 +148,12 @@
   .option-group label {
     font-weight: bold;
   }
-  
+
   .option-values {
     display: flex;
     gap: 0.5rem;
   }
-  
+
   option-values input[type="radio"] {
     display: none;
   }
@@ -165,6 +170,7 @@
     background-color: white;
     border: 2px solid black;
   }
+
   .shopify-pay {
     display: flex;
     justify-content: center;
@@ -180,11 +186,11 @@
   }
   .shopify-pay-img img {
     width: 5rem;
-    height: 1.4rem; 
+    height: 1.4rem;
     object-fit: contain;
     margin-left: 3px;
   }
-  
+
   .more-payment-options{
     font-size: 0.9rem;
     font-weight: 450;
@@ -212,7 +218,7 @@
     font-size: 0.8rem;
     font-weight: 500;
   }
-  
+
   .add-to-wishlist i {
     margin-right: 5px;
   }
@@ -231,31 +237,31 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  
+
   .product-description.closed {
     max-height: 3em;
     -webkit-line-clamp: 2; /* Show only 2 lines */
   }
-  
+
   .product-description:not(.closed) {
     max-height: none;
     -webkit-line-clamp: unset; /* Allow full height */
   }
-  
+
   .product-description .show-more {
     color: rgb(106, 106, 107);
     cursor: pointer;
     display: inline;
     white-space: nowrap;
   }
-  
+
   .product-description.closed .show-more {
     position: absolute;
     bottom: 0;
     right: 0;
     background: white;
   }
-  
+
 
 /* Additional details */
 .product-additional-details {
@@ -443,8 +449,8 @@ button.slick-arrow:hover {
 
 /* Product Variants */
 .product-form__options {
-  border: 1px solid rgb(228, 227, 227); 
-  border-width: 1px; 
+  border: 1px solid rgb(228, 227, 227);
+  border-width: 1px;
   padding: 15px;
   margin-bottom: 20px;
 }
@@ -619,5 +625,12 @@ legend span {
     width: 40%;
     padding: 0.7rem 1rem;
     font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 200px) {
+  .add-to-wishlist {
+    word-wrap: break-word;
+    white-space: wrap;
   }
 }
