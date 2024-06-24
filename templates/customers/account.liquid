@@ -1,45 +1,130 @@
-<!-- /templates/customers/account.liquid -->
-
 <div class="account">
-{% if customer.default_address %}
-  <h2>Address</h2>
-  <p>{{ customer.default_address.address1 }}</p>
-  {% if customer.default_address.address2 != "" %}
-    <p>{{ customer.default_address.address2 }}</p>
-  {% endif %}
-  <p>{{ customer.default_address.city}}, {% if address.province_code %}{{ customer.default_address.province_code }}, {% endif %}{{ customer.default_address.country }}</p>
-  <p>{{ customer.default_address.zip }}</p>
-  <p>{{ customer.default_address.phone }}</p>
-{% endif %}
-
-<div id="customer_orders">
-  <h2>Orders</h2>
-  {% paginate customer.orders by 10 %}
-  {% if customer.orders.size != 0 %}
-    {% for order in customer.orders %}
-      <!-- order details here -->
-    {% endfor %}
-  {% else %}
-    <p>You haven't placed any orders yet.</p>
-  {% endif %}
-  {{ paginate | default_pagination }}
-  {% endpaginate %}
-</div>
-
-<div id="account_actions">
-  <h2>Account</h2>
-  <ul>
-    <li><a href="/account/logout">Logout</a></li>
-    <!-- Add other account actions here if needed -->
+  <ul class="breadcrumb">
+    <li><a href="/">Home</a> /</li>
+    <li>Account</li>
   </ul>
-</div>
 
-{% form 'customer_address', customer.new_address %}
-{% endform %}
+  <div class="account-actions">
+    <h1>Account</h1>
+    <div class="logout">
+      <i class="fa fa-times"></i>
+      <a href="/account/logout">Logout</a>
+    </div>
+  </div>
+
+  <div id="customer_orders">
+    <h2>Order History</h2>
+    {% paginate customer.orders by 10 %}
+    {% if customer.orders.size != 0 %}
+      {% for order in customer.orders %}
+        <!-- order details here -->
+      {% endfor %}
+    {% else %}
+      <p>You haven't placed any orders yet.</p>
+    {% endif %}
+    {{ paginate | default_pagination }}
+    {% endpaginate %}
+  </div>
+
+  <div id="customer_addresses">
+    <h2>Addresses</h2>
+    {% if customer.default_address %}
+      <div class="address">
+        <div class="head">
+          <p>{{ customer.default_address.first_name }} {{ customer.default_address.last_name }}</p>
+        </div>
+        <p>{{ customer.default_address.first_name }} {{ customer.default_address.last_name }}</p>
+        <p>{{ customer.default_address.address1 }}</p>
+        {% if customer.default_address.address2 != "" %}
+          <p>{{ customer.default_address.address2 }}</p>
+        {% endif %}
+        <p>{{ customer.default_address.city }} {% if customer.default_address.province_code %}{{ customer.default_address.province_code }}, {% endif %}{{ customer.default_address.country }}</p>
+        <p>{{ customer.default_address.zip }}</p>
+        <p>{{ customer.default_address.phone }}</p>
+      </div>
+    {% else %}
+      <p>No address available.</p>
+    {% endif %}
+  </div>
+
+  {% form 'customer_address', customer.new_address %}
+  {% endform %}
 </div>
 
 <style>
-  .account{
-    padding: 3rem;
-  }
+.account {
+  padding: 3rem;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.breadcrumb {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.breadcrumb li {
+  display: inline;
+}
+
+.breadcrumb a {
+  text-decoration: none;
+  color: #666;
+}
+
+.account-actions {
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 2rem;
+  margin-top: 2rem;
+}
+
+.logout{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 2rem;
+}
+
+.account-actions i {
+  font-size: 1.1rem;
+  color: #6b6b6b;
+}
+
+.account-actions a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}
+
+#customer_orders, #customer_addresses {
+  margin-bottom: 2rem;
+}
+
+#customer_orders h2, #customer_addresses h2 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+}
+
+#customer_orders p, #customer_addresses p {
+  margin: 0.5rem 0;
+  font-weight: 500;
+}
+
+.address {
+  border: 1px solid #ddd;
+  padding: 1rem;
+  background-color: #f9f9f9;
+}
+
+.address p {
+  margin: 0.2rem 0;
+}
 </style>
