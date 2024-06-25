@@ -1,39 +1,704 @@
-<!-- /templates/customers/addresses.liquid -->
+<div class="address-section">
+  <nav class="breadcrumb">
+    <a href="{{ shop.url }}">Home</a>
+    {% if template contains 'customers/account' %}
+      <span>Account</span>
+    {% elsif template contains 'customers/addresses' %}
+      <a href="/account">Account</a> <span>Addresses</span>
+    {% elsif template contains 'customers/login' %}
+      <span>Login</span>
+    {% elsif template contains 'customers/register' %}
+      <span>Register</span>
+    {% elsif template contains 'products' %}
+      {% if collection %}
+        <a href="{{ collection.url }}">{{ collection.title }}</a>
+      {% endif %}
+      <span>{{ product.title }}</span>
+    {% else %}
+      <span>{{ page_title }}</span>
+    {% endif %}
+  </nav>
 
-<h2>New Address</h2>
-{% form 'customer_address', customer.new_address %}
+  <div class="address_action">
+    <h1>Addresses</h1>
+    <div class="redirect">
+      <a href="/account">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>stroke="currentColor" stroke-width="0.5"
+            </svg>
+        </a>
+      <a href="/account">Return to account page</a>
+    </div>
+  </div>
 
-{{ form.errors | default_errors }}
+  {% if customer.addresses.size > 0 %}
+    {% for address in customer.addresses %}
+      <div class="address">
+        <div class="head">
+          <p>{{ address.first_name }} {{ address.last_name }}{% if address.default %} <em>(Default)</em>{% endif %}</p>
+        </div>
+        <div class="customer_address">
+          <p>{{ address.first_name }} {{ address.last_name }}</p>
+          <p>{{ address.address1 }}</p>
+          {% if address.address2 != "" %}
+            <p>{{ address.address2 }}</p>
+          {% endif %}
+          <p>{{ address.city }} {% if address.province_code %}{{ address.province_code }}, {% endif %}{{ address.country }}</p>
+          <p>{{ address.zip }}</p>
+          <p>{{ address.phone }}</p>
+        </div>
+        <div class="address_actions">
+          <button class="edit" data-id="{{ address.id }}">Edit</button>
+          <button class="delete" data-id="{{ address.id }}">Delete</button>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>No addresses found.</p>
+  {% endif %}
 
-<label for="first_name">First Name</label>
-<input type="text" value="" name="address[first_name]" size="30" />
+  <button id="addNewAddress">Add New Address</button>
 
-<label for="last_name">Last Name</label>
-<input type="text" value="" name="address[last_name]" size="30" />
+  <!-- Modal Popup for New Address -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Add New Address</h2>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg close-button" viewBox="0 0 16 16">
+            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+        </svg>
+      </div>
+      <div class="modal-body">
+        {% form 'customer_address', customer.new_address %}
 
-<label for="company">Company</label>
-<input type="text" value="" name="address[company]" />
+          {{ form.errors | default_errors }}
 
-<label for="address1">Address 1</label>
-<input type="text" value="" name="address[address1]" />
+          <div class="row">
+            <div class="column">
+                <label for="first_name">First Name</label>
+                <input type="text" value="" name="address[first_name]" size="30" />
+            </div>
 
-<label for="address2">Address 2</label>
-<input type="text" value="" name="address[address2]" />
+            <div class="column">
+                <label for="last_name">Last Name</label>
+                <input type="text" value="" name="address[last_name]" size="30" />
+            </div>
+          </div>
 
-<label for="city">City</label>
-<input type="text" value="" name="address[city]" />
+          <label for="company">Company</label>
+          <input type="text" value="" name="address[company]" />
 
-<!-- See docs for @shopify/theme-addresses to support Country and Province -->
-<label for="country">Country</label>
-<select name="address[country]" /></select>
+          <label for="address1">Address Line 1</label>
+          <input type="text" value="" name="address[address1]" />
 
-<label for="province">Province</label>
-<select name="address[province]" /></select>
+          <label for="address2">Address Line 2</label>
+          <input type="text" value="" name="address[address2]" />
 
-<label for="zip">Zip/Post Code</label>
-<input type="text" value="" name="address[zip]" />
+          <label for="city">City</label>
+          <input type="text" value="" name="address[city]" />
 
-<label for="phone">Phone Number</label>
-<input type="tel" value="" name="address[phone]" />
+          <label for="country">Country</label>
+          <select id="country" name="address[country]">
+            <option value="United States">United States</option>
+            <option value="Afghanistan">Afghanistan</option>
+            <option value="Albania">Albania</option>
+            <option value="Algeria">Algeria</option>
+            <option value="Andorra">Andorra</option>
+            <option value="Angola">Angola</option>
+            <option value="Antigua and Barbuda">Antigua and Barbuda</option>
+            <option value="Argentina">Argentina</option>
+            <option value="Armenia">Armenia</option>
+            <option value="Australia">Australia</option>
+            <option value="Austria">Austria</option>
+            <option value="Azerbaijan">Azerbaijan</option>
+            <option value="Bahamas">Bahamas</option>
+            <option value="Bahrain">Bahrain</option>
+            <option value="Bangladesh">Bangladesh</option>
+            <option value="Barbados">Barbados</option>
+            <option value="Belarus">Belarus</option>
+            <option value="Belgium">Belgium</option>
+            <option value="Belize">Belize</option>
+            <option value="Benin">Benin</option>
+            <option value="Bhutan">Bhutan</option>
+            <option value="Bolivia">Bolivia</option>
+            <option value="Bosnia and Herzegovina">Bosnia and Herzegovina</option>
+            <option value="Botswana">Botswana</option>
+            <option value="Brazil">Brazil</option>
+            <option value="Brunei">Brunei</option>
+            <option value="Bulgaria">Bulgaria</option>
+            <option value="Burkina Faso">Burkina Faso</option>
+            <option value="Burundi">Burundi</option>
+            <option value="Cabo Verde">Cabo Verde</option>
+            <option value="Cambodia">Cambodia</option>
+            <option value="Cameroon">Cameroon</option>
+            <option value="Canada">Canada</option>
+            <option value="Central African Republic">Central African Republic</option>
+            <option value="Chad">Chad</option>
+            <option value="Chile">Chile</option>
+            <option value="China">China</option>
+            <option value="Colombia">Colombia</option>
+            <option value="Comoros">Comoros</option>
+            <option value="Congo">Congo</option>
+            <option value="Costa Rica">Costa Rica</option>
+            <option value="Croatia">Croatia</option>
+            <option value="Cuba">Cuba</option>
+            <option value="Cyprus">Cyprus</option>
+            <option value="Czech Republic">Czech Republic</option>
+            <option value="Denmark">Denmark</option>
+            <option value="Djibouti">Djibouti</option>
+            <option value="Dominica">Dominica</option>
+            <option value="Dominican Republic">Dominican Republic</option>
+            <option value="Ecuador">Ecuador</option>
+            <option value="Egypt">Egypt</option>
+            <option value="El Salvador">El Salvador</option>
+            <option value="Equatorial Guinea">Equatorial Guinea</option>
+            <option value="Eritrea">Eritrea</option>
+            <option value="Estonia">Estonia</option>
+            <option value="Eswatini">Eswatini</option>
+            <option value="Ethiopia">Ethiopia</option>
+            <option value="Fiji">Fiji</option>
+            <option value="Finland">Finland</option>
+            <option value="France">France</option>
+            <option value="Gabon">Gabon</option>
+            <option value="Gambia">Gambia</option>
+            <option value="Georgia">Georgia</option>
+            <option value="Germany">Germany</option>
+            <option value="Ghana">Ghana</option>
+            <option value="Greece">Greece</option>
+            <option value="Grenada">Grenada</option>
+            <option value="Guatemala">Guatemala</option>
+            <option value="Guinea">Guinea</option>
+            <option value="Guinea-Bissau">Guinea-Bissau</option>
+            <option value="Guyana">Guyana</option>
+            <option value="Haiti">Haiti</option>
+            <option value="Honduras">Honduras</option>
+            <option value="Hungary">Hungary</option>
+            <option value="Iceland">Iceland</option>
+            <option value="India">India</option>
+            <option value="Indonesia">Indonesia</option>
+            <option value="Iran">Iran</option>
+            <option value="Iraq">Iraq</option>
+            <option value="Ireland">Ireland</option>
+            <option value="Israel">Israel</option>
+            <option value="Italy">Italy</option>
+            <option value="Jamaica">Jamaica</option>
+            <option value="Japan">Japan</option>
+            <option value="Jordan">Jordan</option>
+            <option value="Kazakhstan">Kazakhstan</option>
+            <option value="Kenya">Kenya</option>
+            <option value="Kiribati">Kiribati</option>
+            <option value="Kuwait">Kuwait</option>
+            <option value="Kyrgyzstan">Kyrgyzstan</option>
+            <option value="Laos">Laos</option>
+            <option value="Latvia">Latvia</option>
+            <option value="Lebanon">Lebanon</option>
+            <option value="Lesotho">Lesotho</option>
+            <option value="Liberia">Liberia</option>
+            <option value="Libya">Libya</option>
+            <option value="Liechtenstein">Liechtenstein</option>
+            <option value="Lithuania">Lithuania</option>
+            <option value="Luxembourg">Luxembourg</option>
+            <option value="Madagascar">Madagascar</option>
+            <option value="Malawi">Malawi</option>
+            <option value="Malaysia">Malaysia</option>
+            <option value="Maldives">Maldives</option>
+            <option value="Mali">Mali</option>
+            <option value="Malta">Malta</option>
+            <option value="Marshall Islands">Marshall Islands</option>
+            <option value="Mauritania">Mauritania</option>
+            <option value="Mauritius">Mauritius</option>
+            <option value="Mexico">Mexico</option>
+            <option value="Micronesia">Micronesia</option>
+            <option value="Moldova">Moldova</option>
+            <option value="Monaco">Monaco</option>
+            <option value="Mongolia">Mongolia</option>
+            <option value="Montenegro">Montenegro</option>
+            <option value="Morocco">Morocco</option>
+            <option value="Mozambique">Mozambique</option>
+            <option value="Myanmar">Myanmar</option>
+            <option value="Namibia">Namibia</option>
+            <option value="Nauru">Nauru</option>
+            <option value="Nepal">Nepal</option>
+            <option value="Netherlands">Netherlands</option>
+            <option value="New Zealand">New Zealand</option>
+            <option value="Nicaragua">Nicaragua</option>
+            <option value="Niger">Niger</option>
+            <option value="Nigeria">Nigeria</option>
+            <option value="North Korea">North Korea</option>
+            <option value="North Macedonia">North Macedonia</option>
+            <option value="Norway">Norway</option>
+            <option value="Oman">Oman</option>
+            <option value="Pakistan">Pakistan</option>
+            <option value="Palau">Palau</option>
+            <option value="Palestine">Palestine</option>
+            <option value="Panama">Panama</option>
+            <option value="Papua New Guinea">Papua New Guinea</option>
+            <option value="Paraguay">Paraguay</option>
+            <option value="Peru">Peru</option>
+            <option value="Philippines">Philippines</option>
+            <option value="Poland">Poland</option>
+            <option value="Portugal">Portugal</option>
+            <option value="Qatar">Qatar</option>
+            <option value="Romania">Romania</option>
+            <option value="Russia">Russia</option>
+            <option value="Rwanda">Rwanda</option>
+            <option value="Saint Kitts and Nevis">Saint Kitts and Nevis</option>
+            <option value="Saint Lucia">Saint Lucia</option>
+            <option value="Saint Vincent and the Grenadines">Saint Vincent and the Grenadines</option>
+            <option value="Samoa">Samoa</option>
+            <option value="San Marino">San Marino</option>
+            <option value="Sao Tome and Principe">Sao Tome and Principe</option>
+            <option value="Saudi Arabia">Saudi Arabia</option>
+            <option value="Senegal">Senegal</option>
+            <option value="Serbia">Serbia</option>
+            <option value="Seychelles">Seychelles</option>
+            <option value="Sierra Leone">Sierra Leone</option>
+            <option value="Singapore">Singapore</option>
+            <option value="Slovakia">Slovakia</option>
+            <option value="Slovenia">Slovenia</option>
+            <option value="Solomon Islands">Solomon Islands</option>
+            <option value="Somalia">Somalia</option>
+            <option value="South Africa">South Africa</option>
+            <option value="South Korea">South Korea</option>
+            <option value="South Sudan">South Sudan</option>
+            <option value="Spain">Spain</option>
+            <option value="Sri Lanka">Sri Lanka</option>
+            <option value="Sudan">Sudan</option>
+            <option value="Suriname">Suriname</option>
+            <option value="Sweden">Sweden</option>
+            <option value="Switzerland">Switzerland</option>
+            <option value="Syria">Syria</option>
+            <option value="Taiwan">Taiwan</option>
+            <option value="Tajikistan">Tajikistan</option>
+            <option value="Tanzania">Tanzania</option>
+            <option value="Thailand">Thailand</option>
+            <option value="Timor-Leste">Timor-Leste</option>
+            <option value="Togo">Togo</option>
+            <option value="Tonga">Tonga</option>
+            <option value="Trinidad and Tobago">Trinidad and Tobago</option>
+            <option value="Tunisia">Tunisia</option>
+            <option value="Turkey">Turkey</option>
+            <option value="Turkmenistan">Turkmenistan</option>
+            <option value="Tuvalu">Tuvalu</option>
+            <option value="Uganda">Uganda</option>
+            <option value="Ukraine">Ukraine</option>
+            <option value="United Arab Emirates">United Arab Emirates</option>
+            <option value="United Kingdom">United Kingdom</option>
+            <option value="Uruguay">Uruguay</option>
+            <option value="Uzbekistan">Uzbekistan</option>
+            <option value="Vanuatu">Vanuatu</option>
+            <option value="Venezuela">Venezuela</option>
+            <option value="Vietnam">Vietnam</option>
+            <option value="Yemen">Yemen</option>
+            <option value="Zambia">Zambia</option>
+            <option value="Zimbabwe">Zimbabwe</option>
+          </select>
 
-{% endform %}
+          <label for="province">Province/State</label>
+          <select name="address[province]" id="province">
+            <option value="Alabama">Alabama</option>
+            <option value="Alaska">Alaska</option>
+            <option value="Arizona">Arizona</option>
+            <option value="Arkansas">Arkansas</option>
+            <option value="California">California</option>
+            <option value="Colorado">Colorado</option>
+            <option value="Connecticut">Connecticut</option>
+            <option value="Delaware">Delaware</option>
+            <option value="Florida">Florida</option>
+            <option value="Georgia">Georgia</option>
+            <option value="Hawaii">Hawaii</option>
+            <option value="Idaho">Idaho</option>
+            <option value="Illinois">Illinois</option>
+            <option value="Indiana">Indiana</option>
+            <option value="Iowa">Iowa</option>
+            <option value="Kansas">Kansas</option>
+            <option value="Kentucky">Kentucky</option>
+            <option value="Louisiana">Louisiana</option>
+            <option value="Maine">Maine</option>
+            <option value="Maryland">Maryland</option>
+            <option value="Massachusetts">Massachusetts</option>
+            <option value="Michigan">Michigan</option>
+            <option value="Minnesota">Minnesota</option>
+            <option value="Mississippi">Mississippi</option>
+            <option value="Missouri">Missouri</option>
+            <option value="Montana">Montana</option>
+            <option value="Nebraska">Nebraska</option>
+            <option value="Nevada">Nevada</option>
+            <option value="New Hampshire">New Hampshire</option>
+            <option value="New Jersey">New Jersey</option>
+            <option value="New Mexico">New Mexico</option>
+            <option value="New York">New York</option>
+            <option value="North Carolina">North Carolina</option>
+            <option value="North Dakota">North Dakota</option>
+            <option value="Ohio">Ohio</option>
+            <option value="Oklahoma">Oklahoma</option>
+            <option value="Oregon">Oregon</option>
+            <option value="Pennsylvania">Pennsylvania</option>
+            <option value="Rhode Island">Rhode Island</option>
+            <option value="South Carolina">South Carolina</option>
+            <option value="South Dakota">South Dakota</option>
+            <option value="Tennessee">Tennessee</option>
+            <option value="Texas">Texas</option>
+            <option value="Utah">Utah</option>
+            <option value="Vermont">Vermont</option>
+            <option value="Virginia">Virginia</option>
+            <option value="Washington">Washington</option>
+            <option value="West Virginia">West Virginia</option>
+            <option value="Wisconsin">Wisconsin</option>
+            <option value="Wyoming">Wyoming</option>
+            <!-- Add other provinces or states if necessary -->
+          </select>
+
+          <div class="row">
+            <div class="column">
+                <label for="zip">Postal Code/ZIP</label>
+                <input type="text" value="" name="address[zip]" size="30" />
+            </div>
+
+            <div class="column">
+                <label for="phone">Phone</label>
+                <input type="tel" value="" name="address[phone]" />
+            </div>
+          </div>
+
+          <label class="custom-checkbox">
+              <input type="checkbox" name="address[default]" value="1" class="checkbox visually-hidden" />
+              <span class="checkbox-custom"></span>
+              Default Address
+          </label>
+
+
+          {% comment %} <input type="submit" class="btn" value="Add Address" /> {% endcomment %}
+          <div class="modal-footer">
+            <button type="submit" form="modalForm">Add Address</button>
+          </div>
+        {% endform %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.address-section {
+  padding: 3rem;
+  width: 100%;
+  margin: 0 auto;
+}
+.breadcrumb {
+  padding: 10px 0;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb a {
+  text-decoration: none;
+  color: #838282;
+  position: relative;
+  font-size: 0.9rem;
+  font-weight: 450;
+}
+
+.breadcrumb span {
+  color: #838282;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+  text-underline-offset: 5px;
+  text-decoration-color: #000;
+}
+
+.breadcrumb > *:not(:last-child)::after {
+  content: '/';
+  margin: 0 5px;
+  color: #838282;
+  display: inline-block;
+  font-weight: 450;
+  vertical-align: middle;
+}
+
+.address_action{
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 4rem;
+    padding-bottom: 4rem;
+}
+
+.address_action .redirect{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.address_action .redirect a{
+    text-decoration: none;
+    color: black;
+    display: flex;
+    font-weight: 450;
+}
+
+.address_action .redirect a svg{
+    font-weight: 450;
+}
+
+.address_action h1{
+  font-size: 3rem;
+  font-weight: 500;
+}
+
+.address {
+  border: 1px solid #ddd;
+  margin-bottom: 1rem;
+  width: 50%;
+  font-weight: 500;
+}
+
+.address .head {
+  background-color: #f2f2f2;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 0.5rem;
+  padding: 1rem 1.5rem;
+}
+
+p{
+    margin: 0;
+}
+
+.customer_address {
+  padding: 1.5rem;
+}
+
+.address_actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.5rem;
+  padding-top: 0;
+}
+
+.address_actions button {
+  padding: 0.9rem 1rem;
+  background-color: white;
+  border: 1px solid #bbbbbb;
+  font-weight: 500;
+  cursor: pointer;
+  width: 50%;
+}
+
+#addNewAddress {
+  background-color: #000;
+  color: #fff;
+  padding: 0.75rem 1rem;
+  border: none;
+  cursor: pointer;
+  margin-top: 3.5rem;
+}
+
+/* Modal styles */
+.modal {
+    display: none; /* Initially hidden */
+    position: fixed; /* Fixed position */
+    z-index: 1; /* Sit on top of other content */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* Prevent background scrolling */
+    background-color: rgba(0,0,0,0.7); /* Transparent black background */
+  }
+
+  /* Modal content */
+  .modal-content {
+    background-color: #fefefe;
+    margin: auto; /* Center the modal horizontally */
+    border: 1px solid #888;
+    width: 94%; /* Set modal width to 90% */
+    border-radius: 0;
+    position: relative; /* Needed for close button positioning */
+    height: 89%; /* Set modal height to 90% */
+    overflow-y: auto; /* Enable vertical scrolling within modal */
+    margin-top: 45px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  /* Modal header */
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    border: none;
+  }
+
+  .modal-header h2 {
+    margin-bottom: 0;
+    font-weight: bolder;
+  }
+
+  .close-button{
+    cursor: pointer;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  form label{
+    font-weight: 500;
+  }
+
+  form input{
+    padding: 10px;
+    font-weight: 500;
+  }
+
+  form select{
+    padding: 14px;
+    font-weight: 500;
+  }
+
+  form select option{
+    font-weight: 500;
+  }
+
+  form .row{
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 20px;
+  }
+
+  form .row .column{
+    display: grid;
+    flex-direction: column;
+    /* width: 49%; */
+  }
+
+.custom-checkbox {
+  display: inline-block;
+  position: relative;
+  padding-left: 34px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.custom-checkbox input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.checkbox-custom {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 24px;
+  width: 24px;
+  background-color: #eee;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.custom-checkbox:hover input ~ .checkbox-custom {
+  background-color: #ccc;
+}
+
+.custom-checkbox input:checked ~ .checkbox-custom {
+  background-color: #0266d2;
+  border-color: #007bff;
+}
+
+.checkbox-custom:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.custom-checkbox input:checked ~ .checkbox-custom:after {
+  display: block;
+}
+
+.checkbox-custom::after {
+    content: "";
+    position: absolute;
+    top: 42%;
+    left: 50%;
+    width: 8px;
+    height: 16px;
+    border: solid #fff;
+    border-width: 0 3.5px 3.5px 0;
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+  .modal-footer{
+    border: none;
+    justify-content: flex-start;
+    padding: 0;
+  }
+
+  .modal-footer button{
+    padding: 0.7rem;
+    background-color: black;
+    color: white;
+  }
+
+  /* Prevent background scrolling when modal is open */
+  body.modal-open {
+    overflow: hidden; /* Disable scrolling for the entire body */
+  }
+
+</style>
+
+<script>
+const addNewAddressButton = document.getElementById('addNewAddress');
+const modal = document.getElementById('modal');
+const closeButton = document.querySelector('.close-button');
+
+// Open the modal when the button is clicked
+addNewAddressButton.addEventListener('click', openModal);
+
+// Close the modal when the close button is clicked
+closeButton.addEventListener('click', closeModal);
+
+// Function to open the modal
+function openModal() {
+  modal.style.display = "block";
+  document.body.classList.add('modal-open'); // Add class for body styling (optional)
+}
+
+// Function to close the modal
+function closeModal() {
+  modal.style.display = "none";
+  document.body.classList.remove('modal-open'); // Remove class for body styling (optional)
+}
+
+// Close the modal when clicking outside of the modal content
+window.onclick = function(event) {
+  if (event.target == modal) {
+    closeModal();
+  }
+}
+
+document.querySelectorAll('.delete').forEach(function(button) {
+  button.addEventListener('click', function() {
+    if (confirm('Are you sure you want to delete this address?')) {
+      var addressId = this.getAttribute('data-id');
+      // Perform AJAX request to delete the address
+      // On success, remove the address from the DOM
+    }
+  });
+});
+
+document.querySelectorAll('.edit').forEach(function(button) {
+  button.addEventListener('click', function() {
+    var addressId = this.getAttribute('data-id');
+    // Perform AJAX request to get address data
+    // Populate the modal with address data and display it
+  });
+});
+</script>
