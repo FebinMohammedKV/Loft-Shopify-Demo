@@ -1,29 +1,222 @@
-.bottom{
-    background-image: url(Design.webp);
-    background-size: cover;
-    background-repeat: no-repeat;
+.banner {
     width: 100%;
-    height: 100vh;
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.banner.small {
+    height: 300px;
+}
+
+.banner.medium {
+    height: 500px;
+}
+
+.banner.large {
+    height: 750px;
+}
+
+.banner_img {
+    width: 100%;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: absolute;
     background-position: center;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    object-fit: cover;
+    background-blend-mode: overlay;
 }
-.bottom span{
+
+.banner_inner_content {
     display: flex;
+    flex-direction: column;
+    text-align: center;
+    position: absolute;
+    z-index: 2;
+}
+
+.banner_inner_content.top-left {
+    top: 20px;
+    left: 20px;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.banner_inner_content.top-center {
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.banner_inner_content.top-right {
+    top: 20px;
+    right: 20px;
+    justify-content: flex-start;
+    align-items: flex-end;
+}
+
+.banner_inner_content.middle-left {
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.banner_inner_content.middle-center {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     justify-content: center;
     align-items: center;
-    width: 200px;
-    height: 50px;
-    /* background-color: #eeeeee;
-    background-color: #A3402D; */
-    /* color: white; */
-    border: none;
-    margin-top: 210px;
 }
-.bottom span a{
+
+.banner_inner_content.middle-right {
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.banner_inner_content.bottom-left {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    justify-content: flex-end;
+    align-items: flex-start;
+}
+
+.banner_inner_content.bottom-center {
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.banner_inner_content.bottom-right {
+    bottom: 20px;
+    right: 20px;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+.banner_inner_content a{
     text-decoration: none;
 }
-.bottom span:hover{
-    background-image: linear-gradient(to left, #ab4747 0%, #be4d4d 100%);
+
+.banner_heading {
+    text-decoration: none;
+    margin: 0;
+}
+
+.banner_heading.small {
+    font-size: 1.5rem;
+}
+
+.banner_heading.medium {
+    font-size: 2.5rem;
+}
+
+.banner_heading.large {
+    font-size: 3.5rem;
+}
+
+.banner_description {
+    text-decoration: none;
+}
+
+.banner_description.body {
+    font-size: 1rem;
+}
+
+.banner_description.subtitle {
+    font-size: 1.2rem;
+}
+
+.banner_description.uppercase {
+    text-transform: uppercase;
+}
+
+.banner_button {
+    text-decoration: none;
+    padding: 13px 50px;
+    border-radius: 0;
+    display: inline-block;
+    margin-top: 20px;
+    font-size: 1rem;
+}
+
+@media only screen and (max-width: 768px) {
+    .banner_heading.small {
+        font-size: 1.2rem;
+    }
+
+    .banner_heading.medium {
+        font-size: 1.5rem;
+    }
+
+    .banner_heading.large {
+        font-size: 2rem;
+    }
+
+    .banner_description.body {
+        font-size: 0.8rem;
+    }
+
+    .banner_description.subtitle {
+        font-size: 1rem;
+    }
+
+    .banner_description.uppercase {
+        font-size: 0.8rem;
+    }
+}
+
+@keyframes ambientMovement {
+    0% {
+        background-position: center top;
+    }
+    100% {
+        background-position: center bottom;
+    }
+}
+
+.ambient {
+    animation: ambientMovement 20s infinite alternate;
+}
+
+.fixed {
+    background-attachment: fixed;
+}
+
+.zoom {
+    background-size: 110%;
+    background-position: center;
+}
+
+.zoom:hover {
+    background-size: 100%;
+    transition: background-size 0.3s ease;
+    background-position: center;
+}
+
+.banner_img.none {
+    width: 100%;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    object-fit: cover;
 }

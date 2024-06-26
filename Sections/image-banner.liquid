@@ -1,0 +1,224 @@
+{{ 'banner.css' | asset_url | stylesheet_tag }}
+{{ 'banner.js' | asset_url | script_tag }}
+
+
+{% assign sectionId = section.id | handleize %}
+<div class="banner {{ section.settings.banner_height }}" id="banner-{{ sectionId }}">
+    <a href="{{ section.settings.banner_heading_link }}" class="banner_content">
+        <div class="banner_img {{ section.settings.animation }}" style="background-image: url('{{ section.settings.banner_background | img_url: "master" }}'); background-color: rgba(0, 0, 0, {{ section.settings.overlay_opacity }});"></div>
+    </a>
+    <div class="banner_inner_content {{ section.settings.desktop_content_position }}">
+        {% if section.blocks.size > 0 %}
+            {% for block in section.blocks %}
+                {% case block.type %}
+                    {% when 'banner-heading' %}
+                        {% if block.settings.banner_head %}
+                            <span class="banner_heading {{ block.settings.heading_size }}" style="font-weight: {{ block.settings.text_weight }}; color: {{ block.settings.text_color }};">
+                                {{ block.settings.banner_head | richtext }}
+                            </span>
+                        {% endif %}
+                    {% when 'banner-description' %}
+                        {% if block.settings.banner_des %}
+                            <p class="banner_description {{ block.settings.text_style }}" style="font-weight: {{ block.settings.text_weight }}; color: {{ block.settings.text_color }};">
+                                {{ block.settings.banner_des | richtext }}
+                            </p>
+                        {% endif %}
+                    {% when 'banner-button' %}
+                        {% if block.settings.banner_button_text %}
+                            <span>
+                                <a href="{{ block.settings.button_url }}" class="banner_button" style="background-color: {{ block.settings.button_background }}; color: {{ block.settings.button_color }};">
+                                    {{ block.settings.banner_button_text }}
+                                </a>
+                            </span>
+                        {% endif %}
+                {% endcase %}
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>
+
+{% style %}
+    .banner_inner_content{
+        color: {{ section.settings.banner_content_text_color }};
+    }
+{% endstyle %}
+
+
+{% schema %}
+{
+    "name": "Image Banner",
+    "settings": [
+        {
+            "type": "image_picker",
+            "id": "banner_background",
+            "label": "Banner Background"
+        },
+        {
+            "type": "range",
+            "id": "overlay_opacity",
+            "label": "Image Overlay Opacity",
+            "min": 0,
+            "max": 1,
+            "step": 0.1,
+            "default": 0.1
+        },
+        {
+            "type": "select",
+            "id": "banner_height",
+            "label": "Banner Height",
+            "options": [
+                { "value": "auto", "label": "Adapt to First Image" },
+                { "value": "small", "label": "Small" },
+                { "value": "medium", "label": "Medium" },
+                { "value": "large", "label": "Large" }
+            ],
+            "default": "medium"
+        },
+        {
+            "type": "select",
+            "id": "desktop_content_position",
+            "label": "Desktop Content Position",
+            "options": [
+                { "value": "top-left", "label": "Top Left" },
+                { "value": "top-center", "label": "Top Center" },
+                { "value": "top-right", "label": "Top Right" },
+                { "value": "middle-left", "label": "Middle Left" },
+                { "value": "middle-center", "label": "Middle Center" },
+                { "value": "middle-right", "label": "Middle Right" },
+                { "value": "bottom-left", "label": "Bottom Left" },
+                { "value": "bottom-center", "label": "Bottom Center" },
+                { "value": "bottom-right", "label": "Bottom Right" }
+            ],
+            "default": "middle-center"
+        },
+        {
+            "type": "select",
+            "id": "animation",
+            "label": "Image Behavior",
+            "options": [
+                { "value": "none", "label": "None" },
+                { "value": "ambient", "label": "Ambient Movement" },
+                { "value": "fixed", "label": "Fixed Background Position" },
+                { "value": "zoom", "label": "Zoom in on Scroll" }
+            ],
+            "default": "none"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "banner-heading",
+            "name": "Banner Heading",
+            "settings": [
+                {
+                    "type": "richtext",
+                    "id": "banner_head",
+                    "label": "Text",
+                    "default": "<p>Browse our latest products</p>"
+                },
+                {
+                    "type": "select",
+                    "id": "heading_size",
+                    "label": "Heading Size",
+                    "options": [
+                        { "value": "small", "label": "Small" },
+                        { "value": "medium", "label": "Medium" },
+                        { "value": "large", "label": "Large" }
+                    ],
+                    "default": "medium"
+                },
+                {
+                    "type": "color",
+                    "id": "text_color",
+                    "label": "Text Color"
+                },
+                {
+                    "type": "select",
+                    "id": "text_weight",
+                    "label": "Text Weight",
+                    "options": [
+                        { "value": "400", "label": "Lighter" },
+                        { "value": "500", "label": "Normal" },
+                        { "value": "650", "label": "Bold" },
+                        { "value": "800", "label": "Bolder" }
+                    ],
+                    "default": "500"
+                }
+            ]
+        },
+        {
+            "type": "banner-description",
+            "name": "Banner Description",
+            "settings": [
+                {
+                    "type": "richtext",
+                    "id": "banner_des",
+                    "label": "Text",
+                    "default": "<p>Give customers details about the banner image(s) or content on the template</p>"
+                },
+                {
+                    "type": "select",
+                    "id": "text_style",
+                    "label": "Text Style",
+                    "options": [
+                        { "value": "body", "label": "Body" },
+                        { "value": "subtitle", "label": "Subtitle" },
+                        { "value": "uppercase", "label": "Uppercase" }
+                    ],
+                    "default": "body"
+                },
+                {
+                    "type": "color",
+                    "id": "text_color",
+                    "label": "Text Color"
+                },
+                {
+                    "type": "select",
+                    "id": "text_weight",
+                    "label": "Text Weight",
+                    "options": [
+                        { "value": "400", "label": "Lighter" },
+                        { "value": "500", "label": "Normal" },
+                        { "value": "700", "label": "Bold" }
+                    ],
+                    "default": "500"
+                }
+            ]
+        },
+        {
+            "type": "banner-button",
+            "name": "Button",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "banner_button_text",
+                    "label": "Button Text",
+                    "default": "Shop Now"
+                },
+                {
+                    "type": "url",
+                    "id": "button_url",
+                    "label": "Button Link"
+                },
+                {
+                    "type": "color",
+                    "id": "button_color",
+                    "label": "Button Color",
+                    "default": "#ffffff"
+                },
+                {
+                    "type": "color",
+                    "id": "button_background",
+                    "label": "Button Background",
+                    "default": "#000000"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Image Banner"
+        }
+    ]
+}
+
+{% endschema %}
