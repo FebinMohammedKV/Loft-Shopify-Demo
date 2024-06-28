@@ -32,6 +32,10 @@
     background-blend-mode: overlay;
 }
 
+p{
+    margin: 5px;
+}
+
 .banner_inner_content {
     display: flex;
     flex-direction: column;
@@ -41,14 +45,14 @@
 }
 
 .banner_inner_content.top-left {
-    top: 20px;
-    left: 20px;
+    top: 50px;
+    left: 50px;
     justify-content: flex-start;
     align-items: flex-start;
 }
 
 .banner_inner_content.top-center {
-    top: 20px;
+    top: 50px;
     left: 50%;
     transform: translateX(-50%);
     justify-content: flex-start;
@@ -56,15 +60,15 @@
 }
 
 .banner_inner_content.top-right {
-    top: 20px;
-    right: 20px;
+    top: 50px;
+    right: 50px;
     justify-content: flex-start;
     align-items: flex-end;
 }
 
 .banner_inner_content.middle-left {
     top: 50%;
-    left: 20px;
+    left: 50px;
     transform: translateY(-50%);
     justify-content: center;
     align-items: flex-start;
@@ -80,7 +84,7 @@
 
 .banner_inner_content.middle-right {
     top: 50%;
-    right: 20px;
+    right: 50px;
     transform: translateY(-50%);
     justify-content: center;
     align-items: flex-end;
@@ -88,14 +92,14 @@
 
 .banner_inner_content.bottom-left {
     position: absolute;
-    bottom: 20px;
-    left: 20px;
+    bottom: 50px;
+    left: 50px;
     justify-content: flex-end;
     align-items: flex-start;
 }
 
 .banner_inner_content.bottom-center {
-    bottom: 20px;
+    bottom: 50px;
     left: 50%;
     transform: translateX(-50%);
     justify-content: flex-end;
@@ -103,8 +107,8 @@
 }
 
 .banner_inner_content.bottom-right {
-    bottom: 20px;
-    right: 20px;
+    bottom: 50px;
+    right: 50px;
     justify-content: flex-end;
     align-items: flex-end;
 }
@@ -135,15 +139,15 @@
 }
 
 .banner_description.body {
-    font-size: 1rem;
+    font-size: 1rem !important;
 }
 
 .banner_description.subtitle {
-    font-size: 1.2rem;
+    font-size: 1.2rem !important;
 }
 
 .banner_description.uppercase {
-    text-transform: uppercase;
+    text-transform: uppercase !important;
 }
 
 .banner_button {
@@ -185,14 +189,20 @@
     0% {
         background-position: center top;
     }
+    50% {
+        background-position: center center;
+    }
     100% {
         background-position: center bottom;
     }
 }
 
 .ambient {
-    animation: ambientMovement 20s infinite alternate;
+    animation: ambientMovement 20s infinite alternate ease-in-out;
+    background-size: cover;
+    background-attachment: scroll;
 }
+
 
 .fixed {
     background-attachment: fixed;

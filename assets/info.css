@@ -82,31 +82,9 @@
       padding-right: 0;
     }
   }
-  
 
-/* @media only screen and (min-width: 1900px) {
+  @media (max-width: 300px){
     .info {
-        padding: 0 23rem;
-    }   
-}
-@media only screen and (min-width: 1200px) {
-    .info {
-        padding: 0 3rem;
-    }   
-}
-@media only screen and (min-width: 960px) {
-    .info {
-        padding: 0 3rem;
-    }   
-    .info .image-container {
-        height: 11rem;
+      padding: 0 1rem;
     }
-}
-@media only screen and (min-width: 770px){
-    .info{
-        padding: 0 3rem;
-    }
-    .info .image-container {
-        height: 10rem;
-    }
-} */
+  }

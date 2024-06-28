@@ -74,3 +74,9 @@
         line-height: 18px;
     }
 }
+
+@media (max-width: 300px){
+    .about .cont h1 {
+        word-wrap: break-word;
+    }
+}

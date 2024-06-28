@@ -45,9 +45,9 @@
     <img src="{{ default_image | img_url: 'large' }}" alt="{{ default_image.alt | escape }}" id="ProductPhotoImg">
     <div class="product-thumbnails">
       {% for image in product.images %}
-        <a href="#" 
-           class="thumbnail" 
-           data-image="{{ image.src | img_url: 'large' }}" 
+        <a href="#"
+           class="thumbnail"
+           data-image="{{ image.src | img_url: 'large' }}"
            thumbnail-alt="{{ image.alt }}"
            {% if product.selected_or_first_available_variant.featured_media and product.selected_or_first_available_variant.featured_media.alt != image.alt %}
              style="display: none;"
@@ -57,9 +57,9 @@
         </a>
       {% endfor %}
     </div>
-    
+
   </div>
-  
+
   <div class="product-details">
     <h1>{{ product.title }}</h1>
     <div class="price-info">
@@ -70,7 +70,7 @@
         </p>
       <p class="shipping"><a href="/pages/shipping">Shipping </a>calculated at checkout.</p>
     </div>
-    
+
     <div class="product-description closed" id="product-description">
       {{ product.description }}
       <span class="show-more">... show more...</span>
@@ -127,18 +127,19 @@
         {% if product.available %}
             <button type="submit" name="add" id="AddToCart">Add to Basket</button>
         {% else %}
-          <button type="button" name="add" id="NotifyMe">Notify Me</button>
+          <button type="button" name="add" id="AddToCart">Notify Me</button>
         {% endif %}
       </div>
-      
+
       <button type="button" class="shopify-pay">
         Buy with
         <span class="shopify-pay-img">
           <img src="{{ 'shopPay.png' | asset_url }}" alt="Shopify Pay">
         </span>
       </button>
-      
-      <a href="#" class="more-payment-options">More payment options</a>
+
+      <a href="/checkout" class="more-payment-options">More payment options</a>
+
     </form>
 
 

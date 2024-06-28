@@ -1,18 +1,33 @@
 {{ 'shop-section.css'| asset_url | stylesheet_tag }}
 
-<section class="shop">
-  <div class="image-container">
-    <img src="{{ section.settings.shop_image | img_url: 'large' }}" alt="shop">
-  </div>
-  <div class="cont">
-    <p class="top" style="color: {{ section.settings.top_text_color }}">{{ section.settings.top_text }}</p>
-    <p class="head" style="color: {{ section.settings.heading_color }}">{{ section.settings.heading }}</p>
-    <p class="para" style="color: {{ section.settings.paragraph_color }}">{{ section.settings.paragraph }}</p>
-    <a href="{{ section.settings.button_link }}">
-      <button style="color: {{ section.settings.button_text_color }}; background-color: {{ section.settings.button_bg_color }};">{{ section.settings.button_text }}</button>
-    </a>
+<section class="shop {{ section.settings.image_placement }} {{ section.settings.image_width }}" style="margin-top: {{ section.settings.margin_top }}px; margin-bottom: {{ section.settings.margin_bottom }}px;">
+
+  {% if section.settings.shop_image %}
+    <div class="image-container {{ section.settings.image_behavior }}">
+      <img src="{{ section.settings.shop_image | img_url: 'large' }}" alt="shop">
+    </div>
+  {% endif %}
+
+  <div class="cont {{ section.settings.content_position }} {{ section.settings.content_alignment }} {{ section.settings.content_layout }}">
+    {% if section.blocks.size > 0 %}
+      {% for block in section.blocks %}
+        {% case block.type %}
+          {% when 'top_text' %}
+            <p class="top" style="color: {{ section.settings.top_text_color }}; font-weight: {{ block.settings.text_weight }}; font-size: {{ block.settings.font_size }}px;">{{ block.settings.top_text }}</p>
+          {% when 'heading' %}
+            <p class="head" style="color: {{ section.settings.heading_color }}; font-weight: {{ block.settings.text_weight }}; font-size: {{ block.settings.font_size }}px;">{{ block.settings.heading }}</p>
+          {% when 'paragraph' %}
+            <p class="para" style="color: {{ section.settings.paragraph_color }}; font-weight: {{ block.settings.text_weight }}; font-size: {{ block.settings.font_size }}px;">{{ block.settings.paragraph }}</p>
+          {% when 'button' %}
+            <a href="{{ block.settings.button_link }}">
+              <button style="color: {{ block.settings.button_text_color }}; background-color: {{ block.settings.button_bg_color }};">{{ block.settings.button_text }}</button>
+            </a>
+        {% endcase %}
+      {% endfor %}
+    {% endif %}
   </div>
 </section>
+
 
 {% schema %}
 {
@@ -24,63 +39,210 @@
       "label": "Shop Image"
     },
     {
-      "type": "text",
-      "id": "top_text",
-      "label": "Top Text",
-      "default": "FURNITURE PACKAGES"
+      "type": "select",
+      "id": "image_width",
+      "label": "Desktop Image Width",
+      "options": [
+        { "value": "small", "label": "Small" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "large", "label": "Large" }
+      ],
+      "default": "large"
     },
     {
-      "type": "text",
-      "id": "heading",
-      "label": "Heading",
-      "default": "SHOP THE LOOK"
+      "type": "select",
+      "id": "image_placement",
+      "label": "Desktop Image Placement",
+      "options": [
+        { "value": "image-first", "label": "Image First" },
+        { "value": "image-second", "label": "Image Second" }
+      ],
+      "default": "image-first"
     },
     {
-      "type": "textarea",
-      "id": "paragraph",
-      "label": "Paragraph",
-      "default": "Get everything you need for your property all in one with one of our furniture & accessories packages. Our packages include a range of styles to suit you and vary in price point, which means you can pick a package tailored to you and your resident's needs. Bespoke packages available on request."
+      "type": "select",
+      "id": "content_position",
+      "label": "Desktop Content Position",
+      "options": [
+        { "value": "top", "label": "Top" },
+        { "value": "middle", "label": "Middle" },
+        { "value": "bottom", "label": "Bottom" }
+      ],
+      "default": "middle"
     },
     {
-      "type": "color",
-      "id": "top_text_color",
-      "label": "Top Text Color",
-      "default": "#454444"
+      "type": "select",
+      "id": "content_alignment",
+      "label": "Desktop Content Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
     },
     {
-      "type": "color",
-      "id": "heading_color",
-      "label": "Heading Color",
-      "default": "#000000"
+      "type": "select",
+      "id": "content_layout",
+      "label": "Content Layout",
+      "options": [
+        { "value": "no-overlap", "label": "No Overlap" },
+        { "value": "overlap", "label": "Overlap" }
+      ],
+      "default": "no-overlap"
     },
     {
-      "type": "color",
-      "id": "paragraph_color",
-      "label": "Paragraph Color",
-      "default": "#454444"
+      "type": "select",
+      "id": "image_behavior",
+      "label": "Image Behavior",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "ambient-movement", "label": "Ambient Movement" },
+        { "value": "zoom-scroll", "label": "Zoom in on Scroll" }
+      ],
+      "default": "none"
     },
     {
-      "type": "text",
-      "id": "button_text",
-      "label": "Button Text",
-      "default": "SHOP NOW"
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin Top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 100
     },
     {
-      "type": "color",
-      "id": "button_text_color",
-      "label": "Button Text Color",
-      "default": "#FFFFFF"
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 100
+    }
+  ],
+  "blocks": [
+    {
+      "type": "top_text",
+      "name": "Top Text",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "top_text",
+          "label": "Top Text"
+        },
+        {
+          "type": "range",
+          "id": "font_size",
+          "label": "Font Size",
+          "min": 10,
+          "max": 100,
+          "step": 1,
+          "default": 15
+        },
+        {
+            "type": "select",
+            "id": "text_weight",
+            "label": "Text Weight",
+            "options": [
+                { "value": "400", "label": "Lighter" },
+                { "value": "500", "label": "Normal" },
+                { "value": "700", "label": "Bold" }
+            ],
+            "default": "500"
+        }
+      ]
     },
     {
-      "type": "color",
-      "id": "button_bg_color",
-      "label": "Button Background Color",
-      "default": "#303030"
+      "type": "heading",
+      "name": "Heading",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "heading",
+          "label": "Heading"
+        },
+        {
+          "type": "range",
+          "id": "font_size",
+          "label": "Font Size",
+          "min": 10,
+          "max": 100,
+          "step": 1,
+          "default": 15
+        },
+        {
+          "type": "select",
+          "id": "text_weight",
+          "label": "Text Weight",
+          "options": [
+              { "value": "400", "label": "Lighter" },
+              { "value": "500", "label": "Normal" },
+              { "value": "700", "label": "Bold" }
+          ],
+          "default": "500"
+        }
+      ]
     },
     {
-      "type": "url",
-      "id": "button_link",
-      "label": "Button Link"
+      "type": "paragraph",
+      "name": "Paragraph",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "paragraph",
+          "label": "Paragraph"
+        },
+        {
+          "type": "range",
+          "id": "font_size",
+          "label": "Font Size",
+          "min": 10,
+          "max": 100,
+          "step": 1,
+          "default": 15
+        },
+        {
+          "type": "select",
+          "id": "text_weight",
+          "label": "Text Weight",
+          "options": [
+              { "value": "400", "label": "Lighter" },
+              { "value": "500", "label": "Normal" },
+              { "value": "700", "label": "Bold" }
+          ],
+          "default": "500"
+        }
+      ]
+    },
+    {
+      "type": "button",
+      "name": "Button",
+      "settings": [
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button Text",
+          "default": "SHOP NOW"
+        },
+        {
+          "type": "color",
+          "id": "button_text_color",
+          "label": "Button Text Color",
+          "default": "#FFFFFF"
+        },
+        {
+          "type": "color",
+          "id": "button_bg_color",
+          "label": "Button Background Color",
+          "default": "#303030"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button Link"
+        }
+      ]
     }
   ],
   "presets": [

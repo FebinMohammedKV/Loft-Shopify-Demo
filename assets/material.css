@@ -117,6 +117,12 @@
         padding-right: 0;
     }
     .material .cont span{
-        margin-left: auto; 
+        margin-left: auto;
+    }
+}
+
+@media (max-width: 300px){
+    .material .cont h1 {
+        word-wrap: break-word;
     }
 }

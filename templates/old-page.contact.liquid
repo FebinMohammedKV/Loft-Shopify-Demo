@@ -1,4 +1,4 @@
-<h1>{{ page.title }}</h1>
+{% comment %} <h1>{{ page.title }}</h1>
 {% form 'contact' %}
   {% if form.posted_successfully? %} Thank you for your contact {% endif %}
   {{ form.errors | default_errors }}
@@ -11,4 +11,4 @@
   <label for="ContactFormMessage">message</label>
   <textarea rows="10" id="ContactFormMessage" name="contact[body]"></textarea>
   <input type="submit" value="send">
-{% endform %}
+{% endform %} {% endcomment %}

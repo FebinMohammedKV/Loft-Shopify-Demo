@@ -17,11 +17,18 @@
                                 {{ block.settings.banner_head | richtext }}
                             </span>
                         {% endif %}
-                    {% when 'banner-description' %}
+                    {% comment %} {% when 'banner-description' %}
                         {% if block.settings.banner_des %}
-                            <p class="banner_description {{ block.settings.text_style }}" style="font-weight: {{ block.settings.text_weight }}; color: {{ block.settings.text_color }};">
+                            <p class="banner_description {{ block.settings.text_style }}"
+                               style="font-weight: {{ block.settings.text_weight }}; color: {{ block.settings.text_color }};">
                                 {{ block.settings.banner_des | richtext }}
                             </p>
+                        {% endif %} {% endcomment %}
+                    {% when 'banner-description' %}
+                        {% if block.settings.banner_des %}
+                            <span class="banner_description {{ block.settings.text_style }}" style="font-weight: {{ block.settings.text_weight }}; color: {{ block.settings.text_color }};">
+                                {{ block.settings.banner_des | richtext }}
+                            </span>
                         {% endif %}
                     {% when 'banner-button' %}
                         {% if block.settings.banner_button_text %}
