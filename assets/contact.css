@@ -42,11 +42,7 @@
   margin-bottom: 8px;
   background-color: #F5F8FA;
   font-weight: 500;
-  color: rgb(49, 68, 125);
-}
-
-.contact-section input, select, textarea::placeholder{
-    color: rgb(177, 177, 177);
+  color: rgb(10, 17, 37);
 }
 
 .contact-section input:focus {
@@ -94,11 +90,24 @@ small {
 }
 
 .checkbox{
-    display: inline-block;
+    display: inline-block !important;
 }
 
 .contact-section .form-group p{
     font-size: 0.9rem;
     font-weight: 500;
     margin: 0;
+}
+
+@media (max-width: 772px){
+  input{
+    display: block;
+  }
+}
+
+@media (max-width: 576px){
+  input{
+    display: block;
+  }
+  
 }

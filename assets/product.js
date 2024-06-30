@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
       description.classList.toggle("closed");
       showMoreLink.textContent = description.classList.contains("closed") ? "...show more" : " show less";
     });
-});  
+});
 
 document.addEventListener('DOMContentLoaded', function() {
     const headings = document.querySelectorAll('.product-additional-details .heading');
@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
         ]
       });
     });
-    
+
     // similar heading
     document.addEventListener('DOMContentLoaded', function() {
       function toCamelCase(str) {
@@ -90,6 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+// varient
 document.addEventListener('DOMContentLoaded', function() {
   var variantRadios = document.querySelectorAll('.product-form__swatch input[type="radio"]');
   var mainImage = document.getElementById('ProductPhotoImg');

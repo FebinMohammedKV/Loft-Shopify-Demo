@@ -45,102 +45,98 @@
     <img src="{{ default_image | img_url: 'large' }}" alt="{{ default_image.alt | escape }}" id="ProductPhotoImg">
     <div class="product-thumbnails">
       {% for image in product.images %}
-        <a href="#"
-           class="thumbnail"
-           data-image="{{ image.src | img_url: 'large' }}"
-           thumbnail-alt="{{ image.alt }}"
-           {% if product.selected_or_first_available_variant.featured_media and product.selected_or_first_available_variant.featured_media.alt != image.alt %}
-             style="display: none;"
-           {% endif %}
-        >
-          <img src="{{ image.src | img_url: 'compact' }}" alt="{{ image.alt | escape }}">
-        </a>
+        <div class="thumbnail" 
+        {% if product.selected_or_first_available_variant.featured_media.alt != image.alt and product.selected_or_first_available_variant.featured_media.alt != blank %}
+          style="display: none;"
+        {% endif %}
+        thumbnail-alt="{{ image.alt }}">
+     <img src="{{ image | img_url: 'compact' }}" alt="{{ image.alt | escape }}">
+   </div>
       {% endfor %}
     </div>
 
   </div>
 
   <div class="product-details">
+    <nav class="breadcrumb">
+      <a href="{{ shop.url }}">Home</a> /
+      {% if collection %}
+        <a href="{{ collection.url }}">{{ collection.title }}</a> /
+      {% endif %}
+      <span>{{ product.title }}</span>
+    </nav>
+    
     <h1>{{ product.title }}</h1>
     <div class="price-info">
-        <p class="product-price">From {{ product.price | money }} exc VAT <br>
-            {% if product.compare_at_price > product.price %}
-                <span> From {{ product.compare_at_price | money }} inc VAT</span>
-            {% endif %}
-        </p>
-      <p class="shipping"><a href="/pages/shipping">Shipping </a>calculated at checkout.</p>
-    </div>
+  <p class="product-price">
+    <span class="product-prie">{{ product.selected_or_first_available_variant.price | money }} exc VAT</span>
+    <br>
+    {% if product.compare_at_price > product.price %}
+      <span> From {{ product.compare_at_price | money }} inc VAT</span>
+    {% endif %}
+  </p>
+  <p class="shipping"><a href="/pages/shipping">Shipping </a>calculated at checkout.</p>
+</div>
 
-    <div class="product-description closed" id="product-description">
-      {{ product.description }}
-      <span class="show-more">... show more...</span>
-    </div>
+<div class="product-description closed" id="product-description">
+  {{ product.description }}
+  <span class="show-more">... show more...</span>
+</div>
 
-    <!-- Product Variant Section -->
+<!-- Product Variant Section -->
+{% form 'product', product %}
+<input id="product_id" type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+{% if product.variants.size > 1 %}
+  {% for option in product.options_with_values %}
     <fieldset class="product-form__options">
-      <legend><span>Choose Variants</span></legend>
-      <div class="variant">
-      {% for option in product.options_with_values %}
-        {% if option.name == 'Color' %}
-          <p class="variant-title">{{ option.name }}</p>
-          <div class="product-form__swatch">
-            {% for value in option.values %}
-              {% assign variant = product.variants | where: 'option1', value | first %}
-              <label class="swatch">
-                <input type="radio" name="variant-Color" value="{{ variant.id }}" data-image="{{ variant.featured_image | img_url: 'large' }}" data-alt="{{ value }}">
-                <span class="swatch-image" style="background-image: url('{{ variant.featured_image | img_url: 'small' }}');"></span>
-                <span class="swatch-name">{{ value }}</span>
-              </label>
-            {% endfor %}
-          </div>
-        {% else %}
-          <p class="variant-title">{{ option.name }}</p>
-          <div class="product-form__button-options">
-            {% for value in option.values %}
-              <label class="button-option">
-                <input type="radio" name="variant-{{ option.name }}" value="{{ value }}">
-                <span class="button-label">{{ value }}</span>
-              </label>
-            {% endfor %}
-          </div>
-        {% endif %}
-      {% endfor %}
-      </div>
-    </fieldset>
-
-    <form action="/cart/add" method="post" enctype="multipart/form-data" id="AddToCartForm">
-      <input type="hidden" name="id" value="{{ product.variants.first.id }}">
-      <div class="quantity-selector">
-        <div class="quantity-title">QUANTITY</div>
-        <div class="quantity-content">
-          <button type="button" class="quantity-btn" onclick="decreaseQuantity()">-</button>
-          <input type="text" id="Quantity" name="quantity" value="1" min="1" onchange="updateTotal()">
-          <button type="button" class="quantity-btn" onclick="increaseQuantity()">+</button>
+      <legend><span>Choose {{ option.name }}</span></legend>
+      {% if option.name == 'Color' %}
+        <div class="product-form__swatch">
+          {% for value in option.values %}
+            {% assign variant = product.variants | where: 'option1', value | first %}
+            <label class="swatch" for="{{ option.name | handleize }}-{{ value | handleize }}">
+              <input {% if option.selected_value == value %}checked{% endif %} type="radio" name="{{ option.name }}" value="{{ value }}" id="{{ option.name | handleize }}-{{ value | handleize }}" data-image="{{ variant.featured_image | img_url: 'large' }}" data-alt="{{ value }}">
+              <span class="swatch-image" style="background-image: url('{{ variant.featured_image | img_url: 'small' }}');"></span>
+              <span class="swatch-name">{{ value }}</span>
+            </label>
+          {% endfor %}
         </div>
-      </div>
+      {% else %}
+        <div class="product-form__button-options">
+          {% for value in option.values %}
+            <label class="button-option">
+              <input type="radio" name="{{ option.name }}" value="{{ value }}">
+              <span class="button-label">{{ value }}</span>
+            </label>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </fieldset>
+  {% endfor %}
+{% endif %}
 
-      <div class="total-price">
-        <p>Total: <span id="totalPrice">{{ product.variants.first.price | divided_by: 100.00 }}</span></p>
-      </div>
+<div class="quantity-selector">
+  <div class="quantity-title">QUANTITY</div>
+  <div class="quantity-content">
+    <button type="button" class="quantity-btn" onclick="decreaseQuantity()">-</button>
+    <input type="text" id="Quantity" name="quantity" value="1" min="1" onchange="updateTotal()">
+    <button type="button" class="quantity-btn" onclick="increaseQuantity()">+</button>
+  </div>
+</div>
 
-      <div id="productSelect">
-        {% if product.available %}
-            <button type="submit" name="add" id="AddToCart">Add to Basket</button>
-        {% else %}
-          <button type="button" name="add" id="AddToCart">Notify Me</button>
-        {% endif %}
-      </div>
+<div class="total-price">
+  <p>Total: <span id="totalPrice">{{ product.selected_or_first_available_variant.price | divided_by: 100.00 }}</span></p>
+</div>
 
-      <button type="button" class="shopify-pay">
-        Buy with
-        <span class="shopify-pay-img">
-          <img src="{{ 'shopPay.png' | asset_url }}" alt="Shopify Pay">
-        </span>
-      </button>
+<div id="productSelect">
+  {% if product.available %}
+    <button type="submit" name="add" id="AddToCart">Add to Basket</button>
+  {% else %}
+    <button type="button" name="add" id="AddToCart">Notify Me</button>
+  {% endif %}
+</div>
+{% endform %}
 
-      <a href="/checkout" class="more-payment-options">More payment options</a>
-
-    </form>
 
 
 
@@ -212,27 +208,112 @@
 
 <script>
   function updateTotal() {
-    var quantity = parseInt(document.getElementById("Quantity").value);
-    var price = parseFloat("{{ product.variants.first.price | divided_by: 100.00 }}");
-    var total = quantity * price;
-    document.getElementById("totalPrice").innerText = total.toFixed(2);
-  }
+  var quantity = parseInt(document.getElementById("Quantity").value);
+  var price = parseFloat("{{ product.selected_or_first_available_variant.price | divided_by: 100.00 }}");
+  var total = quantity * price;
+  document.getElementById("totalPrice").innerText = formatMoney(total, "{{ shop.money_format }}");
+}
 
-  function increaseQuantity() {
-    var quantityInput = document.getElementById("Quantity");
-    var currentValue = parseInt(quantityInput.value);
-    quantityInput.value = currentValue + 1;
+function increaseQuantity() {
+  var quantityInput = document.getElementById("Quantity");
+  var currentValue = parseInt(quantityInput.value);
+  quantityInput.value = currentValue + 1;
+  updateTotal();
+}
+
+function decreaseQuantity() {
+  var quantityInput = document.getElementById("Quantity");
+  var currentValue = parseInt(quantityInput.value);
+  if (currentValue > 1) {
+    quantityInput.value = currentValue - 1;
     updateTotal();
   }
+}
 
-  function decreaseQuantity() {
-    var quantityInput = document.getElementById("Quantity");
-    var currentValue = parseInt(quantityInput.value);
-    if (currentValue > 1) {
-      quantityInput.value = currentValue - 1;
-      updateTotal();
-    }
+document.addEventListener("DOMContentLoaded", function() {
+  var product = {{ product | json }};
+
+  document.querySelectorAll('.product-form__options input[type="radio"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      // find selected options
+      var selectedOptions = [];
+      document.querySelectorAll('.product-form__options input[type="radio"]:checked').forEach(checkedRadio => {
+        selectedOptions.push(checkedRadio.value);
+      });
+
+      // finding match variant
+      var matchedVariant = product.variants.find(variant => {
+        var pass = true;
+        for (var i = 0; i < selectedOptions.length; i++) {
+          if (variant.options.indexOf(selectedOptions[i]) === -1) {
+            pass = false;
+            break;
+          }
+        }
+        return pass;
+      });
+
+      // change product form id
+      document.querySelector('#product_id').value = matchedVariant.id;
+      // change url
+      var url = new URL(window.location.href);
+      url.searchParams.set('variant', matchedVariant.id);
+      window.history.replaceState(null, null, url.toString());
+
+      // change the prices
+      document.querySelector('.product-prie').textContent = formatMoney(matchedVariant.price, "{{ shop.money_format }}");
+    });
+  });
+
+  // Initial total update
+  updateTotal();
+});
+
+// Function to format money
+function formatMoney(cents, format) {
+  if (typeof cents == 'string') { cents = cents.replace('.',''); }
+  var value = '';
+  var placeholderRegex = /\{\{\s*(\w+)\s*\}\}/;
+  var formatString = (format || this.money_format);
+
+  function defaultOption(opt, def) {
+    return (typeof opt == 'undefined' ? def : opt);
   }
+
+  function formatWithDelimiters(number, precision, thousands, decimal) {
+    precision = defaultOption(precision, 2);
+    thousands = defaultOption(thousands, ',');
+    decimal   = defaultOption(decimal, '.');
+
+    if (isNaN(number) || number == null) { return 0; }
+
+    number = (number/100.0).toFixed(precision);
+
+    var parts   = number.split('.'),
+        dollars = parts[0].replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1' + thousands),
+        cents   = parts[1] ? (decimal + parts[1]) : '';
+
+    return dollars + cents;
+  }
+
+  switch(formatString.match(placeholderRegex)[1]) {
+    case 'amount':
+      value = formatWithDelimiters(cents, 2);
+      break;
+    case 'amount_no_decimals':
+      value = formatWithDelimiters(cents, 0);
+      break;
+    case 'amount_with_comma_separator':
+      value = formatWithDelimiters(cents, 2, '.', ',');
+      break;
+    case 'amount_no_decimals_with_comma_separator':
+      value = formatWithDelimiters(cents, 0, '.', ',');
+      break;
+  }
+
+  return formatString.replace(placeholderRegex, value);
+}
+
 </script>
 
 
