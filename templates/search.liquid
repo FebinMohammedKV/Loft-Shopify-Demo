@@ -1,22 +1,686 @@
+{{ 'product-collection.css' | asset_url | stylesheet_tag }}
+{% comment %} {{ 'sort.js'| asset_url | script_tag }} {% endcomment %}
+
 {% paginate search.results by 10 %}
-  <form action="/search" method="get" role="search">
-    <input type="search" name="q" value="{{ search.terms | escape }}">
-    <button type="submit">search</button>
-  </form>
+  <div class="search-header">
+    <nav class="breadcrumb">
+      <a href="{{ shop.url }}">Home</a> /
+      <span>Search Results</span>
+    </nav>
+
+    <h1 class="search-title">Search Results</h1>
+
+    <form action="/search" method="get" role="search" class="search-field">
+      <div class="search-input">
+        <input type="search" name="q" value="{{ search.terms | escape }}" placeholder="Search for...">
+      </div>
+      <button type="submit">Search again</button>
+    </form>
+  </div>
 
   {% if search.performed %}
-    {% for item in search.results %}
-      {% if item.featured_image %}
-        <a href="{{ item.url | within: collection }}" title="{{ item.title | escape }}">
-          {{ item.featured_image.src | img_url: 'medium' | img_tag: item.featured_image.alt }}
-        </a>
-      {% endif %}
-      <h5>{{ item.title | link_to: item.url }}</h5>
-      <p>{{ item.content | strip_html | truncatewords: 50 }}</p>
-    {% else %}
-      no results
-    {% endfor %}
-  {% endif %}
+    <section class="sorting">
+      <div class="filter">
+        <div class="filter-container" onclick="filterFunction()">
+          <span class="material-symbols-outlined filterbtn">tune</span>
+          <span class="filterbtn">Filter</span>
+        </div>
+        <div id="filter-dropdown-content" class="filter-dropdown-content">
+          <form class="filter-form">
+            <input type="hidden" name="q" value="{{ search.terms }}">
+            {% for filter in search.filters %}
+              <div class="filter-dropdown">
+                <div onclick="toggleDropdown('{{ filter.param_name }}Dropdown')" class="filter-title">
+                  {{ filter.label }}
+                  <i class="chevron-icon fa fa-chevron-down"></i>
+                </div>
+                <div id="{{ filter.param_name }}Dropdown" class="filter-options">
+                  {% case filter.type %}
+                    {% when 'boolean' %}
+                      <ul>
+                        <li>
+                          <label for="Filter-{{ filter.param_name }}-{{ filter.true_value.value }}">
+                            <input type="checkbox" name="{{ filter.param_name }}" value="{{ filter.true_value.value }}" id="Filter-{{ filter.param_name }}" {% if filter.true_value.active %}checked{% endif %} {% if filter.true_value.count == 0 and filter.true_value.active == false %}disabled{% endif %}>
+                            {{ filter.true_value.label }}
+                          </label>
+                        </li>
+                        <li>
+                          <label for="Filter-{{ filter.param_name }}-{{ filter.false_value.value }}">
+                            <input type="checkbox" name="{{ filter.param_name }}" value="{{ filter.false_value.value }}" id="Filter-{{ filter.param_name }}" {% if filter.false_value.active %}checked{% endif %} {% if filter.false_value.count == 0 and filter.false_value.active == false %}disabled{% endif %}>
+                            {{ filter.false_value.label }}
+                          </label>
+                        </li>
+                      </ul>
+                    {% when 'list' %}
+                      <ul>
+                        {% for filter_value in filter.values %}
+                          <li>
+                            <label for="Filter-{{ filter.param_name }}-{{ forloop.index }}">
+                              <input type="checkbox" name="{{ filter_value.param_name }}" value="{{ filter_value.value }}" id="Filter-{{ filter.param_name }}-{{ forloop.index }}" {% if filter_value.active %}checked{% endif %} {% if filter_value.count == 0 and filter_value.active == false %}disabled{% endif %}>
+                              {{ filter_value.label }}
+                            </label>
+                          </li>
+                        {% endfor %}
+                      </ul>
+                    {% when 'price_range' %}
+                      <div class="filter-group-display__price-range">
+                        <div class="filter-group-display__price-range-from">
+                          <label for="Filter-{{ filter.min_value.param_name }}">From</label>
+                          <span>{{ cart.currency.symbol }}</span>
+                          <input name="{{ filter.min_value.param_name }}" id="Filter-{{ filter.min_value.param_name }}" {% if filter.min_value.value %} value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}" {% endif %} type="number" placeholder="0" min="0" max="{{ filter.range_max | money_without_currency | replace: ',', '' }}">
+                        </div>
+                        <div class="filter-group-display__price-range-to">
+                          <label for="Filter-{{ filter.max_value.param_name }}">To</label>
+                          <span>{{ cart.currency.symbol }}</span>
+                          <input name="{{ filter.max_value.param_name }}" id="Filter-{{ filter.max_value.param_name }}" {% if filter.max_value.value %} value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}" {% endif %} type="number" placeholder="{{ filter.range_max | money_without_currency | replace: ',', '' }}" min="0" max="{{ filter.range_max | money_without_currency | replace: ',', '' }}">
+                        </div>
+                      </div>
+                  {% endcase %}
+                </div>
+              </div>
+            {% endfor %}
+            <div class="reset">
+              <p><a href="{{ routes.search_url }}?sort_by={{ search.sort_by }}&q={{ search.terms }}">Reset</a></p>
+              {% for filter in search.filters %}
+                {% if filter.type == "price_range" %}
+                  {% if filter.min_value.value != nil or filter.max_value.value != nil %}
+                    <p>
+                      <a href="{{ filter.url_to_remove }}">
+                        {% assign min_value = filter.min_value.value | default: 0 %}
+                        {% assign max_value = filter.max_value.value | default: filter.range_max %}
+                        {{ min_value | money }} - {{ max_value | money }} X
+                      </a>
+                    </p>
+                  {% endif %}
+                {% else %}
+                  {% for filter_value in filter.active_values %}
+                    <p>
+                      <a href="{{ filter_value.url_to_remove }}">
+                        {{ filter.label }}: {{ filter_value.label }} X
+                      </a>
+                    </p>
+                  {% endfor %}
+                {% endif %}
+              {% endfor %}
+            </div>
+          </form>
+        </div>
+      </div>
+      <div>
+        <span>{{ search.results_count }} &nbsp; Products</span>
+      </div>
+      <div class="sort">
+        <div class="dropdown">
+          <span onclick="toggleSortDropdown()" class="dropbtn">
+            <span class="sortIcon dropbtn">Sort By</span>
+            <i id="sortIcon" class="fa-solid fa-chevron-down chevron-icon dropbtn"></i>
+          </span>
+          <div id="myDropdown" class="dropdown-content">
+            <a href="?sort=price-asc">Best selling</a>
+            <a href="?sort=price-desc">Title ascending</a>
+            <a href="?sort=title-asc">Title descending</a>
+            <a href="?sort=title-desc">Price ascending</a>
+            <a href="?sort=price-desc">Price descending</a>
+            <a href="?sort=created-asc">Created ascending</a>
+            <a href="?sort=created-desc">Created descending</a>
+            <a href="?sort=relevance">Relevance</a>
+          </div>
+        </div>
+      </div>
+    </section>
 
-  {% if paginate.pages > 1 %}{{ paginate | default_pagination }}{% endif %}
+
+    <section class="grid">
+      <div id="overlay" class="overlay"></div>
+      {% if search.results.size > 0 %}
+        {% for product in search.results %}
+          <div class="grid-container" id="product-{{ product.id }}">
+            <a href="{{ product.url }}" style="text-decoration: none;">
+              <div class="image-container">
+                <div class="image">
+                  {% if product.images.size > 1 %}
+                    <img src="{{ product.images.first | img_url: 'large' }}" alt="{{ product.title }}" class="f-image main-image-{{ product.id }}">
+                    <img src="{{ product.images[1] | img_url: 'large' }}" alt="{{ product.title }}" class="f2-image secondary-image-{{ product.id }}">
+                  {% else %}
+                    <img src="{{ product.featured_image.src | img_url: 'large' }}" alt="{{ product.featured_image.alt | escape }}" class="f-image main-image-{{ product.id }}">
+                    <img src="{{ product.featured_image.src | img_url: 'large' }}" alt="{{ product.featured_image.alt | escape }}" class="f2-image secondary-image-{{ product.id }}">
+                  {% endif %}
+                </div>
+                <div class="top">
+                  {% if product.available %}
+                    <div class="sale">SALE</div>
+                  {% else %}
+                    <div class="sale">SOLD OUT</div>
+                  {% endif %}
+                  <div>
+                    <i class="fa-regular fa-heart" style="color: #030303;"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="details">
+                <div class="head"><span>{{ product.title }}</span></div>
+                <p>From {{ product.price | money }} exc VAT &nbsp;
+                  {% if product.compare_at_price > product.price %}
+                    <span>{{ product.compare_at_price | money }}</span>
+                  {% endif %}
+                </p>
+              </div>
+            </a>
+            <a href="{{ product.url }}" class="view-product-button">
+              <span>View Product</span>
+            </a>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="noresult">
+          <p>No results could be found for "{{ search.query }}"</p>
+          <p>0 results found for "{{ search.query }}"</p>
+        </div>
+      {% endif %}
+    </section>
+
+      <section class="paging">
+          <div class="left {% unless paginate.previous %}disabled{% endunless %}">
+              {% if paginate.previous %}
+                  <a href="{{ paginate.previous.url }}"><i class="fa-solid fa-arrow-left-long"></i></a>
+              {% else %}
+                  <i class="fa-solid fa-arrow-left-long"></i>
+              {% endif %}
+          </div>
+          <div class="page-links">
+              {% for part in paginate.parts %}
+                  {% if part.is_link %}
+                      <a href="{{ part.url }}">{{ part.title }}</a>
+                  {% else %}
+                      <p class="current">{{ part.title }}</p>
+                  {% endif %}
+              {% endfor %}
+          </div>
+          <div class="right {% unless paginate.next %}disabled{% endunless %}">
+              {% if paginate.next %}
+                  <a href="{{ paginate.next.url }}"><i class="fa-solid fa-arrow-right-long"></i></a>
+              {% else %}
+                  <i class="fa-solid fa-arrow-right-long"></i>
+              {% endif %}
+          </div>
+      </section>
+  {% endif %}
 {% endpaginate %}
+
+<style>
+  .search-header{
+    padding: 3rem 4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    font-size: 0.9rem;
+  }
+
+  .breadcrumb{
+    /* padding: 2rem 5rem; */
+    font-size: 0.9rem;
+    color: rgb(141, 141, 141);
+    gap: 10px;
+    font-weight: 450;
+  }
+
+  .breadcrumb a{
+    position: relative;
+    display: inline-block;
+    color: rgb(141, 141, 141);
+  }
+
+  .breadcrumb a:hover{
+    color: rgb(141, 141, 141);
+  }
+
+  .breadcrumb a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 1px; /* Thickness of the underline */
+    display: block;
+    background: rgb(141, 141, 141); /* Color of the underline */
+    transition: width 0.4s; /* Duration of the effect */
+    bottom: 2px;
+    left: 0;
+    color: rgb(141, 141, 141);
+  }
+
+  .breadcrumb a:hover::after {
+      width: 100%;
+  }
+
+  input[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  a{
+    text-decoration: none;
+    color: #030303;
+  }
+
+  a:hover{
+    color: black;
+  }
+
+  .head {
+    position: relative;
+    display: inline-block; /* Ensure the element only takes up as much width as the text */
+    cursor: pointer;
+  }
+
+  .head span {
+    position: relative;
+    display: inline-block; /* Ensure the element only takes up as much width as the text */
+  }
+
+  .head span::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 1px; /* Thickness of the underline */
+    display: block;
+    background: black; /* Color of the underline */
+    transition: width 0.4s; /* Duration of the effect */
+    left: 0;
+  }
+
+  .head span:hover::after {
+      width: 100%;
+  }
+
+  .search-field{
+    width: 100%;
+    display: flex;
+    gap: 20px;
+  }
+
+  .search-field .search-input{
+    width: 85%;
+    border: 1px solid rgb(169, 168, 168);
+    padding: 13px 20px;
+  }
+
+  .search-input input{
+    width: 100%;
+    border: none;
+    outline: none;
+    font-weight: 500;
+    font-size: 1rem;
+  }
+
+  .search-input input::placeholder{
+    color: rgb(147, 147, 147);
+  }
+
+  .search-field button{
+    white-space: nowrap;
+    border: none;
+    background-color: black;
+    color: white;
+    font-weight: 500;
+    font-size: 1rem;
+    padding: 1rem 3rem;
+  }
+
+  .sorting {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 3;
+  margin: 0;
+}
+
+.filter {
+  position: relative;
+  cursor: pointer;
+  z-index: 3;
+}
+
+.filter.open {
+  background-color: #f8f8f8;
+}
+
+.filterdropdown {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.filter-container {
+  display: flex;
+  align-items: center;
+}
+
+.material-symbols-outlined {
+  padding-right: 10px;
+}
+
+.sortIcon {
+  padding-right: 8px;
+}
+
+.filter-dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f8f8f8;
+  overflow-y: auto;
+  border: 1px solid rgb(229, 229, 229);
+  z-index: 4;
+  transform: translate(-12%, 100%);
+  box-sizing: border-box;
+  width: 25rem;
+  min-width: fit-content;
+  white-space: nowrap;
+  transition: left 0.3s ease, max-height 0.3s ease;
+  left: -500px;
+  min-height: 49rem !important;
+  bottom: 0;
+  padding-bottom: 30px;
+}
+
+.grid{
+  padding-top: 2rem;
+}
+
+.grid, .paging, .container {
+  position: relative;
+}
+
+.overlay {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
+  z-index: 2;
+}
+
+.overlay.active {
+  display: block;
+}
+
+.filter-dropdown {
+  background-color: #f8f8f8;
+  border-bottom: 1px solid rgb(229, 229, 229);
+  padding: 30px 25px;
+  cursor: pointer;
+}
+
+.filter-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+}
+
+.filter-title .chevron-icon {
+  transition: transform 0.3s ease;
+}
+
+.filter-dropdown ul {
+  margin: 0;
+  gap: 2rem;
+}
+
+.filter-options {
+  display: none;
+  padding: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.filter-options label {
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.filter-options input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+}
+
+.filter-options ul li {
+  margin-bottom: 10px;
+}
+
+.reset {
+  padding: 30px 25px;
+  cursor: pointer;
+}
+
+.filter-group-display__price-range {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.filter-group-display__price-range-from input,
+.filter-group-display__price-range-to input {
+  width: 50%;
+}
+
+.show {
+  display: block;
+}
+
+.chevron-icon.active {
+  transform: rotate(180deg);
+}
+
+.chevron-icon {
+  transition: transform 0.3s ease;
+}
+
+.dropdown-content.show + .chevron-icon {
+  transform: rotate(180deg);
+}
+
+/* .chevron-icon.active {
+  transform: rotate(180deg);
+} */
+
+
+  .view-product-button {
+    width: 100%;
+    color: #000000;
+    border: 1px solid rgb(188, 186, 186);
+    background: transparent;
+    font-weight: 500;
+    font-size: 1rem;
+    height: 50px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .view-product-button span {
+    display: inline-block;
+    position: relative;
+    transition: transform 0.5s;
+  }
+
+  .view-product-button::before {
+    content: "View Product";
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    font-size: 1rem;
+    transition: transform 0.5s;
+    transform: translateY(100%);
+    color: #030303;
+  }
+  
+  .view-product-button:hover span {
+    transform: translateY(-500%);
+  }
+  
+  .view-product-button:hover::before {
+    transform: translateY(-100%);
+  }
+
+  @media (max-width: 840px) {
+  .sorting{
+    overflow: visible;
+    padding: 0;
+  }
+
+  .sorting>div{
+    padding: 8px 10px;
+  }
+
+  .filter-dropdown-content {
+    position: absolute;
+    /* width: calc(100% - 30px); Adjust width for smaller screens */
+    transform: none; /* Remove transform */
+    left: 0% !important; /* Start from off-screen to the left */
+    top: 40px; /* Align to the top of the screen */
+  }
+
+  .filter-dropdown-content.show {
+    left: 0; /* Slide in from the left */
+  }
+}
+
+@media (max-width: 768px){
+  .search-input input{
+    display: block;
+  }
+
+  .search-header{
+    padding: 2rem;
+  }
+}
+
+@media (max-width: 576px){
+  .search-field{
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .search-field .search-input{
+    width: 100% !important;
+  }
+
+  .search-field button{
+    padding: 1rem;
+  }
+
+  .search-header{
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 400px){
+  .filter-dropdown-content{
+    width: 100%;
+  }
+
+  .filter-title {
+    gap: 5rem;
+  }
+}
+
+@media (max-width: 264px){
+  .search-field .search-input{
+    width: 100% !important;
+  }
+}
+</style>
+
+<script>
+function toggleDropdown(id) {
+  var dropdown = document.getElementById(id);
+  var chevronIcon = dropdown.previousElementSibling.querySelector('.chevron-icon');
+  dropdown.classList.toggle("show");
+  chevronIcon.classList.toggle("active");
+}
+
+function filterFunction() {
+  var filterDropdownContent = document.getElementById("filter-dropdown-content");
+  var overlay = document.querySelector(".overlay");
+  var filterDiv = document.querySelector(".filter");
+
+  if (filterDropdownContent.style.left === "0px") {
+    filterDropdownContent.style.left = "-500px";
+    setTimeout(() => {
+      filterDropdownContent.classList.remove("show");
+      overlay.classList.remove("active");
+      filterDiv.classList.remove("open");
+    }, 300);
+  } else {
+    filterDropdownContent.classList.add("show");
+    setTimeout(() => {
+      filterDropdownContent.style.left = "0px";
+      if (window.innerWidth <= 840) {
+        filterDropdownContent.style.maxHeight = `calc(100vh - ${filterDiv.getBoundingClientRect().top}px)`;
+      } else {
+        filterDropdownContent.style.maxHeight = `calc(100vh - ${filterDiv.getBoundingClientRect().bottom}px)`;
+      }
+      overlay.classList.add("active");
+      filterDiv.classList.add("open");
+    }, 10);
+  }
+}
+
+function handleCheckboxChange(event) {
+  event.target.closest('form').submit();
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  var checkboxes = document.querySelectorAll('.filter-options input[type="checkbox"]');
+  checkboxes.forEach(function(checkbox) {
+    checkbox.addEventListener('change', handleCheckboxChange);
+  });
+});
+
+function toggleSortDropdown() {
+  var dropdown = document.getElementById("myDropdown");
+  dropdown.classList.toggle("show");
+  var chevronIcon = document.getElementById("sortIcon");
+  chevronIcon.classList.toggle("active");
+}
+
+window.onclick = function(event) {
+  var filterDropdownContent = document.getElementById("filter-dropdown-content");
+  var overlay = document.querySelector(".overlay");
+  var filterDiv = document.querySelector(".filter");
+
+  if (!event.target.matches('.filterbtn') && !event.target.closest('.filter-dropdown-content')) {
+    if (filterDropdownContent.classList.contains('show')) {
+      filterDropdownContent.style.left = "-500px";
+      setTimeout(() => {
+        filterDropdownContent.classList.remove("show");
+        overlay.classList.remove("active");
+        filterDiv.classList.remove("open");
+      }, 300);
+    }
+  }
+
+  if (!event.target.matches('.dropbtn')) {
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    for (var i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+        var chevronIcon = document.querySelector(".chevron-icon");
+        chevronIcon.classList.remove("active");
+      }
+    }
+  }
+}
+
+</script>

@@ -37,6 +37,28 @@
     flex-direction: column;
     gap: 1rem;
   }
+
+  .breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0;
+    margin-bottom: 1rem;
+    list-style: none;
+    gap: 5px;
+    color: #959494;
+  }
+
+  .breadcrumb a{
+    text-decoration: none;
+    color: #959494;
+  }
+
+  .breadcrumb a:hover{
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+    text-decoration-color: #272626;
+  }
   
   .product-details h1 {
     font-size: 1.6rem;
@@ -115,7 +137,7 @@
   .quantity-content{
     display: flex;
     justify-content: start;
-    align-items: start;
+    align-items: center;
     gap: 1rem;
     width: 100%;
     flex-wrap: wrap;
@@ -169,31 +191,32 @@
     padding: 0.8rem 1rem;
     background-color: white;
     border: 2px solid black;
+    font-weight: 500;
   }
 
   .shopify-pay {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    padding: 0.7rem 1rem;
+    margin-top: 0;
+    padding: 0.9rem 1rem;
     cursor: pointer;
     width: 100%;
     border: none;
     background-color: rgb(90,49,244);
     color: white;
+    gap: 5px;
+    font-weight: 500;
   }
   .shopify-pay-img img {
     width: 5rem;
-    height: 1.4rem;
+    height: 1.2rem;
     object-fit: contain;
-    margin-left: 3px;
   }
 
-  .more-payment-options{
+  .more-payment-options a{
     font-size: 0.9rem;
-    font-weight: 450;
+    font-weight: 500;
     color: black;
     text-decoration-thickness: 1px solid;
   }
@@ -451,7 +474,7 @@ button.slick-arrow:hover {
 .product-form__options {
   border: 1px solid rgb(228, 227, 227);
   border-width: 1px;
-  padding: 15px;
+  padding: 15px 25px;
   margin-bottom: 20px;
 }
 
@@ -476,7 +499,7 @@ legend span {
   display: flex;
   gap: 20px;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 35px;
 }
 
 .variant{
@@ -487,8 +510,7 @@ legend span {
 
 .variant-title {
   font-weight: bold;
-  margin: 0;
-  margin-bottom: 2px;
+  margin: 5px 0;
 }
 
 .swatch {
@@ -512,7 +534,6 @@ legend span {
   border-radius: 50%;
   border: 2px solid transparent;
   padding: 5px; /* Add padding to create a gap between the image and the border */
-  margin-top: 10px;
   box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
 }
 

@@ -1,0 +1,24 @@
+{
+    "collections": [
+      {
+        "name": "Subcategory",
+        "fields": [
+          {
+            "type": "single_line",
+            "id": "subcategory_title",
+            "label": "Subcategory Title"
+          },
+          {
+            "type": "file",
+            "id": "subcategory_image",
+            "label": "Subcategory Image"
+          },
+          {
+            "type": "url",
+            "id": "subcategory_url",
+            "label": "Subcategory URL"
+          }
+        ]
+      }
+    ]
+  }

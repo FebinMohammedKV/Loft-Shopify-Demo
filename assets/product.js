@@ -1,12 +1,4 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // Image thumbnail click handler
-    document.querySelectorAll('.thumbnail').forEach(function (thumbnail) {
-      thumbnail.addEventListener('click', function (e) {
-        e.preventDefault();
-        document.getElementById('ProductPhotoImg').src = this.dataset.image;
-      });
-    });
-
     // Shipping link handler
     document.querySelector('.price-info p a').addEventListener('click', function (e) {
       e.preventDefault();
@@ -21,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+// additional details
 document.addEventListener('DOMContentLoaded', function() {
     const headings = document.querySelectorAll('.product-additional-details .heading');
     const contents = document.querySelectorAll('.product-additional-details .info');
@@ -88,50 +81,4 @@ document.addEventListener('DOMContentLoaded', function() {
         productTitleElement.textContent = toCamelCase(productTitleElement.textContent);
       }
     });
-});
-
-// varient
-document.addEventListener('DOMContentLoaded', function() {
-  var variantRadios = document.querySelectorAll('.product-form__swatch input[type="radio"]');
-  var mainImage = document.getElementById('ProductPhotoImg');
-  var thumbnails = document.querySelectorAll('.product-thumbnails .thumbnail');
-
-  variantRadios.forEach(function(radio) {
-    radio.addEventListener('change', function() {
-      var selectedImage = this.getAttribute('data-image');
-      var selectedAlt = this.getAttribute('data-alt');
-
-      // Update the main image
-      if (mainImage) {
-        mainImage.src = selectedImage;
-        mainImage.alt = selectedAlt;
-      }
-
-      // Update thumbnails to reflect the variant's images
-      thumbnails.forEach(function(thumbnail) {
-        var thumbnailImage = thumbnail.getAttribute('data-image');
-        if (thumbnailImage === selectedImage) {
-          thumbnail.classList.add('active');
-        } else {
-          thumbnail.classList.remove('active');
-        }
-      });
-    });
-  });
-
-  // Handle thumbnail click
-  thumbnails.forEach(function(thumbnail) {
-    thumbnail.addEventListener('click', function(event) {
-      event.preventDefault();
-      var thumbnailImage = this.getAttribute('data-image');
-      if (mainImage) {
-        mainImage.src = thumbnailImage;
-        mainImage.alt = this.querySelector('img').getAttribute('alt');
-      }
-      thumbnails.forEach(function(thumb) {
-        thumb.classList.remove('active');
-      });
-      this.classList.add('active');
-    });
-  });
 });

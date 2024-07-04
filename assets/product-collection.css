@@ -8,8 +8,7 @@
     margin-bottom: 2.7rem;
     font-weight: 500;
     flex-wrap: wrap;
-    
-} 
+}
 
 .sorting > div {
     display: flex;
@@ -366,10 +365,6 @@
   .add-to-cart-button:hover::before {
     transform: translateY(-100%);
   }
-  
-  
-
-
 
 .paging {
     width: 100%;

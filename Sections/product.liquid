@@ -38,113 +38,122 @@
     }
 {% endstyle %}
 
-{% assign default_image = product.images[0] %} <!-- Set the first image as the default -->
-
+{% assign default_image = product.selected_or_first_available_variant.featured_image | default: product.featured_image %}
 <div class="product-page">
   <div class="product-images">
     <img src="{{ default_image | img_url: 'large' }}" alt="{{ default_image.alt | escape }}" id="ProductPhotoImg">
     <div class="product-thumbnails">
       {% for image in product.images %}
-        <div class="thumbnail" 
-        {% if product.selected_or_first_available_variant.featured_media.alt != image.alt and product.selected_or_first_available_variant.featured_media.alt != blank %}
-          style="display: none;"
-        {% endif %}
-        thumbnail-alt="{{ image.alt }}">
-     <img src="{{ image | img_url: 'compact' }}" alt="{{ image.alt | escape }}">
-   </div>
+        <div class="thumbnail"
+          {% if image.alt != default_image.alt %}
+            style="display: none;"
+          {% endif %}
+          data-image="{{ image | img_url: 'large' }}"
+          thumbnail-alt="{{ image.alt }}">
+          <img src="{{ image | img_url: 'compact' }}" alt="{{ image.alt | escape }}">
+        </div>
       {% endfor %}
     </div>
-
   </div>
+
 
   <div class="product-details">
     <nav class="breadcrumb">
       <a href="{{ shop.url }}">Home</a> /
       {% if collection %}
-        <a href="{{ collection.url }}">{{ collection.title }}</a> /
+      <a href="{{ collection.url }}">{{ collection.title }}</a> /
       {% endif %}
       <span>{{ product.title }}</span>
     </nav>
-    
+
     <h1>{{ product.title }}</h1>
     <div class="price-info">
-  <p class="product-price">
-    <span class="product-prie">{{ product.selected_or_first_available_variant.price | money }} exc VAT</span>
-    <br>
-    {% if product.compare_at_price > product.price %}
-      <span> From {{ product.compare_at_price | money }} inc VAT</span>
+      <p class="product-price">
+        <span class="product-price">{{ product.selected_or_first_available_variant.price | money }} exc VAT</span>
+        <br>
+        {% if product.compare_at_price > product.price %}
+          <span> From {{ product.compare_at_price | money }} inc VAT</span>
+        {% endif %}
+      </p>
+      <p class="shipping"><a href="/pages/shipping">Shipping</a> calculated at checkout.</p>
+    </div>
+
+    <div class="product-description closed" id="product-description">
+      {{ product.description }}
+      <span class="show-more">... show more...</span>
+    </div>
+
+    <!-- Product Variant Section -->
+    {% form 'product', product %}
+    <input id="product_id" type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+    {% if product.variants.size > 1 %}
+      <fieldset class="product-form__options">
+        <legend><span>Choose Variants</span></legend>
+        {% for option in product.options_with_values %}
+          {% if option.name == 'Color' %}
+            <p class="variant-title">{{ option.name }}</p>
+            <div class="product-form__swatch">
+              {% for value in option.values %}
+                {% assign variant = product.variants | where: 'option1', value | first %}
+                <label class="swatch" for="{{ option.name | handleize }}-{{ value | handleize }}">
+                  <input {% if option.selected_value == value %}checked{% endif %} type="radio" name="{{ option.name }}" value="{{ value }}" id="{{ option.name | handleize }}-{{ value | handleize }}" data-image="{{ variant.featured_image | img_url: 'large' }}" data-alt="{{ value }}">
+                  <span class="swatch-image" style="background-image: url('{{ variant.featured_image | img_url: 'small' }}');"></span>
+                  <span class="swatch-name">{{ value }}</span>
+                </label>
+              {% endfor %}
+            </div>
+          {% else %}
+          <p class="variant-title">{{ option.name }}</p>
+            <div class="product-form__button-options">
+              {% for value in option.values %}
+                <label class="button-option">
+                  <input type="radio" name="{{ option.name }}" value="{{ value }}">
+                  <span class="button-label">{{ value }}</span>
+                </label>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endfor %}
+        </fieldset>
     {% endif %}
-  </p>
-  <p class="shipping"><a href="/pages/shipping">Shipping </a>calculated at checkout.</p>
-</div>
 
-<div class="product-description closed" id="product-description">
-  {{ product.description }}
-  <span class="show-more">... show more...</span>
-</div>
+    <div class="quantity-selector">
+      <div class="quantity-title">QUANTITY</div>
+      <div class="quantity-content">
+        <button type="button" class="quantity-btn" onclick="decreaseQuantity()">-</button>
+        <input type="text" id="Quantity" name="quantity" value="1" min="1" onchange="updateTotal()">
+        <button type="button" class="quantity-btn" onclick="increaseQuantity()">+</button>
+      </div>
+    </div>
 
-<!-- Product Variant Section -->
-{% form 'product', product %}
-<input id="product_id" type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
-{% if product.variants.size > 1 %}
-  {% for option in product.options_with_values %}
-    <fieldset class="product-form__options">
-      <legend><span>Choose {{ option.name }}</span></legend>
-      {% if option.name == 'Color' %}
-        <div class="product-form__swatch">
-          {% for value in option.values %}
-            {% assign variant = product.variants | where: 'option1', value | first %}
-            <label class="swatch" for="{{ option.name | handleize }}-{{ value | handleize }}">
-              <input {% if option.selected_value == value %}checked{% endif %} type="radio" name="{{ option.name }}" value="{{ value }}" id="{{ option.name | handleize }}-{{ value | handleize }}" data-image="{{ variant.featured_image | img_url: 'large' }}" data-alt="{{ value }}">
-              <span class="swatch-image" style="background-image: url('{{ variant.featured_image | img_url: 'small' }}');"></span>
-              <span class="swatch-name">{{ value }}</span>
-            </label>
-          {% endfor %}
-        </div>
+    <div class="total-price">
+      <p>Total: <span id="totalPrice">{{ product.selected_or_first_available_variant.price | money }}</span></p>
+    </div>
+
+    <div id="productSelect">
+      {% if product.available %}
+        <button type="submit" name="add" id="AddToCart">Add to Basket</button>
       {% else %}
-        <div class="product-form__button-options">
-          {% for value in option.values %}
-            <label class="button-option">
-              <input type="radio" name="{{ option.name }}" value="{{ value }}">
-              <span class="button-label">{{ value }}</span>
-            </label>
-          {% endfor %}
-        </div>
+        <button type="button" name="add" id="AddToCart">Notify Me</button>
       {% endif %}
-    </fieldset>
-  {% endfor %}
-{% endif %}
+    </div>
+    {% endform %}
 
-<div class="quantity-selector">
-  <div class="quantity-title">QUANTITY</div>
-  <div class="quantity-content">
-    <button type="button" class="quantity-btn" onclick="decreaseQuantity()">-</button>
-    <input type="text" id="Quantity" name="quantity" value="1" min="1" onchange="updateTotal()">
-    <button type="button" class="quantity-btn" onclick="increaseQuantity()">+</button>
-  </div>
-</div>
-
-<div class="total-price">
-  <p>Total: <span id="totalPrice">{{ product.selected_or_first_available_variant.price | divided_by: 100.00 }}</span></p>
-</div>
-
-<div id="productSelect">
-  {% if product.available %}
-    <button type="submit" name="add" id="AddToCart">Add to Basket</button>
-  {% else %}
-    <button type="button" name="add" id="AddToCart">Notify Me</button>
-  {% endif %}
-</div>
-{% endform %}
-
-
-
-
+    <button class="shopify-pay" style="background-color: #5A31F4;">
+      Buy with
+      <div class="shopify-pay-img">
+        <img src="{{ 'shopPay.png' | asset_url }}" alt="Shopify Pay">
+      </div>
+    </button>
 
     <span class="add-to-wishlist">
         <i class="fa-regular fa-heart" style="color: #ffffff;"></i> &nbsp;
         Add to wishlist
     </span>
+
+    <div class="more-payment-options">
+      <a href="/checkout">More Payment options</a>
+    </div>
 
     <!-- sections/product-details.liquid -->
     <div class="product-additional-details">
@@ -166,7 +175,6 @@
       </div>
     </div>
   </div>
-
 </div>
 
 {% comment %} Similer products {% endcomment %}
@@ -209,8 +217,9 @@
 <script>
   function updateTotal() {
   var quantity = parseInt(document.getElementById("Quantity").value);
-  var price = parseFloat("{{ product.selected_or_first_available_variant.price | divided_by: 100.00 }}");
-  var total = quantity * price;
+  var priceText = document.querySelector('.product-price').textContent;
+  var price = parseFloat(priceText.replace(/[^\d.]/g, '')) * 100; // Ensure price is in cents
+  var total = quantity * price * 1000;
   document.getElementById("totalPrice").innerText = formatMoney(total, "{{ shop.money_format }}");
 }
 
@@ -261,12 +270,42 @@ document.addEventListener("DOMContentLoaded", function() {
       window.history.replaceState(null, null, url.toString());
 
       // change the prices
-      document.querySelector('.product-prie').textContent = formatMoney(matchedVariant.price, "{{ shop.money_format }}");
+      document.querySelector('.product-price').textContent = formatMoney(matchedVariant.price, "{{ shop.money_format }}") + " exc VAT";
+      updateTotal();
+
+      // Update the main image
+      var mainImage = document.getElementById('ProductPhotoImg');
+      if (mainImage) {
+        mainImage.src = matchedVariant.featured_image.src;
+        mainImage.alt = matchedVariant.featured_image.alt;
+      }
+
+      // Update thumbnails
+      var thumbnails = document.querySelectorAll('.product-thumbnails .thumbnail');
+      thumbnails.forEach(thumbnail => {
+        if (thumbnail.getAttribute('thumbnail-alt') === matchedVariant.featured_image.alt) {
+          thumbnail.style.display = 'block';
+        } else {
+          thumbnail.style.display = 'none';
+        }
+      });
     });
   });
 
   // Initial total update
   updateTotal();
+
+  // Handle thumbnail click
+  document.querySelectorAll('.thumbnail').forEach(thumbnail => {
+    thumbnail.addEventListener('click', function(event) {
+      event.preventDefault();
+      var mainImage = document.getElementById('ProductPhotoImg');
+      if (mainImage) {
+        mainImage.src = this.getAttribute('data-image');
+        mainImage.alt = this.getAttribute('thumbnail-alt');
+      }
+    });
+  });
 });
 
 // Function to format money
@@ -287,7 +326,7 @@ function formatMoney(cents, format) {
 
     if (isNaN(number) || number == null) { return 0; }
 
-    number = (number/100.0).toFixed(precision);
+    number = (number/100.0).toFixed(precision); // Convert cents to dollars
 
     var parts   = number.split('.'),
         dollars = parts[0].replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1' + thousands),
@@ -313,7 +352,6 @@ function formatMoney(cents, format) {
 
   return formatString.replace(placeholderRegex, value);
 }
-
 </script>
 
 

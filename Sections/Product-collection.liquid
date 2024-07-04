@@ -27,7 +27,7 @@
           </div>
         </div>
     </div>
-</section> 
+</section>
 
 
 {%- paginate collection.products by section.settings.products_per_page -%}
@@ -109,11 +109,6 @@
             <p>No matches</p>
         {% endfor %}
     </section>
-
-
-
-
-
     <section class="paging">
         <div class="left {% unless paginate.previous %}disabled{% endunless %}">
             {% if paginate.previous %}
@@ -139,11 +134,7 @@
             {% endif %}
         </div>
     </section>
-
-    
-    
 {% endpaginate %}
-    
 
 
 

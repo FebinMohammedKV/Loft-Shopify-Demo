@@ -38,6 +38,29 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
+// search cancel button
+document.addEventListener('DOMContentLoaded', function() {
+  const searchInput = document.getElementById('search-input');
+  const customClearIcon = document.getElementById('custom-clear-icon');
+
+  searchInput.addEventListener('input', function() {
+      if (searchInput.value.length > 0) {
+          customClearIcon.classList.remove('hidden');
+          customClearIcon.style.display = 'inline'; // Show the button
+      } else {
+          customClearIcon.classList.add('hidden');
+          customClearIcon.style.display = 'none'; // Hide the button
+      }
+  });
+
+  customClearIcon.addEventListener('click', function() {
+      searchInput.value = '';
+      searchInput.focus();
+      customClearIcon.classList.add('hidden');
+      customClearIcon.style.display = 'none'; // Hide the button
+  });
+});
+
 // bottom nav
 document.addEventListener('DOMContentLoaded', function () {
   const accountIcon = document.querySelector('.account-icon');

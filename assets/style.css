@@ -20,10 +20,13 @@
 
   .navigation .left {
     display: flex;
-    /* flex-basis: 45%; */
-    /* justify-content: flex-start; */
     align-items: center;
     gap: 1rem;
+  }
+
+  .navigation .left,
+  .navigation .right{
+    width: 20%;
   }
 
   .navigation .left .menubtn {
@@ -35,27 +38,57 @@
     background: transparent;
   }
 
-  .navigation .main .left .Search {
-    border: none;
-    outline: none;
-    width: 5rem;
-  }
+.navigation .main .left .search-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  position: relative; /* Added to position cancel button correctly */
+}
 
-  .main .logo {
-    /* flex-basis: 10%; */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+.navigation .main .left .Search {
+  border: none;
+  outline: none;
+  width: 100%;
+  padding-left: 25px; /* Adjust padding for left icon */
+  padding-right: 30px; /* Adjust padding for custom cancel button */
+  font-weight: 500;
+}
 
-  .main .right {
-    align-items: flex-start;
+.hidden {
+  display: none;
+}
+
+#custom-clear-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 12px;
+  cursor: pointer;
+  color: black; /* Default color */
+}
+
+input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.main .logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.main .right {
+  align-items: flex-start;
 }
 
 .main .right ul {
-    display: flex;
-    justify-content: flex-end;
-    gap: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
 }
 
 .main .right ul li {
