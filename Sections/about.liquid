@@ -1,33 +1,32 @@
 {{ 'about.css' | asset_url | stylesheet_tag }}
 
-{% style %}
- .cont .para{
-    padding-top: {{ block.settings.padding_top }}px;
-  }
-{% endstyle %}
-
 <section class="about" style="background-color: {{ section.settings.bg_color }}; padding: {{ section.settings.padding_top }} {{ section.settings.padding_right }} {{ section.settings.padding_bottom }} {{ section.settings.padding_left }};">
-  <div class="cont">
-    {% if section.settings.title %}
-      <h1 style="color: {{ section.settings.title_color }}">{{ section.settings.title }}</h1>
-    {% endif %}
-
+  <div class="cont" style="text-align: {{ section.settings.desktop_content_position }};">
     {% if collection %}
       {% for i in (1..10) %}
         {% assign paragraph_key = "paragraph_" | append: i %}
         {% assign paragraph_content = collection.metafields.custom[paragraph_key] %}
         
         {% if paragraph_content %}
-          <p class="para" style="color: {{ section.settings.content_color }};">{{ paragraph_content }}</p>
+          <p class="para" style="color: {{ section.settings.content_color }}; text-align: {{ section.settings.content_alignment }};">{{ paragraph_content }}</p>
         {% else %}
           {% break %}
         {% endif %}
       {% endfor %}
     {% else %}
       {% for block in section.blocks %}
-        {% if block.type == 'paragraph' and block.settings.content %}
-          <p class="para" style="color: {{ block.settings.content_color }}; padding-top: {{ block.settings.padding_top }}; padding-left: {{ block.settings.padding_left }}; padding-right: {{ block.settings.padding_right }}; padding-bottom: {{ block.settings.padding_bottom }};">{{ block.settings.content }}</p>
-        {% endif %}
+        {% case block.type %}
+          {% when 'title' %}
+            <h1 style="color: {{ block.settings.title_color }}; font-size: {{ block.settings.title_size }};">{{ block.settings.title }}</h1>
+          {% when 'paragraph' %}
+            <p class="para" style="color: {{ block.settings.content_color }}; padding-top: {{ block.settings.padding_top }}; padding-left: {{ block.settings.padding_left }}; padding-right: {{ block.settings.padding_right }}; padding-bottom: {{ block.settings.padding_bottom }};">{{ block.settings.content }}</p>
+          {% when 'button' %}
+            <div>
+              <a href="{{ block.settings.button_link }}">
+                <button style="color: {{ block.settings.button_text_color }}; background-color: {{ block.settings.button_bg_color }}; font-weight: {{ block.settings.font_weight }};">{{ block.settings.button_text }}</button>
+              </a>
+            </div>
+        {% endcase %}
       {% endfor %}
     {% endif %}
   </div>
@@ -42,17 +41,6 @@
       "id": "bg_color",
       "label": "Background Color",
       "default": "#ffffff"
-    },
-    {
-      "type": "color",
-      "id": "title_color",
-      "label": "Title Color",
-      "default": "#343434"
-    },
-    {
-      "type": "text",
-      "id": "title",
-      "label": "Title"
     },
     {
       "type": "color",
@@ -83,15 +71,66 @@
       "id": "padding_left",
       "label": "Padding Left",
       "default": "0px"
+    },
+    {
+      "type": "select",
+      "id": "desktop_content_position",
+      "label": "Desktop Content Position",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "label": "Content Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
     }
   ],
   "blocks": [
+    {
+      "type": "title",
+      "name": "Title",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "color",
+          "id": "title_color",
+          "label": "Title Color",
+          "default": "#343434"
+        },
+        {
+          "type": "select",
+          "id": "title_size",
+          "label": "Title Size",
+          "options": [
+            { "value": "1.5rem", "label": "Small" },
+            { "value": "2rem", "label": "Medium" },
+            { "value": "2.5rem", "label": "Large" },
+            { "value": "3rem", "label": "Extra Large" }
+          ],
+          "default": "2rem"
+        }
+      ]
+    },
     {
       "type": "paragraph",
       "name": "Paragraph",
       "settings": [
         {
-          "type": "textarea",
+          "type": "richtext",
           "id": "content",
           "label": "Content"
         },
@@ -124,6 +163,45 @@
           "id": "padding_left",
           "label": "Padding Left",
           "default": "0px"
+        }
+      ]
+    },
+    {
+      "type": "button",
+      "name": "Button",
+      "settings": [
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button Text"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button Link"
+        },
+        {
+          "type": "color",
+          "id": "button_text_color",
+          "label": "Button Text Color",
+          "default": "#ffffff"
+        },
+        {
+          "type": "color",
+          "id": "button_bg_color",
+          "label": "Button Background Color",
+          "default": "#000000"
+        },
+        {
+          "type": "select",
+          "id": "font_weight",
+          "label": "Font Weight",
+          "options": [
+            { "value": "normal", "label": "Normal" },
+            { "value": "bold", "label": "Bold" },
+            { "value": "bolder", "label": "Bolder" }
+          ],
+          "default": "normal"
         }
       ]
     }

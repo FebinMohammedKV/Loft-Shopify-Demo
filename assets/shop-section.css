@@ -111,8 +111,10 @@ p {
   flex-direction: column;
   justify-content: center;
   width: 100%;
+  height: 100%;
   padding: 3rem;
   box-sizing: border-box; /* Ensure padding is included in the width */
+  font-weight: 500;
 }
 
 /* Content position settings */
@@ -181,8 +183,8 @@ p {
 /* Button styling */
 .shop .cont button {
   border: none;
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-size: 1rem;
+  /* font-weight: 500; */
   margin-top: 1rem;
   padding: 1rem 2.5rem;
 }

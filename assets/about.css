@@ -27,6 +27,10 @@
     font-weight: 500;
 }
 
+button{
+    padding: 1rem 2.5rem;
+}
+
 @media (max-width: 1200px) {
     .about .cont h1 {
         font-size: 2rem;
