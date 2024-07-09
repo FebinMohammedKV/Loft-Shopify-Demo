@@ -41,15 +41,61 @@
   </div>
 
   <div id="Search" class="tabcontent">
-    <div class="search-box">
-      <input type="text" name="search" class="Search" placeholder="Search">
-    </div>
+  <div class="search-box">
+    <form action="/search" method="get" role="search" class="search-field" id="footer-search-form">
+      <div class="search-input" style="position: relative;">
+        <input type="search" name="q" class="Search" id="footer-search-input" placeholder="Search">
+      </div>
+      <button type="submit" class="mobile-search-btn">Search</button>
+    </form>
+  </div>
 </div>
-
-
 
 <!-- JavaScript to toggle tabs -->
 <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const searchInputFooter = document.getElementById('footer-search-input');
+    const searchFormFooter = document.getElementById('footer-search-form');
+    const customClearIcon = document.getElementById('custom-clear-icon');
+
+    // Function to handle form submission
+    function handleSearchInput(event, searchForm) {
+      if (event.key === 'Enter' || event.type === 'submit') {
+        if (validateSearch(searchInputFooter)) {
+          searchForm.submit(); // Submit the form if validation passes
+        } else {
+          event.preventDefault(); // Prevent default behavior if validation fails
+        }
+      }
+    }
+
+    // Add event listener for the footer search input keypress
+    searchInputFooter.addEventListener('keypress', function(event) {
+      handleSearchInput(event, searchFormFooter);
+    });
+
+    // Add event listener for the footer search form submission
+    searchFormFooter.addEventListener('submit', function(event) {
+      if (!validateSearch(searchInputFooter)) {
+        event.preventDefault(); // Prevent form submission if validation fails
+      }
+    });
+  });
+
+  function validateSearch(searchInput) {
+    const searchValue = searchInput.value.trim();
+    if (searchValue === "") {
+      // Prevent form submission if the input is empty
+      return false;
+    }
+    // Allow form submission if the input is not empty
+    return true;
+  }
+
+
+
+
+
 function openPage(pageName, elmnt) {
   var i, tabcontent, tablinks;
   tabcontent = document.getElementsByClassName("tabcontent");

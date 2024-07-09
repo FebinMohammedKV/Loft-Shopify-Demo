@@ -61,6 +61,17 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
+//search validate
+function validateSearch() {
+  var searchInput = document.getElementById('search-input').value;
+  if (searchInput.trim() === "") {
+    // Prevent form submission
+    return false;
+  }
+  // Allow form submission
+  return true;
+}
+
 // bottom nav
 document.addEventListener('DOMContentLoaded', function () {
   const accountIcon = document.querySelector('.account-icon');

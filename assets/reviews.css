@@ -211,11 +211,11 @@ button.slick-arrow:hover {
   }
 
   button.slick-prev.slick-arrow {
-      left: -15px;
+      left: -60px;
   }
 
   button.slick-next.slick-arrow {
-      right: -15px;
+      right: -60px;
   }
 }
 
@@ -250,13 +250,14 @@ button.slick-arrow:hover {
       /* margin-right: 10px;
       margin-left: 10px; */
       margin: 0 auto;
+      /* width: 321px; */
   }
 
   button.slick-prev.slick-arrow{
-      left: -25px;
+      left: -60px;
   }
   button.slick-next.slick-arrow {
-      right: -25px;
+      right: -60px;
   }
 }
 

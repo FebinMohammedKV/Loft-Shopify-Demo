@@ -25,8 +25,10 @@
           <span class="material-symbols-outlined filterbtn">tune</span>
           <span class="filterbtn">Filter</span>
         </div>
+
         <div id="filter-dropdown-content" class="filter-dropdown-content">
-          <form class="filter-form">
+          <button class="close-btn" onclick="filterFunction()">&#x2716;</button>
+          <form class="filter-form" id="filter-form">
             <input type="hidden" name="q" value="{{ search.terms }}">
             {% for filter in search.filters %}
               <div class="filter-dropdown">
@@ -40,13 +42,13 @@
                       <ul>
                         <li>
                           <label for="Filter-{{ filter.param_name }}-{{ filter.true_value.value }}">
-                            <input type="checkbox" name="{{ filter.param_name }}" value="{{ filter.true_value.value }}" id="Filter-{{ filter.param_name }}" {% if filter.true_value.active %}checked{% endif %} {% if filter.true_value.count == 0 and filter.true_value.active == false %}disabled{% endif %}>
+                            <input type="radio" name="{{ filter.param_name }}" value="{{ filter.true_value.value }}" id="Filter-{{ filter.param_name }}" {% if filter.true_value.active %}checked{% endif %} {% if filter.true_value.count == 0 and filter.true_value.active == false %}disabled{% endif %} onchange="this.form.submit()">
                             {{ filter.true_value.label }}
                           </label>
                         </li>
                         <li>
                           <label for="Filter-{{ filter.param_name }}-{{ filter.false_value.value }}">
-                            <input type="checkbox" name="{{ filter.param_name }}" value="{{ filter.false_value.value }}" id="Filter-{{ filter.param_name }}" {% if filter.false_value.active %}checked{% endif %} {% if filter.false_value.count == 0 and filter.false_value.active == false %}disabled{% endif %}>
+                            <input type="radio" name="{{ filter.param_name }}" value="{{ filter.false_value.value }}" id="Filter-{{ filter.param_name }}" {% if filter.false_value.active %}checked{% endif %} {% if filter.false_value.count == 0 and filter.false_value.active == false %}disabled{% endif %} onchange="this.form.submit()">
                             {{ filter.false_value.label }}
                           </label>
                         </li>
@@ -56,7 +58,7 @@
                         {% for filter_value in filter.values %}
                           <li>
                             <label for="Filter-{{ filter.param_name }}-{{ forloop.index }}">
-                              <input type="checkbox" name="{{ filter_value.param_name }}" value="{{ filter_value.value }}" id="Filter-{{ filter.param_name }}-{{ forloop.index }}" {% if filter_value.active %}checked{% endif %} {% if filter_value.count == 0 and filter_value.active == false %}disabled{% endif %}>
+                              <input type="radio" name="{{ filter.param_name }}" value="{{ filter_value.value }}" id="Filter-{{ filter.param_name }}-{{ forloop.index }}" {% if filter_value.active %}checked{% endif %} {% if filter_value.count == 0 and filter_value.active == false %}disabled{% endif %} onchange="this.form.submit()">
                               {{ filter_value.label }}
                             </label>
                           </li>
@@ -67,48 +69,85 @@
                         <div class="filter-group-display__price-range-from">
                           <label for="Filter-{{ filter.min_value.param_name }}">From</label>
                           <span>{{ cart.currency.symbol }}</span>
-                          <input name="{{ filter.min_value.param_name }}" id="Filter-{{ filter.min_value.param_name }}" {% if filter.min_value.value %} value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}" {% endif %} type="number" placeholder="0" min="0" max="{{ filter.range_max | money_without_currency | replace: ',', '' }}">
+                          <input name="{{ filter.min_value.param_name }}" id="Filter-{{ filter.min_value.param_name }}" {% if filter.min_value.value %} value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}" {% endif %} type="number" placeholder="0" min="0" max="{{ filter.range_max | money_without_currency | replace: ',', '' }}" onchange="this.form.submit()">
                         </div>
                         <div class="filter-group-display__price-range-to">
                           <label for="Filter-{{ filter.max_value.param_name }}">To</label>
                           <span>{{ cart.currency.symbol }}</span>
-                          <input name="{{ filter.max_value.param_name }}" id="Filter-{{ filter.max_value.param_name }}" {% if filter.max_value.value %} value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}" {% endif %} type="number" placeholder="{{ filter.range_max | money_without_currency | replace: ',', '' }}" min="0" max="{{ filter.range_max | money_without_currency | replace: ',', '' }}">
+                          <input name="{{ filter.max_value.param_name }}" id="Filter-{{ filter.max_value.param_name }}" {% if filter.max_value.value %} value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}" {% endif %} type="number" placeholder="{{ filter.range_max | money_without_currency | replace: ',', '' }}" min="0" max="{{ filter.range_max | money_without_currency | replace: ',', '' }}" onchange="this.form.submit()">
                         </div>
                       </div>
                   {% endcase %}
                 </div>
               </div>
             {% endfor %}
-            <div class="reset">
-              <p><a href="{{ routes.search_url }}?sort_by={{ search.sort_by }}&q={{ search.terms }}">Reset</a></p>
-              {% for filter in search.filters %}
-                {% if filter.type == "price_range" %}
-                  {% if filter.min_value.value != nil or filter.max_value.value != nil %}
-                    <p>
-                      <a href="{{ filter.url_to_remove }}">
-                        {% assign min_value = filter.min_value.value | default: 0 %}
-                        {% assign max_value = filter.max_value.value | default: filter.range_max %}
-                        {{ min_value | money }} - {{ max_value | money }} X
-                      </a>
-                    </p>
-                  {% endif %}
-                {% else %}
-                  {% for filter_value in filter.active_values %}
-                    <p>
-                      <a href="{{ filter_value.url_to_remove }}">
-                        {{ filter.label }}: {{ filter_value.label }} X
-                      </a>
-                    </p>
-                  {% endfor %}
-                {% endif %}
-              {% endfor %}
-            </div>
+            <p class="mobile-clearall" style="background: transparent;">
+              <a href="{{ routes.search_url }}?sort_by={{ search.sort_by }}&q={{ search.terms }}">
+                Clear All ({{ filter_count }})
+              </a>
+            </p>
           </form>
         </div>
       </div>
+
+      {% assign filter_count = 0 %}
+      {% assign active_filters = "" %}
+      {% for filter in search.filters %}
+        {% if filter.type == "price_range" %}
+          {% if filter.min_value.value or filter.max_value.value %}
+            {% assign filter_count = filter_count | plus: 1 %}
+            {% assign min_value = filter.min_value.value | default: 0 %}
+            {% assign max_value = filter.max_value.value | default: filter.range_max %}
+            {% capture filter_html %}
+              <p class="filter-option">
+                <a href="{{ filter.url_to_remove }}">
+                  {{ min_value | money }} - {{ max_value | money }}
+                  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                  </svg>
+                </a>
+              </p>
+            {% endcapture %}
+            {% assign active_filters = active_filters | append: filter_html %}
+          {% endif %}
+        {% else %}
+          {% for filter_value in filter.values %}
+            {% if filter_value.active %}
+              {% assign filter_count = filter_count | plus: 1 %}
+              {% capture filter_html %}
+                <p class="filter-option">
+                  <a href="{{ filter_value.url_to_remove }}">
+                    {{ filter_value.label }}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                      <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                    </svg>
+                  </a>
+                </p>
+              {% endcapture %}
+              {% assign active_filters = active_filters | append: filter_html %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+
+      {% if filter_count > 0 %}
+        <div class="reset">
+          <div class="filter-option-container">
+            {{ active_filters | safe }}
+          </div>
+            <p class="clearall" style="background: transparent;">
+            <a href="{{ routes.search_url }}?sort_by={{ search.sort_by }}&q={{ search.terms }}">
+              Clear All ({{ filter_count }})
+            </a>
+          </p>
+        </div>
+      {% endif %}
+
       <div>
         <span>{{ search.results_count }} &nbsp; Products</span>
       </div>
+
       <div class="sort">
         <div class="dropdown">
           <span onclick="toggleSortDropdown()" class="dropbtn">
@@ -131,55 +170,55 @@
 
 
     <section class="grid">
-  <div id="overlay" class="overlay"></div>
-  {% if search.results.size > 0 %}
-    {% for product in search.results %}
-      <div class="grid-container" id="product-{{ product.id }}">
-        <a href="{{ product.url }}" style="text-decoration: none;">
-          <div class="image-container">
-            <div class="image">
-              {% if product.images.size > 1 %}
-                <img src="{{ product.images.first | img_url: 'large' }}" alt="{{ product.title }}" class="f-image main-image-{{ product.id }}">
-                <img src="{{ product.images[1] | img_url: 'large' }}" alt="{{ product.title }}" class="f2-image secondary-image-{{ product.id }}">
-              {% else %}
-                <img src="{{ product.featured_image.src | img_url: 'large' }}" alt="{{ product.featured_image.alt | escape }}" class="f-image main-image-{{ product.id }}">
-                <img src="{{ product.featured_image.src | img_url: 'large' }}" alt="{{ product.featured_image.alt | escape }}" class="f2-image secondary-image-{{ product.id }}">
-              {% endif %}
-            </div>
-            <div class="top">
-              {% if product.available %}
-                <div class="sale">SALE</div>
-              {% else %}
-                <div class="sale">SOLD OUT</div>
-              {% endif %}
-              <div>
-                <button class="wishlist-icon" data-product-id="{{ product.id }}">
-                  <i class="fa-regular fa-heart"></i>
-                </button>
+      <div id="overlay" class="overlay"></div>
+      {% if search.results.size > 0 %}
+        {% for product in search.results %}
+          <div class="grid-container" id="product-{{ product.id }}">
+            <a href="{{ product.url }}" style="text-decoration: none;">
+              <div class="image-container">
+                <div class="image">
+                  {% if product.images.size > 1 %}
+                    <img src="{{ product.images.first | img_url: 'large' }}" alt="{{ product.title }}" class="f-image main-image-{{ product.id }}">
+                    <img src="{{ product.images[1] | img_url: 'large' }}" alt="{{ product.title }}" class="f2-image secondary-image-{{ product.id }}">
+                  {% else %}
+                    <img src="{{ product.featured_image.src | img_url: 'large' }}" alt="{{ product.featured_image.alt | escape }}" class="f-image main-image-{{ product.id }}">
+                    <img src="{{ product.featured_image.src | img_url: 'large' }}" alt="{{ product.featured_image.alt | escape }}" class="f2-image secondary-image-{{ product.id }}">
+                  {% endif %}
+                </div>
+                <div class="top">
+                  {% if product.available %}
+                    <div class="sale">SALE</div>
+                  {% else %}
+                    <div class="sale">SOLD OUT</div>
+                  {% endif %}
+                  <div>
+                    <button class="wishlist-icon" data-product-id="{{ product.id }}">
+                      <i class="fa-regular fa-heart"></i>
+                    </button>
+                  </div>
+                </div>
               </div>
-            </div>
+              <div class="details">
+                <div class="head"><span>{{ product.title }}</span></div>
+                <p>From {{ product.price | money }} exc VAT &nbsp;
+                  {% if product.compare_at_price > product.price %}
+                    <span>{{ product.compare_at_price | money }}</span>
+                  {% endif %}
+                </p>
+              </div>
+            </a>
+            <a href="{{ product.url }}" class="view-product-button">
+              <span>View Product</span>
+            </a>
           </div>
-          <div class="details">
-            <div class="head"><span>{{ product.title }}</span></div>
-            <p>From {{ product.price | money }} exc VAT &nbsp;
-              {% if product.compare_at_price > product.price %}
-                <span>{{ product.compare_at_price | money }}</span>
-              {% endif %}
-            </p>
-          </div>
-        </a>
-        <a href="{{ product.url }}" class="view-product-button">
-          <span>View Product</span>
-        </a>
-      </div>
-    {% endfor %}
-  {% else %}
-    <div class="noresult">
-      <p>No results could be found for "{{ search.query }}"</p>
-      <p>0 results found for "{{ search.query }}"</p>
-    </div>
-  {% endif %}
-</section>
+        {% endfor %}
+      {% else %}
+        <div class="noresult">
+          <p>No results could be found for "{{ search.terms }}"</p>
+          <p>0 results found for "{{ search.terms }}"</p>
+        </div>
+      {% endif %}
+    </section>
 
 
       <section class="paging">
@@ -218,6 +257,7 @@
     gap: 2rem;
     font-size: 0.9rem;
   }
+
   .breadcrumb{
     /* padding: 2rem 5rem; */
     font-size: 0.9rem;
@@ -225,14 +265,17 @@
     gap: 10px;
     font-weight: 450;
   }
+
   .breadcrumb a{
     position: relative;
     display: inline-block;
     color: rgb(141, 141, 141);
   }
+
   .breadcrumb a:hover{
     color: rgb(141, 141, 141);
   }
+
   .breadcrumb a::after {
     content: '';
     position: absolute;
@@ -245,29 +288,36 @@
     left: 0;
     color: rgb(141, 141, 141);
   }
+
   .breadcrumb a:hover::after {
       width: 100%;
   }
+
   input[type="search"]::-webkit-search-cancel-button {
     -webkit-appearance: none;
     appearance: none;
   }
+
   a{
     text-decoration: none;
     color: #030303;
   }
+
   a:hover{
     color: black;
   }
+
   .head {
     position: relative;
     display: inline-block; /* Ensure the element only takes up as much width as the text */
     cursor: pointer;
   }
+
   .head span {
     position: relative;
     display: inline-block; /* Ensure the element only takes up as much width as the text */
   }
+
   .head span::after {
     content: '';
     position: absolute;
@@ -278,19 +328,25 @@
     transition: width 0.4s; /* Duration of the effect */
     left: 0;
   }
+
   .head span:hover::after {
       width: 100%;
   }
+
   .search-field{
     width: 100%;
     display: flex;
     gap: 20px;
   }
+
   .search-field .search-input{
     width: 85%;
     border: 1px solid rgb(169, 168, 168);
     padding: 13px 20px;
+    margin: 0;
+    height: auto;
   }
+
   .search-input input{
     width: 100%;
     border: none;
@@ -298,9 +354,11 @@
     font-weight: 500;
     font-size: 1rem;
   }
+
   .search-input input::placeholder{
     color: rgb(147, 147, 147);
   }
+
   .search-field button{
     white-space: nowrap;
     border: none;
@@ -319,6 +377,12 @@
     margin: 0;
   }
 
+  .sorting>div {
+    display: flex;
+    padding: 0 10px;
+    gap: 0;
+  }
+
   .filter {
     position: relative;
     cursor: pointer;
@@ -326,7 +390,7 @@
   }
 
   .filter.open {
-    background-color: #f8f8f8;
+    background-color: #f0f0f0;
   }
 
   .filterdropdown {
@@ -351,20 +415,29 @@
   .filter-dropdown-content {
     display: none;
     position: absolute;
-    background-color: #f8f8f8;
+    background-color: #f0f0f0;
     overflow-y: auto;
     border: 1px solid rgb(229, 229, 229);
     z-index: 4;
-    transform: translate(-12%, 100%);
+    transform: translate(-9%, 100%);
     box-sizing: border-box;
-    width: 25rem;
+    width: 35rem;
     min-width: fit-content;
     white-space: nowrap;
     transition: left 0.3s ease, max-height 0.3s ease;
     left: -500px;
-    min-height: 49rem !important;
+    height: 100vh !important;
     bottom: 0;
     padding-bottom: 30px;
+    max-height: 100vh !important;
+  }
+
+  .filter-dropdown-content .close-btn{
+    display: none;
+  }
+
+  .mobile-clearall{
+    display: none;
   }
 
   .grid{
@@ -391,8 +464,8 @@
   }
 
   .filter-dropdown {
-    background-color: #f8f8f8;
-    border-bottom: 1px solid rgb(229, 229, 229);
+    background-color: #F0F0F0;
+    border-bottom: 1px solid rgb(225, 225, 225);
     padding: 30px 25px;
     cursor: pointer;
   }
@@ -432,13 +505,42 @@
     height: 18px;
   }
 
+  .filter-options input[type="radio"] {
+    width: 18px;
+    height: 18px;
+  }
+
   .filter-options ul li {
     margin-bottom: 10px;
   }
 
   .reset {
-    padding: 30px 25px;
+    position: absolute;
+    top: 11px !important;
+    left: 140px !important;
+    padding: 0;
     cursor: pointer;
+  }
+
+  .filter-option-container {
+    display: flex;
+    gap: 10px;
+    max-width: 385px;
+    overflow-x: scroll;
+    scrollbar-width: none; /*Firefox */
+  }
+
+  /* WebKit browsers */
+  .filter-option-container::-webkit-scrollbar {
+    display: none;
+  }
+
+  .reset p {
+    margin: 0;
+    font-weight: 450;
+    background-color: #F0F0F0;
+    padding: 2px 8px;
+    white-space: nowrap;
   }
 
   .filter-group-display__price-range {
@@ -450,6 +552,7 @@
   .filter-group-display__price-range-from input,
   .filter-group-display__price-range-to input {
     width: 50%;
+    padding-left: 10px;
   }
 
   .show {
@@ -526,6 +629,24 @@
     transform: translateY(-100%);
   }
 
+  @media (max-width: 1413px){
+    .filter-option-container{
+      max-width: 15rem;
+    }
+  }
+
+  @media (max-width: 1113px){
+    .filter-option-container{
+      max-width: 8rem;
+    }
+  }
+
+  @media (max-width: 883px){
+    .filter-option-container{
+      max-width: 5rem;
+    }
+  }
+
   @media (max-width: 840px) {
     .sorting{
       overflow: visible;
@@ -547,15 +668,65 @@
     .filter-dropdown-content.show {
       left: 0; /* Slide in from the left */
     }
+
+    .reset{
+      top: -2px !important;
+      left: 96px !important;
+    }
   }
 
   @media (max-width: 768px){
-    .search-input input{
+    .search-input input {
+      display: block;
+    }
+
+    .filter-dropdown input{
       display: block;
     }
 
     .search-header{
       padding: 2rem;
+    }
+
+    .filter-option-container{
+      display: none !important;
+    }
+
+    .filter-dropdown-content {
+      position: fixed;
+      top: 0;
+      left: -500px;
+      width: 100%;
+      height: 100%;
+      background-color: #F0F0F0;
+      overflow-y: auto; /* Ensure dropdown content is scrollable */
+      transition: left 0.3s ease;
+      z-index: 20; /* Ensure it is above other content */
+      padding: 3rem 1rem;
+    }
+
+    .filter-dropdown-content.show {
+      left: 0;
+    }
+
+    .filter-dropdown-content .close-btn {
+      display: block !important;
+      position: absolute;
+      top: 30px;
+      right: 38px;
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+    }
+    
+    .mobile-clearall{
+      display: flex;
+      padding: 30px 25px;
+    }
+
+    .clearall{
+      display: none;
     }
   }
 
@@ -580,7 +751,8 @@
 
   @media (max-width: 400px){
     .filter-dropdown-content{
-      width: 100%;
+      width: 100vw;
+      height: 100vh;
     }
 
     .filter-title {
@@ -607,6 +779,7 @@ function filterFunction() {
   var filterDropdownContent = document.getElementById("filter-dropdown-content");
   var overlay = document.querySelector(".overlay");
   var filterDiv = document.querySelector(".filter");
+  var body = document.body;
 
   if (filterDropdownContent.style.left === "0px") {
     filterDropdownContent.style.left = "-500px";
@@ -614,18 +787,20 @@ function filterFunction() {
       filterDropdownContent.classList.remove("show");
       overlay.classList.remove("active");
       filterDiv.classList.remove("open");
+      body.classList.remove("no-scroll");
     }, 300);
   } else {
     filterDropdownContent.classList.add("show");
     setTimeout(() => {
       filterDropdownContent.style.left = "0px";
-      if (window.innerWidth <= 840) {
+      if (window.innerWidth <= 768) {
         filterDropdownContent.style.maxHeight = `calc(100vh - ${filterDiv.getBoundingClientRect().top}px)`;
       } else {
         filterDropdownContent.style.maxHeight = `calc(100vh - ${filterDiv.getBoundingClientRect().bottom}px)`;
       }
       overlay.classList.add("active");
       filterDiv.classList.add("open");
+      body.classList.add("no-scroll");
     }, 10);
   }
 }
@@ -660,6 +835,7 @@ window.onclick = function(event) {
         filterDropdownContent.classList.remove("show");
         overlay.classList.remove("active");
         filterDiv.classList.remove("open");
+        document.body.classList.remove("no-scroll");
       }, 300);
     }
   }
@@ -675,7 +851,8 @@ window.onclick = function(event) {
       }
     }
   }
-}
+};
+
 
 // wishlist
   document.addEventListener('DOMContentLoaded', function () {

@@ -119,6 +119,12 @@
     .submenu li a:hover {
         color: {{ blocks[0].settings.hover_color }};
     }
+
+  .sticky-navigation{
+    position: sticky;
+    top: 75px;
+    z-index: 5;
+  }
 {% endstyle %}
 
 
@@ -128,7 +134,10 @@
 {% schema %}
     {
       "name": "navigation",
-      "class": "navigation",
+      "class": "sticky-navigation",
+      "enabled_on": {
+        "groups": ["header"]
+      },
       "settings": [
         {
           "type": "link_list",

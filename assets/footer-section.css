@@ -103,7 +103,7 @@ footer .pay2 img {
   color: white;
   position: relative;
   overflow: hidden;
-  z-index: 1;
+  z-index: 4;
   text-decoration: none;
   display: flex;
   justify-content: center;
@@ -136,12 +136,38 @@ footer .pay2 img {
   height: 230px;
 }
 
+.search-box .search-field{
+  width: 100%;
+  text-align: center;
+}
+
 .search-box input {
-  width: 80%;
+  width: 100%;
   padding: 10px;
   font-size: 16px;
+  border: none;
+  outline: none;
+}
+
+.search-input{
+  width: 90%;
+  border: 2px solid rgb(111, 111, 111);
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin: 0 auto;
-  margin-top: 99px;
+  margin-top: 75px;
+}
+
+.search-box .mobile-search-btn{
+  padding: 10px 25px;
+  border: none;
+  background-color: rgb(48, 48, 48);
+  color: white;
+  font-weight: 500;
+  margin: 0 auto;
+  margin-top: 1rem;
 }
 
 /* Media Queries for Responsiveness */

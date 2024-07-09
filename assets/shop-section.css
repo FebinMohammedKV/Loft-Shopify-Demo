@@ -232,13 +232,17 @@ p {
 /* Media Queries for Responsiveness */
 @media (max-width: 1200px) {
   .shop {
-    padding: 0 5rem;
+    padding: 0 5rem !important;
+  }
+
+  .shop .cont{
+    max-height: fit-content;
   }
 }
 
 @media (max-width: 992px) {
   .shop {
-    padding: 0 2rem;
+    padding: 0 2rem !important;
   }
 }
 
@@ -247,7 +251,7 @@ p {
     display: flex;
     flex-wrap: wrap;
     /* grid-template-columns: 1fr; */
-    padding: 0 1.5rem;
+    padding: 0 1.5rem !important;
   }
 
   p {
@@ -297,10 +301,5 @@ p {
 
   .shop .cont .para {
     font-size: 0.8rem;
-  }
-
-  .shop .cont button {
-    width: 150px;
-    height: 45px;
   }
 }

@@ -1,0 +1,487 @@
+{{ 'cart-slide.css' | asset_url | stylesheet_tag }}
+<div class="ajaxcart-overlay"></div>
+<div class="ajaxcart-slide">
+    <div class="ajaxcart-head">
+        {% if cart.item_count > 0 %}
+            <p class="ajaxcart-product-count">Shopping Cart <span>({{ cart.item_count }})</span></p>
+        {% else %}
+            <div class="empty">Your Bag is Empty</div>
+        {% endif %}
+        <button class="ajaxclose-btn cart">
+            <span class="material-symbols-outlined" style="font-size: 1.8rem; font-weight: lighter;">close</span>
+        </button>
+    </div>
+    <div class="ajaxcart-body">
+        {% for item in cart.items %}
+            <div class="ajaxcart-product-details" id="cart-product-{{ item.key }}" style="{% if forloop.first %}border-top: none;{% endif %}">
+                <div class="ajaxcart-pimage">
+                    <a href="{{ item.url | within: collections.all }}">
+                        <img src="{{ item.image | img_url: 'master' }}" alt="{{ item.title | escape }}">
+                    </a>
+                </div>
+                <div class="ajaxcart-productinfo">
+                    <div class="ajax-product-info">
+                        <a href="{{ item.url }}" class="ajaxproduct-title">{{ item.title | escape }}</a>
+                        <div class="remove">
+                            <a href="#" class="delete" data-key="{{ item.key }}">Remove</a>
+                        </div>
+                    </div>
+                    <div class="ajaxprice-qty">
+                        <div class="ajax-quantity-content">
+                            <button type="button" class="ajax-quantity-btn ajax-decrease" data-key="{{ item.key }}">-</button>
+                            <span id="Quantity_{{ item.key }}" data-value="{{ item.quantity }}">{{ item.quantity }}</span>
+                            <button type="button" class="ajax-quantity-btn ajax-increase" data-key="{{ item.key }}">+</button>
+                            <input type="hidden" name="updates[]" id="updates_{{ item.key }}" value="{{ item.quantity }}">
+                        </div>
+                        <div>
+                            <span class="ajaxproduct-price" id="product-price-{{ item.key }}" data-price="{{ item.price }}">{{ item.price | money }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="ajaxcart-footer">
+        <div class="ajaxtotal">
+            <span>Total</span>
+            <span class="subtotal-price" id="cart-total">{{ cart.total_price | money }}</span>
+        </div>
+        <span class="ajaxcart-dis">Taxes and shipping calculated at checkout.</span>
+        <div class="ajax-buttons">
+            <form action="/cart" class="ajax-view-cart-btn">
+                <button class="ajax-view-cart" type="submit" name="cart">View Cart</button>
+            </form>
+            <form action="/checkout">
+                <button class="ajax-checkout-btn" type="submit" name="checkout">Checkout</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+   document.addEventListener('DOMContentLoaded', function() {
+    const isCartPage = window.location.pathname === '/cart';
+    const ajaxCartSlide = document.querySelector('.ajaxcart-slide');
+    const overlay = document.querySelector('.ajaxcart-overlay');
+
+    if (isCartPage) {
+        ajaxCartSlide.style.display = 'none';
+        overlay.style.display = 'none';
+    } else {
+        const decreaseButtons = document.querySelectorAll('.ajax-quantity-btn.ajax-decrease');
+        const increaseButtons = document.querySelectorAll('.ajax-quantity-btn.ajax-increase');
+        const removeLinks = document.querySelectorAll('.delete');
+        const closeButton = document.querySelector('.ajaxclose-btn.cart');
+        const cartButton = document.querySelector('.cart');
+        const addToCartButtons = document.querySelectorAll('.add-to-cart-button');
+
+        function updateCartTotal() {
+            let total = 0;
+            document.querySelectorAll('.ajaxcart-product-details').forEach(function(item) {
+                const quantity = parseInt(item.querySelector('.ajax-quantity-content span').getAttribute('data-value'), 10);
+                const price = parseFloat(item.querySelector('.ajaxproduct-price').getAttribute('data-price')) / 100;
+                const linePrice = quantity * price;
+                item.querySelector('.ajaxproduct-price').textContent = `Rs ${linePrice.toFixed(2)}`;
+                total += linePrice;
+            });
+            document.getElementById('cart-total').textContent = `Rs ${total.toFixed(2)}`;
+        }
+
+        function updateCartItem(key, quantity) {
+            fetch('/cart/change.js', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: key,
+                    quantity: quantity
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.querySelector('.ajaxcart-product-count span').textContent = `(${data.item_count})`;
+                updateCartTotal();
+                updateCartSlider();
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        decreaseButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const key = this.getAttribute('data-key');
+                const quantitySpan = document.getElementById(`Quantity_${key}`);
+                let quantity = parseInt(quantitySpan.getAttribute('data-value'), 10);
+                if (quantity > 1) {
+                    quantity--;
+                    quantitySpan.setAttribute('data-value', quantity);
+                    quantitySpan.textContent = quantity;
+                    document.getElementById(`updates_${key}`).value = quantity;
+                    updateCartItem(key, quantity);
+                }
+            });
+        });
+
+        increaseButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const key = this.getAttribute('data-key');
+                const quantitySpan = document.getElementById(`Quantity_${key}`);
+                let quantity = parseInt(quantitySpan.getAttribute('data-value'), 10);
+                quantity++;
+                quantitySpan.setAttribute('data-value', quantity);
+                quantitySpan.textContent = quantity;
+                document.getElementById(`updates_${key}`).value = quantity;
+                updateCartItem(key, quantity);
+            });
+        });
+
+        removeLinks.forEach(link => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                const key = this.getAttribute('data-key');
+                const productRow = document.getElementById(`cart-product-${key}`);
+                productRow.parentNode.removeChild(productRow);
+                updateCartItem(key, 0);
+            });
+        });
+
+        closeButton.addEventListener('click', function() {
+            document.body.classList.remove('no-scroll');
+            ajaxCartSlide.style.right = '-500px';
+            overlay.style.display = 'none';
+        });
+
+        function toggleCartSlide() {
+            document.body.classList.add('no-scroll');
+            ajaxCartSlide.style.right = '0';
+            overlay.style.display = 'block';
+        }
+
+        cartButton.addEventListener('click', toggleCartSlide);
+
+        addToCartButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const productId = this.closest('form').getAttribute('data-product-id');
+                addToCart(productId);
+            });
+        });
+
+        function addToCart(productId) {
+            fetch('/cart/add.js', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: productId,
+                    quantity: 1
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                updateCartSlider();
+                toggleCartSlide();
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function updateCartSlider() {
+            fetch('/cart.js')
+            .then(response => response.json())
+            .then(data => {
+                const ajaxCartBody = document.querySelector('.ajaxcart-body');
+                const ajaxCartProductCount = document.querySelector('.ajaxcart-product-count span');
+                const cartTotal = document.getElementById('cart-total');
+                ajaxCartBody.innerHTML = '';
+
+                data.items.forEach(item => {
+                    const productRow = document.createElement('div');
+                    productRow.classList.add('ajaxcart-product-details');
+                    productRow.id = `cart-product-${item.key}`;
+                    productRow.innerHTML = `
+                        <div class="ajaxcart-pimage">
+                            <a href="${item.url}">
+                                <img src="${item.image}" alt="${item.title}">
+                            </a>
+                        </div>
+                        <div class="ajaxcart-productinfo">
+                            <div class="ajax-product-info">
+                                <a href="${item.url}" class="ajaxproduct-title">${item.title}</a>
+                                <div class="remove">
+                                    <a href="#" class="delete" data-key="${item.key}">Remove</a>
+                                </div>
+                            </div>
+                            <div class="ajaxprice-qty">
+                                <div class="ajax-quantity-content">
+                                    <button type="button" class="ajax-quantity-btn ajax-decrease" data-key="${item.key}">-</button>
+                                    <span id="Quantity_${item.key}" data-value="${item.quantity}">${item.quantity}</span>
+                                    <button type="button" class="ajax-quantity-btn ajax-increase" data-key="${item.key}">+</button>
+                                    <input type="hidden" name="updates[]" id="updates_${item.key}" value="${item.quantity}">
+                                </div>
+                                <div class="ajaxproduct-price" data-price="${item.price}">Rs ${(item.price / 100).toFixed(2)}</div>
+                            </div>
+                        </div>
+                    `;
+                    ajaxCartBody.appendChild(productRow);
+                });
+
+                ajaxCartProductCount.textContent = `(${data.item_count})`;
+                cartTotal.textContent = `Rs ${(data.total_price / 100).toFixed(2)}`;
+
+                attachEventListeners();
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function attachEventListeners() {
+            document.querySelectorAll('.ajax-quantity-btn.ajax-decrease').forEach(button => {
+                button.addEventListener('click', function() {
+                    const key = this.getAttribute('data-key');
+                    const quantitySpan = document.getElementById(`Quantity_${key}`);
+                    let quantity = parseInt(quantitySpan.getAttribute('data-value'), 10);
+                    if (quantity > 1) {
+                        quantity--;
+                        quantitySpan.setAttribute('data-value', quantity);
+                        quantitySpan.textContent = quantity;
+                        document.getElementById(`updates_${key}`).value = quantity;
+                        updateCartItem(key, quantity);
+                    }
+                });
+            });
+
+            document.querySelectorAll('.ajax-quantity-btn.ajax-increase').forEach(button => {
+                button.addEventListener('click', function() {
+                    const key = this.getAttribute('data-key');
+                    const quantitySpan = document.getElementById(`Quantity_${key}`);
+                    let quantity = parseInt(quantitySpan.getAttribute('data-value'), 10);
+                    quantity++;
+                    quantitySpan.setAttribute('data-value', quantity);
+                    quantitySpan.textContent = quantity;
+                    document.getElementById(`updates_${key}`).value = quantity;
+                    updateCartItem(key, quantity);
+                });
+            });
+
+            document.querySelectorAll('.delete').forEach(link => {
+                link.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    const key = this.getAttribute('data-key');
+                    const productRow = document.getElementById(`cart-product-${key}`);
+                    productRow.parentNode.removeChild(productRow);
+                    updateCartItem(key, 0);
+                });
+            });
+        }
+    }
+});
+
+</script>
+
+<style>
+    .ajaxcart-slide {
+        display: none;
+        width: 430px;
+        height: 100vh;
+        right: -500px;
+        display: flex;
+        flex-direction: column;
+        text-align: start;
+        align-items: center;
+        background-color: white;
+        position: fixed;
+        top: 0;
+        transition: right 0.5s ease;
+        z-index: 5;
+        overflow-y: scroll;
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+    }
+
+    .ajaxcart-slide::-webkit-scrollbar {
+        display: none;  /* Chrome, Safari, and Opera */
+    }
+
+    .ajaxcart-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.2);
+        z-index: 4;
+    }
+
+    .ajaxcart-product-count {
+        text-transform: uppercase;
+        font-weight: bold;
+        font-size: 1rem;
+    }
+
+    .ajaxcart-slide a {
+        text-decoration: none;
+        color: black;
+    }
+
+    .ajaxcart-head {
+        width: 100%;
+        border-bottom: 1px solid rgb(193, 193, 193);
+        padding: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        position: sticky;
+        top: 0;
+        background: white;
+        z-index: 1;
+    }
+
+    .empty {
+        font-size: 1.3rem;
+        margin-bottom: 10px;
+    }
+
+    .cartdis {
+        font-size: .7rem;
+        word-spacing: 2px;
+    }
+
+    .ajax-quantity-content {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+    }
+
+    .ajaxclose-btn {
+        background: none;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+    }
+
+    .ajaxcart-body {
+        width: 100%;
+        padding: 0 20px;
+        flex-grow: 1;
+    }
+
+    .ajax-quantity-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: row;
+        background-color: #f0f0f0;
+        border-radius: 50%;
+        cursor: pointer;
+        height: 15px;
+        width: 20px;
+        border: none;
+        outline: none;
+    }
+
+    .ajaxcart-pimage img {
+        width: 80px;
+    }
+
+    .ajaxcart-product-details {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        padding: 20px 0;
+        border-top: 1px solid rgb(193, 193, 193);
+    }
+
+    .ajax-product-info {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .ajaxcart-productinfo {
+        padding-left: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .ajaxprice-qty {
+        align-items: center;
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-between;
+        margin-top: auto;
+    }
+
+    .ajaxcart-slide button {
+        padding: 0.3rem;
+    }
+
+    .ajaxcart-footer {
+        width: 100%;
+        border-top: 1px solid rgb(193, 193, 193);
+        padding: 30px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: #F2F2F2;
+    }
+
+    .ajaxtotal {
+        display: flex;
+        flex-direction: row;
+        border-bottom: 1px solid rgb(193, 193, 193);
+        font-size: 0.9rem;
+        font-weight: 500;
+        padding-bottom: 0.5rem;
+        width: 100%;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .ajaxtotal .subtotal-price {
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    .ajaxcart-dis {
+        font-size: 0.9rem;
+        color: rgb(124, 124, 124);
+        padding: 1rem 0;
+        text-align: left;
+        font-weight: 500;
+        width: 100%;
+    }
+
+    .ajax-buttons {
+        display: flex;
+        gap: 10px;
+        width: 100%;
+    }
+
+    .ajax-buttons form {
+        width: 50%;
+    }
+
+    .ajax-buttons form button {
+        width: 100%;
+        height: 100%;
+        padding: 0.8rem 1rem;
+        font-weight: 500;
+        border: 1px solid rgb(161, 161, 161);
+    }
+
+    .ajax-checkout-btn {
+        background-color: black;
+        color: white;
+        border: none;
+        outline: none;
+        cursor: pointer;
+    }
+
+    .no-scroll {
+        overflow: hidden;
+    }
+
+</style>
