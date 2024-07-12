@@ -1,53 +1,81 @@
 document.addEventListener('DOMContentLoaded', function() {
-  const decreaseButtons = document.querySelectorAll('.quantity-btn.decrease');
-  const increaseButtons = document.querySelectorAll('.quantity-btn.increase');
-  const updateButton = document.querySelector('.update-button');
-
   function recalculateTotals() {
-    let total = 0;
-    const items = document.querySelectorAll('.cart-product');
-    items.forEach(item => {
-      const quantity = parseInt(item.querySelector('.quantity-content span').getAttribute('data-value'), 10);
-      const price = parseFloat(item.querySelector('.item-total').getAttribute('data-price')) / 100;
-      const linePrice = quantity * price;
-      item.querySelector('.item-total').textContent = `Rs ${linePrice.toFixed(2)}`;
-      total += linePrice;
-    });
-    document.querySelector('.subtotal-price').innerHTML = `Rs ${total.toFixed(2)} <span>(All prices are ex VAT)</span>`;
+      let total = 0;
+      const items = document.querySelectorAll('.cart-product');
+      items.forEach(item => {
+          const quantity = parseInt(item.querySelector('.quantity-content span').textContent);
+          const pricePerItem = parseFloat(item.querySelector('.item-total').dataset.price) / 100;
+          const linePrice = quantity * pricePerItem;
+          item.querySelector('.item-total').textContent = `Rs ${linePrice.toFixed(2)}`;
+          total += linePrice;
+      });
+      document.querySelector('.subtotal-price').innerHTML = `Rs ${total.toFixed(2)} <span>(All prices are ex VAT)</span>`;
   }
 
-  decreaseButtons.forEach(button => {
-    button.addEventListener('click', function() {
-      const key = this.getAttribute('data-key');
-      const quantitySpan = document.getElementById(`Quantity_${key}`);
-      let quantity = parseInt(quantitySpan.getAttribute('data-value'), 10);
-      if (quantity > 1) {
-        quantity--;
-        quantitySpan.setAttribute('data-value', quantity);
-        quantitySpan.textContent = quantity;
-        document.getElementById(`updates_${key}`).value = quantity;
-        recalculateTotals();
-      }
-    });
+  function updateCartItem(key, quantity) {
+      return fetch('/cart/change.js', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+              id: key,
+              quantity: quantity
+          })
+      })
+      .then(response => response.json());
+  }
+
+  document.querySelectorAll('.quantity-btn').forEach(function(button) {
+      button.addEventListener('click', function() {
+          const span = button.parentElement.querySelector('span');
+          const oldValue = parseInt(span.textContent);
+          const key = button.getAttribute('data-key');
+          let newValue = oldValue;
+
+          if (button.classList.contains('decrease')) {
+              newValue = oldValue > 1 ? oldValue - 1 : 1;
+          } else if (button.classList.contains('increase')) {
+              newValue = oldValue + 1;
+          }
+
+          span.textContent = newValue;
+          button.parentElement.querySelector('input[name="updates[]"]').value = newValue;
+
+          // Update product price
+          const pricePerItem = parseFloat(document.getElementById(`product-price-${key}`).dataset.price) / 100;
+          const newPrice = pricePerItem * newValue;
+          document.getElementById(`product-price-${key}`).textContent = `Rs ${newPrice.toFixed(2)}`;
+
+          recalculateTotals();
+      });
   });
 
-  increaseButtons.forEach(button => {
-    button.addEventListener('click', function() {
-      const key = this.getAttribute('data-key');
-      const quantitySpan = document.getElementById(`Quantity_${key}`);
-      let quantity = parseInt(quantitySpan.getAttribute('data-value'), 10);
-      quantity++;
-      quantitySpan.setAttribute('data-value', quantity);
-      quantitySpan.textContent = quantity;
-      document.getElementById(`updates_${key}`).value = quantity;
-      recalculateTotals();
-    });
+  document.querySelector('.update-button').addEventListener('click', function(e) {
+      e.preventDefault();
+
+      const updatePromises = [];
+      document.querySelectorAll('.cart-product').forEach(item => {
+          const key = item.getAttribute('data-key');
+          const quantity = parseInt(item.querySelector('.quantity-content span').textContent);
+          updatePromises.push(updateCartItem(key, quantity));
+      });
+
+      Promise.all(updatePromises)
+          .then(results => {
+              const updatedCart = results[results.length - 1];
+              recalculateTotals();
+          })
+          .catch(error => console.error('Error:', error));
   });
 
-  updateButton.addEventListener('click', function(e) {
-    recalculateTotals();
-  });
+  recalculateTotals(); // Initial total calculation
 });
+
+
+
+
+
 
 // slider
 $(document).ready(function(){

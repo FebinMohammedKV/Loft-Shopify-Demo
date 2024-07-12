@@ -1,0 +1,50 @@
+{% layout none %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Wishlist</title>
+  <style>
+    .wishlist-products {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .similar-product {
+      width: 200px;
+      margin: 10px;
+      border: 1px solid #ddd;
+      padding: 10px;
+    }
+    .product-link img {
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <h1>Your Wishlist</h1>
+  <div class="wishlist-products" id="wishlist-products">
+    {% if customer %}
+      {% assign wishlist_items = customer.metafields.wishlist.items %}
+      {% if wishlist_items %}
+        {% for product_id in wishlist_items %}
+          {% assign product = all_products[product_id] %}
+          <div class="similar-product">
+            <a href="{{ product.url }}" class="product-link">
+              <img src="{{ product.featured_image | img_url: 'medium' }}" alt="{{ product.title }}">
+              <h3 class="product-title">{{ product.title }}</h3>
+              <p class="product-price">From {{ product.price | money }} excl VAT</p>
+            </a>
+            <form action="/cart/add" method="post" class="add-to-cart-form">
+              <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+              <button type="submit" class="add-to-cart-button">Add to Cart</button>
+            </form>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p>Your wishlist is currently empty.</p>
+      {% endif %}
+    {% else %}
+      <p>You need to be logged in to view your wishlist.</p>
+    {% endif %}
+  </div>
+</body>
+</html>

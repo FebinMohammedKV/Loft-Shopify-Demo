@@ -1,5 +1,6 @@
 {{ 'product.css'| asset_url | stylesheet_tag }}
 {{ 'product.js'| asset_url | script_tag }}
+{{ 'wishlist.js'| asset_url | script_tag }}
 
 {% comment %} {% assign current_variant = product.selected_or_first_available_variant %}
 {% assign featured_image = current_variant.featured_image | default: product.featured_image %}
@@ -129,18 +130,18 @@
     <div class="total-price">
       <p>Total: <span id="totalPrice">{{ product.selected_or_first_available_variant.price | money }}</span></p>
     </div>
-
+  {% endform %}
     <div id="productSelect">
       {% if product.available %}
         <form action="/cart/add" method="post" class="add-to-cart-form">
-        <input type="hidden" name="id" value="{{ variant.id }}">
-        <button type="submit" name="add" id="AddToCart">Add to Basket</button>
+          <input type="hidden" name="id" value="{{ variant.id }}">
+          <button type="submit" name="add" id="AddToCart">Add to Basket</button>
         </form>
       {% else %}
         <button type="button" name="add" id="AddToCart">Notify Me</button>
       {% endif %}
     </div>
-    {% endform %}
+    
 
     <button class="shopify-pay" style="background-color: #5A31F4;">
       Buy with
@@ -149,10 +150,14 @@
       </div>
     </button>
 
-    <span class="add-to-wishlist">
-        <i class="fa-regular fa-heart" style="color: #ffffff;"></i> &nbsp;
-        Add to wishlist
-    </span>
+    {% comment %} <span class="add-to-wishlist wishlist-item" data-id="{{ product.id }}">
+      <i class="fa-regular fa-heart" style="color: #ffffff;"></i> &nbsp;
+      Add to wishlist
+    </span> {% endcomment %}
+
+    <button class="st-wishlist-button" data-type="details" data-handle="{{product.handle}}"></button>
+
+    {% comment %} {% render 'wishlist', productid: product.id %} {% endcomment %}
 
     <div class="more-payment-options">
       <a href="/checkout">More Payment options</a>
@@ -355,6 +360,34 @@ function formatMoney(cents, format) {
 
   return formatString.replace(placeholderRegex, value);
 }
+
+// wishlist
+$(document).ready(function() {
+    var productId = '{{ product_id }}';
+    var buttonElement = $('#wishlist-' + productId);
+
+    buttonElement.click(function() {
+      let currentState = localStorage.getItem("wishID-" + productId);
+      
+      if (currentState) {
+        localStorage.removeItem("wishID-" + productId);
+        buttonElement.removeClass('wishfillID');
+      } else {
+        localStorage.setItem("wishID-" + productId, JSON.stringify({
+          id: productId,
+          title: '{{ product.title }}',
+          image: '{{ product.featured_image | image_url: width: 300, height: 300 }}',
+          price: '{{ product.price | money }}',
+          url: '{{ product.url }}'
+        }));
+        buttonElement.addClass('wishfillID');
+      }
+    });
+
+    if (localStorage.getItem("wishID-" + productId)) {
+      buttonElement.addClass('wishfillID');
+    }
+  });
 </script>
 
 

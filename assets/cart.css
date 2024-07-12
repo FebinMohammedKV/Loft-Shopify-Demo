@@ -405,10 +405,12 @@ button.slick-arrow {
 
 button.slick-prev.slick-arrow {
   left: -31px;
+  z-index: 1;
 }
 
 button.slick-next.slick-arrow {
   right: -31px;
+  z-index: 1;
 }
 
 button.slick-arrow:hover {
@@ -424,7 +426,7 @@ button.slick-arrow:hover {
 
 @media (max-width: 992px){
   .cart-container{
-    grid-template-columns: repeat(1, 1fr); 
+    grid-template-columns: repeat(1, 1fr);
   }
   .product-total .total{
     flex-direction: row;

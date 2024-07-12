@@ -1,134 +1,87 @@
 {{ 'cart.css'| asset_url | stylesheet_tag }}
 {{ 'cart.js'| asset_url | script_tag }}
 
-{% comment %} {% if cart.item_count > 0 %}
-    <h1>cart</h1>
-    <form action="/cart" method="post" novalidate>
-      <table>
-        <thead>
-          <th colspan="2">Prod</th>
-          <th>Price</th>
-          <th>Qty</th>
-          <th>total</th>
-        </thead>
-        <tbody>
-          {% for item in cart.items %}
-            <tr>
-              <td>
-                <a href="{{ item.url | within: collections.all }}">
-                  <img src="{{ item | img_url: 'medium' }}" alt="{{ item.title | escape }}">
-                </a>
-              </td>
-              <td>
-                <a href="{{ item.url }}">{{ item.product.title }}</a>
-                {{ item.variant.title }}
-                <a href="/cart/change?line={{ forloop.index }}&amp;quantity=0">remove</a>
-              </td>
-              <td>{{ item.price | money }}</td>
-              <td>
-                <input type="number" name="updates[]" id="updates_{{ item.key }}" value="{{ item.quantity }}" min="0">
-              </td>
-              <td>
-                {% if item.original_line_price != item.line_price %}{{ item.original_line_price | money }}{% endif %}
-                {{ item.line_price | money }}
-                {% for discount in item.discounts %}{{ discount.title }}{% endfor %}
-              </td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-      <div>
-        <p>sub total : {{ cart.total_price | money }}</p>
-        <button type="submit" name="update">Update</button>
-        <button type="submit" name="checkout">Checkout</button>
-      </div>
-    </form>
-  {% else %}
-    <h2>cart</h2>
-    Cart is empty
-{% endif %}
-   {% endcomment %}
-
 {% if cart.item_count > 0 %}
   <h1 style="font-size: {{ section.settings.cart_title_font_size }}px; font-weight: {{ section.settings.cart_title_font_weight }}; margin-top: {{ section.settings.cart_title_margin_top }}px; margin-bottom: {{ section.settings.cart_title_margin_bottom }}px;">
     {{ section.settings.cart_page_title }}
   </h1>
   <form action="/cart" method="post" novalidate>
-  <div class="cart-container">
-    <!-- Left Column: Product Information -->
-    <div class="cart-products">
-      {% for item in cart.items %}
-      <div class="cart-product">
-        <div class="product-image">
-          <a href="{{ item.url | within: collections.all }}">
-            <img src="{{ item | img_url: 'medium' }}" alt="{{ item.title | escape }}">
-          </a>
-        </div>
-        <div class="cart-product-details">
-          <div class="product-details">
-            <a href="{{ item.url }}">{{ item.product.title }}</a>
-            <div class="product-varient">{{ item.variant.title }}</div>
-            <div class="quantity-selector">
-              <div class="product-price">{{ item.price | money }}</div>
-              <div class="quantity-content">
-                <button type="button" class="quantity-btn decrease" data-key="{{ item.key }}">-</button>
-                <span id="Quantity_{{ item.key }}" data-value="{{ item.quantity }}">{{ item.quantity }}</span>
-                <button type="button" class="quantity-btn increase" data-key="{{ item.key }}">+</button>
-                <input type="hidden" name="updates[{{ item.key }}]" id="updates_{{ item.key }}" value="{{ item.quantity }}">
+    <div class="cart-container">
+      <div class="cart-products">
+        {% for item in cart.items %}
+        <div class="cart-product" id="cart-product-{{ item.key }}" data-key="{{ item.key }}">
+          <div class="product-image">
+            <a href="{{ item.url | within: collections.all }}">
+              <img src="{{ item | img_url: 'medium' }}" alt="{{ item.title | escape }}">
+            </a>
+          </div>
+          <div class="cart-product-details">
+            <div class="product-details">
+              <a href="{{ item.url }}">{{ item.product.title }}</a>
+              <div class="product-varient">{{ item.variant.title }}</div>
+              <div class="quantity-selector">
+                <div class="product-price">{{ item.price | money }}</div>
+                <div class="quantity-content">
+                  <button type="button" class="quantity-btn decrease" data-key="{{ item.key }}">-</button>
+                  <span id="Quantity_{{ item.key }}" data-value="{{ item.quantity }}">{{ item.quantity }}</span>
+                  <button type="button" class="quantity-btn increase" data-key="{{ item.key }}">+</button>
+                  <input type="hidden" name="updates[{{ item.key }}]" id="updates_{{ item.key }}" value="{{ item.quantity }}">
+                </div>
+                <a href="" class="edit">Edit</a>
               </div>
-              <a href="" class="edit">Edit</a>
             </div>
-          </div>
-          <div class="product-total">
-            <div class="total">
-              <span>Total</span>
-              <span class="item-total" data-price="{{ item.price }}">Rs {{ item.line_price | money }}</span>
-            </div>
-            <div class="remove">
-              <a href="/cart/change?line={{ forloop.index }}&amp;quantity=0">Remove</a>
+            <div class="product-total">
+              <div class="total">
+                <span>Total</span>
+                <span class="item-total" id="product-price-{{ item.key }}" data-price="{{ item.price }}">Rs {{ item.line_price | money }}</span>
+              </div>
+              <div class="remove">
+                <a href="/cart/change?line={{ forloop.index }}&amp;quantity=0">Remove</a>
+              </div>
             </div>
           </div>
         </div>
+        <hr>
+        {% endfor %}
+        <div class="cart-instruction">
+          <textarea name="instruction" id="instruction" class="custom-textarea" placeholder="Special instructions (Where keys are located etc...)"></textarea>
+        </div>
       </div>
-      <hr>
-      {% endfor %}
-      <div class="cart-instruction">
-        <textarea name="instruction" id="instruction" class="custom-textarea" placeholder="Special instructions (Where keys are located etc...)"></textarea>
-      </div>
-    </div>
 
-    <div class="cart-aside">
-      <div class="cart-subtotal">
-        <p>Total </p>
-        <p class="subtotal-price">Rs {{ cart.total_price | money }} <span>(All prices are ex VAT)</span></p>
-      </div>
-      <div class="shipping">
-        <a href="/pages/shipping">Shipping</a> calculated at checkout.
-      </div>
-      <div class="mandatory_checkout-container">
-        <input id="mandatory_checkout" class="check-input" type="checkbox" value="Yes" required="">
-        <span class="mandatory_checkout-text">Added all the installation &amp; removal services</span>
-      </div>
-      <div class="cart-actions">
-        <div class="upd-chek-btn">
-          <button type="submit" name="update" class="update-button">Update</button>
-          <button type="submit" name="checkout" class="checkout-button">Checkout</button>
+      <div class="cart-aside">
+        <div class="cart-subtotal">
+          <p>Total </p>
+          <p class="subtotal-price">Rs {{ cart.total_price | money }} <span>(All prices are ex VAT)</span></p>
         </div>
-        <!-- Add your payment options buttons here -->
-        <button class="shoppay-button" style="background-color: #5A31F4;">
-          <img src="{{ 'shopPay.png' | asset_url }}" alt="Shopify Pay">
-        </button>
-        <button class="paypal-button" style="background-color: #FFC439;">
-          <img src="{{ 'paypal-logo.svg' | asset_url }}" alt="Paypal Logo">
-          <img src="{{ 'paypal.svg' | asset_url }}" alt="Paypal Logo">
-        </button>
-        <button class="gpay-button" style="background-color: #000000;">
-          <img src="{{ 'g-pay.png' | asset_url }}" alt="Google Pay">
-        </button>
+        <div class="shipping">
+          <a href="/pages/shipping">Shipping</a> calculated at checkout.
+        </div>
+        <div class="mandatory_checkout-container">
+          <input id="mandatory_checkout" class="check-input" type="checkbox" value="Yes" required="">
+          <span class="mandatory_checkout-text">Added all the installation &amp; removal services</span>
+        </div>
+        <div class="cart-actions">
+          <div class="upd-chek-btn">
+            <button type="submit" name="update" class="update-button">Update</button>
+            <button type="submit" name="checkout" class="checkout-button">Checkout</button>
+          </div>
+          <button class="shoppay-button" style="background-color: #5A31F4;">
+            <img src="{{ 'shopPay.png' | asset_url }}" alt="Shopify Pay">
+          </button>
+          <button class="paypal-button" style="background-color: #FFC439;">
+            <img src="{{ 'paypal-logo.svg' | asset_url }}" alt="Paypal Logo">
+            <img src="{{ 'paypal.svg' | asset_url }}" alt="Paypal Logo">
+          </button>
+          <button class="gpay-button" style="background-color: #000000;">
+            <img src="{{ 'g-pay.png' | asset_url }}" alt="Google Pay">
+          </button>
+        </div>
       </div>
     </div>
-  </div>
-</form>
+  </form>
+
+
+
 
     <div class="install-removal" style="margin-top: {{ section.settings.ir_margin_top }}px; margin-bottom: {{ section.settings.ir_margin-bottom }}px">
       <h2 class="installation-removal-heading" style="font-size: {{ section.settings.ir_heading_font_size }}px; font-weight: {{ section.settings.ir_heading_font_weight }};">
@@ -360,4 +313,3 @@
     ]
   }
   {% endschema %}
-  

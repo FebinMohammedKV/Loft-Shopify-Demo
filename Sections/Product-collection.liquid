@@ -1,5 +1,6 @@
 {{ 'product-collection.css' | asset_url | stylesheet_tag }}
 {{ 'sort.js'| asset_url | script_tag }}
+{{ 'wishlist.js'| asset_url | script_tag }}
 
 
 <section class="sorting">
@@ -51,9 +52,9 @@
                             {% else %}
                                 <div class="sale">SOLD OUT</div>
                             {% endif %}
-                            <div>
+                            <div class="wishlist-icon" data-id="{{ product.id }}">
                                 <i class="fa-regular fa-heart" style="color: #030303;"></i>
-                            </div>
+                              </div>
                         </div>
                     </div>
                     <div class="details">
@@ -137,6 +138,34 @@
 {% endpaginate %}
 
 
+<script>
+$(document).ready(function() {
+    var productId = '{{ product.id }}';
+    var iconElement = $('#wishlist-' + productId);
+
+    iconElement.click(function() {
+      let currentState = localStorage.getItem("wishID-" + productId);
+      
+      if (currentState) {
+        localStorage.removeItem("wishID-" + productId);
+        iconElement.removeClass('wishfillID');
+      } else {
+        localStorage.setItem("wishID-" + productId, JSON.stringify({
+          id: productId,
+          title: '{{ product.title }}',
+          image: '{{ product.featured_image | image_url: width: 300, height: 300 }}',
+          price: '{{ product.price | money }}',
+          url: '{{ product.url }}'
+        }));
+        iconElement.addClass('wishfillID');
+      }
+    });
+
+    if (localStorage.getItem("wishID-" + productId)) {
+      iconElement.addClass('wishfillID');
+    }
+  });
+</script>
 
 
 {% schema %}
@@ -146,7 +175,7 @@
         {
             "type": "number",
             "id": "products_per_page",
-            "label": "products per page" 
+            "label": "products per page"
         }
     ],
     "presets": [

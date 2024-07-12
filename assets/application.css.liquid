@@ -6,3 +6,71 @@ body{
    box-sizing: border-box;
    overflow-x: hidden;
 }
+
+.tt-swiper {
+   height: 260px !important;
+   align-items: center;
+   gap: 0 !important;
+}
+
+#tt-carousel{
+   height: 260px !important;
+   align-items: center;
+}
+
+.tt-swiper-header {
+   width: 20% !important;
+   height: 240px !important;
+}
+
+.tt-swiper-wrapper {
+   height: 100% !important;
+   margin-right: 20px;
+   padding: 0 30px 0 !important;
+}
+
+.tt-card-list {
+   height: 100% !important;
+   /* gap: 2px; */
+   align-items: center;
+   width: calc(99%);
+}
+
+.tt-card-wrapper{
+   height: 240px !important;
+   padding: 0;
+   width: calc(100% / var(--column, 2));
+   flex-basis: calc(100% / var(--column, 2));
+}
+
+.tt-card {
+   box-shadow: 0 0 8px rgb(128, 127, 127) !important;
+}
+
+@media(max-width: 768px){
+   #trustoo-card-carousel-widget{
+      margin-bottom: 210px !important;
+   }
+
+   .tt-swiper{
+      flex-direction: column;
+      gap: 20px !important;
+      margin: 0 auto;
+      width: 93% !important;
+      height: auto;
+   }
+
+   .tt-swiper-header{
+      width: 100% !important;
+      padding: 1.5rem 1rem !important;
+   }
+
+   .tt-swiper-wrapper {
+      width: 100% !important;
+      margin-right: 0 !important;
+   }
+
+   .tt-card-list{
+      height: 250px !important;
+   }
+}

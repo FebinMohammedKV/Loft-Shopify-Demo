@@ -64,12 +64,17 @@
       {{ 'register' | customer_register_link }}
     {% endif %}
   {% endif %} {% endcomment %}
+
+  
+
+
   {% sections 'header-group' %}
   <main role="main">
     {{ content_for_layout }}
   </main>
   {% sections 'footer-group' %}
 
+  <script src="{{ 'wishlist.js' | asset_url }}"></script>
   {{ 'application.js' | asset_url | script_tag }}
   {{ 'bootstrap.min.js' | asset_url | script_tag }}
   <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
